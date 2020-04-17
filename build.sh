@@ -1,15 +1,17 @@
 #!/bin/bash
-
-# https://itnext.io/how-to-create-a-custom-ubuntu-live-from-scratch-dd3b3f213f81
-
 set -eu -o pipefail
 
 ROOT_PATH=$(pwd)
 WORKING_PATH=$(pwd)/build_files
 
+if [ -d "$WORKING_PATH" ]; then
+   rm -rf "$WORKING_PATH"
+fi
+mkdir -p "$WORKING_PATH"
+
 echo >&2 "===]> Info: Build dependencies... ";
 export DEBIAN_FRONTEND=noninteractive
-
+apt-get update
 apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
     binutils \
     debootstrap \
@@ -17,12 +19,12 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
     xorriso \
     grub-pc-bin \
     grub-efi-amd64-bin \
-    mtools
+    mtools \
+    dosfstools \
+    zip
 
-if [ -d "$WORKING_PATH" ]; then
-   rm -rf "$WORKING_PATH"
-fi
-mkdir -p "$WORKING_PATH"
+command -v wget >/dev/null 2>&1 || { echo >&2 "I require wget but it's not installed.  Aborting."; exit 1; }
+
 
 echo >&2 "===]> Info: Checkout bootstrap... ";
 debootstrap \
@@ -35,15 +37,15 @@ debootstrap \
 
 echo >&2 "===]> Info: Creating chroot environment... ";
 mount --bind /dev "$WORKING_PATH/chroot/dev"
-mount --bind /run "$WORKING_PATH/chroot/run"
+# mount --bind /run "$WORKING_PATH/chroot/run"
 
-cp "$ROOT_PATH/files/chroot_build.sh" "$WORKING_PATH/chroot/chroot_build.sh"
-chroot "$WORKING_PATH/chroot" ./chroot_build.sh
+cp -r "$ROOT_PATH/files" "$WORKING_PATH/chroot/tmp/setup_files"
+chroot "$WORKING_PATH/chroot" /tmp/setup_files/chroot_build.sh
 
 
 echo >&2 "===]> Info: Cleanup the chroot environment... ";
+# umount -lf "$WORKING_PATH/chroot/run"
 umount "$WORKING_PATH/chroot/dev"
-umount "$WORKING_PATH/chroot/run"
 
 
 echo >&2 "===]> Info: Create image directory and populate it... ";
@@ -55,10 +57,8 @@ if [ -e "$WORKING_PATH/ubuntu-for-mbp.iso" ]; then
    rm -f "$WORKING_PATH/ubuntu-for-mbp.iso"
 fi
 mkdir -p image/{casper,isolinux,install}
-cp chroot/boot/vmlinuz-**-**-generic image/casper/vmlinuz
-cp chroot/boot/initrd.img-**-**-generic image/casper/initrd
-
-cp -r "$ROOT_PATH/files/preseed" image/
+cp chroot/boot/vmlinuz-*-mbp image/casper/vmlinuz
+cp chroot/boot/initrd.img-*-mbp image/casper/initrd
 
 
 echo >&2 "===]> Info: Create manifest... ";
@@ -120,7 +120,7 @@ grub-mkstandalone \
 (
    cd isolinux && \
    dd if=/dev/zero of=efiboot.img bs=1M count=10 && \
-   sudo mkfs.vfat efiboot.img && \
+   mkfs.vfat efiboot.img && \
    LC_CTYPE=C mmd -i efiboot.img efi efi/boot && \
    LC_CTYPE=C mcopy -i efiboot.img ./bootx64.efi ::efi/boot/
 )
@@ -142,7 +142,7 @@ xorriso \
    -as mkisofs \
    -iso-level 3 \
    -full-iso9660-filenames \
-   -volid "Ubuntu 20.04 beta minimal MacBook Pro" \
+   -volid "Ubuntu MBP 20.04 beta minimal" \
    -eltorito-boot boot/grub/bios.img \
    -no-emul-boot \
    -boot-load-size 4 \
@@ -154,7 +154,7 @@ xorriso \
    -e EFI/efiboot.img \
    -no-emul-boot \
    -append_partition 2 0xef isolinux/efiboot.img \
-   -output "../ubuntu-20.04-beta-minimal-mbp.iso" \
+   -output "../ubuntu-mbp-20.04-beta-minimal.iso" \
    -graft-points \
       "." \
       /boot/grub/bios.img=isolinux/bios.img \
