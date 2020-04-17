@@ -1,0 +1,7 @@
+SUBSYSTEM!="sound", GOTO="pulseaudio_end"
+ACTION!="change", GOTO="pulseaudio_end"
+KERNEL!="card*", GOTO="pulseaudio_end"
+
+SUBSYSTEMS=="pci", ATTRS{vendor}=="0x106b", ATTRS{device}=="0x1803", ENV{PULSE_PROFILE_SET}="apple-t2.conf"
+
+LABEL="pulseaudio_end"
