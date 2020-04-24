@@ -1,0 +1,52 @@
+#!/bin/bash
+set -eu -o pipefail
+
+echo >&2 "===]> Info: Create image directory and populate it... "
+cd "${WORKING_PATH}"
+
+if [ -d "${IMAGE_PATH}" ]; then
+  rm -rf "${IMAGE_PATH}"
+fi
+
+mkdir -p "${IMAGE_PATH}"/{casper,install,isolinux}
+cp "${CHROOT_PATH}"/boot/vmlinuz-"${KERNEL_VERSION}" "${IMAGE_PATH}"/casper/vmlinuz
+cp "${CHROOT_PATH}"/boot/initrd.img-"${KERNEL_VERSION}" "${IMAGE_PATH}"/casper/initrd
+#cd "${IMAGE_PATH}/casper" && lz4 initrd.lz4 # TODO: Workarround for lz4 format not recongnised
+
+touch "${IMAGE_PATH}"/ubuntu
+
+echo >&2 "===]> Info: Grub configuration... "
+cp -r "${ROOT_PATH}"/files/preseed "${IMAGE_PATH}"/pressed
+#cp -r "${ROOT_PATH}"/files/boot/* "${IMAGE_PATH}/"
+cp "${ROOT_PATH}/files/grub/grub.cfg" "${IMAGE_PATH}"/isolinux/grub.cfg
+#cp "${ROOT_PATH}/files/isolinux/txt.cfg" "${IMAGE_PATH}"/isolinux/txt.cfg
+
+
+echo >&2 "===]> Info: Compress the chroot... "
+cd "${WORKING_PATH}"
+mksquashfs chroot "${IMAGE_PATH}"/casper/filesystem.squashfs
+printf "%s" "$(du -sx --block-size=1 "${CHROOT_PATH}" | cut -f1)" >"${IMAGE_PATH}"/casper/filesystem.size
+
+echo >&2 "===]> Info: Create manifest... "
+# shellcheck disable=SC2016
+chroot "${CHROOT_PATH}" dpkg-query -W --showformat='${Package} ${Version}\n' |
+  tee "${IMAGE_PATH}"/casper/filesystem.manifest
+cp -v "${IMAGE_PATH}"/casper/filesystem.manifest "${IMAGE_PATH}"/casper/filesystem.manifest-desktop
+
+REMOVE='ubiquity ubiquity-frontend-gtk ubiquity-frontend-kde casper lupin-casper live-initramfs user-setup discover1 xresprobe os-prober libdebian-installer4'
+for i in $REMOVE; do
+  sed -i "/${i}/d" "${IMAGE_PATH}"/casper/filesystem.manifest-desktop
+done
+
+echo >&2 "===]> Info: Create diskdefines... "
+cat <<EOF >"${IMAGE_PATH}"/README.diskdefines
+#define DISKNAME  Ubuntu MBP 20.04 LTS "Focal Fossa" - Beta amd64
+#define TYPE  binary
+#define TYPEbinary  1
+#define ARCH  amd64
+#define ARCHamd64  1
+#define DISKNUM  1
+#define DISKNUM1  1
+#define TOTALNUM  0
+#define TOTALNUM0  1
+EOF

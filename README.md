@@ -1,59 +1,35 @@
 # mbp-ubuntu
 
+This Repo is still Work in progress. The haven't installed yet. The ISO in from this repo should allow you to install ubuntu without using an external keyboard or mouse. Make sure that the required modules are enabled in initramfs and modules.d after installing.
+
+```
+printf '\n# apple-bce\nhid-apple\nbcm5974\nsnd-seq\napple-bce' >>/etc/modules-load.d/apple-bce.conf
+printf '\n# apple-bce\nhid-apple\nsnd-seq\napple-bce' >>/etc/initramfs-tools/modules
+
+printf '\n# applespi\napple_ibridge\napple_ib_tb\napple_ib_als' >>/etc/modules-load.d/applespi.conf
+```
+
+
+The easiest way to get Ubuntu in your MBP is following this Post: https://gist.github.com/gbrow004/096f845c8fe8d03ef9009fbb87b781a4
+
 [![Build Status](https://travis-ci.com/marcosfad/mbp-ubuntu.svg?branch=master)](https://travis-ci.com/marcosfad/mbp-ubuntu)
 
 UBUNTU 20.04 ISO with Apple T2 patches built-in (Macbooks produced >= 2018).
 
-All available Apple T2 drivers are integrated with this iso. Most things work, besides those mentioned in [not working section](#not-working).
+All available Apple T2 drivers are integrated with this iso. 
+
+This repo is a rework of https://github.com/mikeeq/mbp-fedora
+
+Most things should be work, besides those mentioned in [not working section](#not-working).
 
 Kernel - <https://github.com/marcosfad/mbp-ubuntu-kernel>
 
-Drivers:
+Drivers you should use:
+- Apple T2 (apple-bce) (audio, keyboard, touchpad) - <https://github.com/MCMrARM/mbp2018-bridge-drv>
+- Touchbar (apple-ibridge, apple-ib-tb, apple-ib-als) - <https://github.com/roadrunner2/macbook12-spi-driver/tree/mbp15>
 
-- Apple T2 (audio, keyboard, touchpad) - <https://github.com/MCMrARM/mbp2018-bridge-drv>
-- Apple SMC - <https://github.com/MCMrARM/mbp2018-etc>
-- Touchbar - <https://github.com/roadrunner2/macbook12-spi-driver/tree/mbp15>
 
-> Tested on: Macbook Pro 16,1 16" 2019 i9 TouchBar
-
-```
-Boot ROM Version:	220.270.99.0.0 (iBridge: 16.16.6571.0.0,0)
-macOS Mojave: 10.14.6 (18G103)
-```
-
-## How to install
-
-- Turn off secure boot - <https://support.apple.com/en-us/HT208330>
-- Download .iso from releases section - <https://github.com/marcosfad/mbp-ubuntu/releases/latest>
-  - If it's splitted into multiple zip parts, you need to join splitted files into one and then extract it via `unzip` or extract them directly via `7z x` or `7za x`
-    - <https://unix.stackexchange.com/questions/40480/how-to-unzip-a-multipart-spanned-zip-on-linux>
-- Burn the image on USB stick >=8GB via:
-  - dd - `dd bs=4M if=/home/user/Downloads/ubuntu-20.04-beta-minimal-mbp.iso of=/dev/sdc conv=fdatasync status=progress`
-  - rufus (GPT)- <https://rufus.ie/>
-  - balenaEtcher- <https://www.balena.io/etcher/>
-  - don't use `livecd-iso-to-disk`, because it's overwriting grub settings
-- Install Ubuntu
-  - Boot directly from macOS boot manager. (You can boot into it by pressing and holding option key after clicking the power-on button).
-    - There will be three boot options available, usually the third one works for me. (There are three of them, because there are three partitions in ISO: 1) ISO9660: with installer data, 2) fat32, 3) hfs+)
-  - I recommend to shrink (resize) macOS APFS partition and not removing macOS installation entirely from your MacBook, because it's the only way to keep your device up-to-date. macOS OS updates also contains security patches to EFI/Apple T2
-    - HowTo: <https://www.anyrecover.com/hard-drive-recovery-data/resize-partition-mac/> # Steps to Resize Mac Partition
-  - You should use standard partition layout during partitioning your Disk in anaconda, because i haven't tested LVM scenario yet. <https://github.com/marcosfad/mbp-ubuntu/issues/2>
-    - /boot/efi - 1024MB fat32
-    - /boot - 1024MB EXT4
-    - / - xxxGB EXT4
-
-- Put wifi firmware files to `/lib/firmware/brcm/`
-  - tutorial - <https://github.com/mikeeq/mbp-fedora-kernel/#working-with-mbp-fedora-kernel>
-- You can change mappings of ctrl, fn, option keys (PC keyboard mappings) by creating `/etc/modprobe.d/hid_apple.conf` file and recreating grub config. All available modifications could be found here: <https://github.com/free5lot/hid-apple-patched>
-```
-# /etc/modprobe.d/hid_apple.conf
-options hid_apple swap_fn_leftctrl=1
-options hid_apple swap_opt_cmd=1
-
-grub2-mkconfig -o /boot/efi/EFI/ubuntu/grub.cfg
-```
-
-## Not working
+## Not working (Following the mikeeq/mbp-fedora)
 
 - Dynamic audio input/output change (on connecting/disconnecting headphones jack)
 - TouchID - (@MCMrARM is working on it - https://github.com/Dunedan/mbp-2016-linux/issues/71#issuecomment-528545490)
@@ -62,8 +38,10 @@ grub2-mkconfig -o /boot/efi/EFI/ubuntu/grub.cfg
 
 ## TODO
 
+- Tests
+- Check installer.
 
-## Known issues
+## Known issues (Following the mikeeq/mbp-fedora)
 
 - Kernel/Mac related issues are mentioned in kernel repo
 
@@ -76,11 +54,16 @@ grub2-mkconfig -o /boot/efi/EFI/ubuntu/grub.cfg
 - Discord: <https://discord.gg/Uw56rqW>
 - WiFi firmware: <https://packages.aunali1.com/apple/wifi-fw/18G2022>
 - Linux on a MBP Late 2016: <https://gist.github.com/gbrow004/096f845c8fe8d03ef9009fbb87b781a4>
+- Repack Bootable ISO: <https://wiki.debian.org/RepackBootableISO>
+- <https://github.com/syzdek/efibootiso>
 
 ### Ubuntu
 
 - <https://help.ubuntu.com/community/LiveCDCustomization>
 - <https://itnext.io/how-to-create-a-custom-ubuntu-live-from-scratch-dd3b3f213f81>
+- <https://help.ubuntu.com/community/LiveCDCustomizationFromScratch>
+- <https://help.ubuntu.com/community/InstallCDCustomization>
+- <https://linuxconfig.org/legacy-bios-uefi-and-secureboot-ready-ubuntu-live-image-customization>
 
 ### Github
 
@@ -94,6 +77,7 @@ grub2-mkconfig -o /boot/efi/EFI/ubuntu/grub.cfg
 - ArchLinux installation guide: <https://gist.github.com/TRPB/437f663b545d23cc8a2073253c774be3>
 - hid-apple-patched module for changing mappings of ctrl, fn, option keys: <https://github.com/free5lot/hid-apple-patched>
 - Audio configuration: <https://gist.github.com/kevineinarsson/8e5e92664f97508277fefef1b8015fba>
+- Ubuntu in MBP16: <https://gist.github.com/gbrow004/096f845c8fe8d03ef9009fbb87b781a4>
 
 ## Credits
 
@@ -104,4 +88,3 @@ grub2-mkconfig -o /boot/efi/EFI/ubuntu/grub.cfg
 - @aunali1 - thanks for ArchLinux Kernel CI
 - @ppaulweber - thanks for keyboard and Macbook Air patches
 - @kevineinarsson - thanks for the audio settings
-- @roadrunner2 - thanks for the overview

@@ -7,9 +7,9 @@ os:
 services:
   - docker
 
-branches:
-  only:
-    - master
+#branches:
+#  only:
+#    - master
 
 stages:
   - test
@@ -33,6 +33,7 @@ jobs:
           cd /repo
           apk add --no-cache shellcheck bash
           shellcheck ./*.sh
+          shellcheck ./files/*.sh
         '
     - stage: build_deploy
       name: "Build Ubuntu and Deploy to GitHub Releases"
@@ -41,7 +42,7 @@ jobs:
         provider: releases
         api_key: "$GITHUB_TOKEN"
         file_glob: true
-        file: "/build_files/output_zip/*"
+        file: "output/*"
         skip_cleanup: true
         on:
           tags: true

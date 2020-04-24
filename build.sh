@@ -2,175 +2,83 @@
 set -eu -o pipefail
 
 ROOT_PATH=$(pwd)
-WORKING_PATH=$(pwd)/build_files
+WORKING_PATH=/root/work
+CHROOT_PATH="${WORKING_PATH}/chroot"
+IMAGE_PATH="${WORKING_PATH}/image"
+#KERNEL_VERSION=5.4.0-26-generic
+KERNEL_VERSION=5.6.7-mbp
 
 if [ -d "$WORKING_PATH" ]; then
-   rm -rf "$WORKING_PATH"
+  rm -rf "$WORKING_PATH"
 fi
 mkdir -p "$WORKING_PATH"
 
-echo >&2 "===]> Info: Build dependencies... ";
+echo >&2 "===]> Info: Build dependencies... "
 export DEBIAN_FRONTEND=noninteractive
 apt-get update
 apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
-    binutils \
-    debootstrap \
-    squashfs-tools \
-    xorriso \
-    grub-pc-bin \
-    grub-efi-amd64-bin \
-    mtools \
-    dosfstools \
-    zip
+  binutils \
+  debootstrap \
+  squashfs-tools \
+  xorriso \
+  grub-pc-bin \
+  grub-efi-amd64-bin \
+  mtools \
+  dosfstools \
+  zip \
+  isolinux \
+  syslinux \
+  lz4
 
-command -v wget >/dev/null 2>&1 || { echo >&2 "I require wget but it's not installed.  Aborting."; exit 1; }
+echo >&2 "===]> Info: Build Ubuntu FS... "
+/bin/bash -c "
+  ROOT_PATH=${ROOT_PATH} \\
+  WORKING_PATH=${WORKING_PATH} \\
+  CHROOT_PATH=${CHROOT_PATH} \\
+  IMAGE_PATH=${IMAGE_PATH} \\
+  KERNEL_VERSION=${KERNEL_VERSION} \\
+  ${ROOT_PATH}/build_file_system.sh
+"
 
+echo >&2 "===]> Info: Build Image FS... "
+/bin/bash -c "
+  ROOT_PATH=${ROOT_PATH} \\
+  WORKING_PATH=${WORKING_PATH} \\
+  CHROOT_PATH=${CHROOT_PATH} \\
+  IMAGE_PATH=${IMAGE_PATH} \\
+  KERNEL_VERSION=${KERNEL_VERSION} \\
+  ${ROOT_PATH}/build_image.sh
+"
 
-echo >&2 "===]> Info: Checkout bootstrap... ";
-debootstrap \
-    --arch=amd64 \
-    --variant=minbase \
-    focal \
-    "$WORKING_PATH/chroot" \
-    http://de.archive.ubuntu.com/ubuntu/
+echo >&2 "===]> Info: Prepare Boot for ISO... "
+/bin/bash -c "
+  IMAGE_PATH=${IMAGE_PATH} \\
+  CHROOT_PATH=${CHROOT_PATH} \\
+  ${ROOT_PATH}/prepare_iso.sh
+"
 
-
-echo >&2 "===]> Info: Creating chroot environment... ";
-mount --bind /dev "$WORKING_PATH/chroot/dev"
-# mount --bind /run "$WORKING_PATH/chroot/run"
-
-cp -r "$ROOT_PATH/files" "$WORKING_PATH/chroot/tmp/setup_files"
-chroot "$WORKING_PATH/chroot" /tmp/setup_files/chroot_build.sh
-
-
-echo >&2 "===]> Info: Cleanup the chroot environment... ";
-# umount -lf "$WORKING_PATH/chroot/run"
-umount "$WORKING_PATH/chroot/dev"
-
-
-echo >&2 "===]> Info: Create image directory and populate it... ";
-cd "$WORKING_PATH"
-if [ -d "$WORKING_PATH/image" ]; then
-  rm -rf "$WORKING_PATH/image"
-fi
-if [ -e "$WORKING_PATH/ubuntu-for-mbp.iso" ]; then
-   rm -f "$WORKING_PATH/ubuntu-for-mbp.iso"
-fi
-mkdir -p image/{casper,isolinux,install}
-cp chroot/boot/vmlinuz-*-mbp image/casper/vmlinuz
-cp chroot/boot/initrd.img-*-mbp image/casper/initrd
-
-
-echo >&2 "===]> Info: Create manifest... ";
-cd "$WORKING_PATH"
-# shellcheck disable=SC2016
-chroot chroot dpkg-query -W --showformat='${Package} ${Version}\n' | tee image/casper/filesystem.manifest
-
-cp -v image/casper/filesystem.manifest image/casper/filesystem.manifest-desktop
-sed -i '/ubiquity/d' image/casper/filesystem.manifest-desktop
-sed -i '/casper/d' image/casper/filesystem.manifest-desktop
-sed -i '/discover/d' image/casper/filesystem.manifest-desktop
-sed -i '/laptop-detect/d' image/casper/filesystem.manifest-desktop
-sed -i '/os-prober/d' image/casper/filesystem.manifest-desktop
-
-
-### Workaround - travis_wait
-while true
-do
-  date
-  sleep 30
-done &
-bgPID=$!
-
-echo >&2 "===]> Info: Compress the chroot... ";
-cd "$WORKING_PATH"
-mksquashfs chroot image/casper/filesystem.squashfs
-printf "%s" "$(du -sx --block-size=1 chroot | cut -f1)" > image/casper/filesystem.size
-
-
-echo >&2 "===]> Info: Create diskdefines... ";
-cat <<EOF > image/README.diskdefines
-#define DISKNAME  Ubuntu 20.04 LTS "Focal Fossa" - MacBook Pro Beta amd64
-#define TYPE  binary
-#define TYPEbinary  1
-#define ARCH  amd64
-#define ARCHamd64  1
-#define DISKNUM  1
-#define DISKNUM1  1
-#define TOTALNUM  0
-#define TOTALNUM0  1
-EOF
-
-
-echo >&2 "===]> Info: Grub configuration... ";
-touch image/ubuntu
-cp "$ROOT_PATH/files/grub/grub.cfg" image/isolinux/grub.cfg
-cp -r "$ROOT_PATH/files/preseed" image/pressed
-
-echo >&2 "===]> Info: Create ISO Image for a LiveCD... ";
-cd "$WORKING_PATH/image"
-
-grub-mkstandalone \
-   --format=x86_64-efi \
-   --output=isolinux/bootx64.efi \
-   --locales="" \
-   --fonts="" \
-   "boot/grub/grub.cfg=isolinux/grub.cfg"
-
-(
-   cd isolinux && \
-   dd if=/dev/zero of=efiboot.img bs=1M count=10 && \
-   mkfs.vfat efiboot.img && \
-   LC_CTYPE=C mmd -i efiboot.img efi efi/boot && \
-   LC_CTYPE=C mcopy -i efiboot.img ./bootx64.efi ::efi/boot/
-)
-
-grub-mkstandalone \
-   --format=i386-pc \
-   --output=isolinux/core.img \
-   --install-modules="linux16 linux normal iso9660 biosdisk memdisk search tar ls" \
-   --modules="linux16 linux normal iso9660 biosdisk search" \
-   --locales="" \
-   --fonts="" \
-   "boot/grub/grub.cfg=isolinux/grub.cfg"
-
-cat /usr/lib/grub/i386-pc/cdboot.img isolinux/core.img > isolinux/bios.img
-
-(find . -type f -print0 | xargs -0 md5sum | grep -v "\./md5sum.txt" > md5sum.txt)
-
-xorriso \
-   -as mkisofs \
-   -iso-level 3 \
-   -full-iso9660-filenames \
-   -volid "Ubuntu MBP 20.04 beta minimal" \
-   -eltorito-boot boot/grub/bios.img \
-   -no-emul-boot \
-   -boot-load-size 4 \
-   -boot-info-table \
-   --eltorito-catalog boot/grub/boot.cat \
-   --grub2-boot-info \
-   --grub2-mbr /usr/lib/grub/i386-pc/boot_hybrid.img \
-   -eltorito-alt-boot \
-   -e EFI/efiboot.img \
-   -no-emul-boot \
-   -append_partition 2 0xef isolinux/efiboot.img \
-   -output "../ubuntu-mbp-20.04-beta-minimal.iso" \
-   -graft-points \
-      "." \
-      /boot/grub/bios.img=isolinux/bios.img \
-      /EFI/efiboot.img=isolinux/efiboot.img
+echo >&2 "===]> Info: Create ISO... "
+/bin/bash -c "
+  ROOT_PATH=${ROOT_PATH} \\
+  IMAGE_PATH=${IMAGE_PATH} \\
+  CHROOT_PATH=${CHROOT_PATH} \\
+  KERNEL_VERSION=${KERNEL_VERSION} \\
+  ${ROOT_PATH}/create_iso.sh
+"
 livecd_exitcode=$?
 
 ### Zip iso and split it into multiple parts - github max size of release attachment is 2GB, where ISO is sometimes bigger than that
-cd "$WORKING_PATH"
-mkdir -p ./output_zip
-zip -s 1500m ./output_zip/livecd.zip ./*.iso
+cd "${ROOT_PATH}"
+if [ -d "${ROOT_PATH}/output" ]; then
+  rm -rf "${ROOT_PATH}/output"
+fi
+mkdir -p "${ROOT_PATH}/output"
+zip -s 1500m "${ROOT_PATH}/output/livecd.zip" ./*.iso
 
 ### Calculate sha256 sums of built ISO
-sha256sum ./*.iso > ./output_zip/sha256
+sha256sum "${ROOT_PATH}"/*.iso >"${ROOT_PATH}/output/sha256"
 
 find ./ | grep ".iso"
 find ./ | grep ".zip"
-kill "$bgPID"
 
 exit "$livecd_exitcode"
