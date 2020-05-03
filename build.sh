@@ -1,12 +1,12 @@
 #!/bin/bash
 set -eu -o pipefail
 
-ROOT_PATH=$(pwd)
-WORKING_PATH=/root/work
-CHROOT_PATH="${WORKING_PATH}/chroot"
-IMAGE_PATH="${WORKING_PATH}/image"
+export ROOT_PATH=$(pwd)
+export WORKING_PATH=/root/work
+export CHROOT_PATH="${WORKING_PATH}/chroot"
+export IMAGE_PATH="${WORKING_PATH}/image"
 #KERNEL_VERSION=5.4.0-26-generic
-KERNEL_VERSION=5.6.7-mbp
+export KERNEL_VERSION=5.6.10-mbp
 
 if [ -d "$WORKING_PATH" ]; then
   rm -rf "$WORKING_PATH"
@@ -27,8 +27,7 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   dosfstools \
   zip \
   isolinux \
-  syslinux \
-  lz4
+  syslinux
 
 echo >&2 "===]> Info: Build Ubuntu FS... "
 /bin/bash -c "

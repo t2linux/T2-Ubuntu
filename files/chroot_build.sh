@@ -44,11 +44,9 @@ ln -s /bin/true /sbin/initctl
 echo >&2 "===]> Info: Install packages needed for Live System... "
 
 export DEBIAN_FRONTEND=noninteractive
-#dpkg -i "/tmp/setup_files/kernel/linux-image-${KERNEL_VERSION}_${KERNEL_VERSION}-1_amd64.deb"
-#dpkg -i "/tmp/setup_files/kernel/linux-headers-${KERNEL_VERSION}_${KERNEL_VERSION}-1_amd64.deb"
-#apt-get install -f
 apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
   ubuntu-standard \
+  sudo \
   casper \
   lupin-casper \
   discover \
@@ -63,16 +61,19 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   initramfs-tools \
   binutils \
   linux-generic \
+  grub-efi-amd64-signed \
   "linux-image-${KERNEL_VERSION}" \
-  "linux-headers-${KERNEL_VERSION}"
-#  linux-headers-generic
+  "linux-headers-${KERNEL_VERSION}" \
+  intel-microcode \
+  thermald
 
 echo >&2 "===]> Info: Install window manager... "
 
 apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
   plymouth-theme-ubuntu-logo \
   ubuntu-desktop-minimal \
-  ubuntu-gnome-wallpapers
+  ubuntu-gnome-wallpapers \
+  snapd
 
 echo >&2 "===]> Info: Install Graphical installer... "
 
@@ -124,7 +125,7 @@ git -C /opt/drivers/applespi/ checkout "${APPLE_IB_DRIVER_COMMIT_HASH}"
 PATH=/usr/share/Modules/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/bin \
   make -C /lib/modules/"${KERNEL_VERSION}"/build/ M=/opt/drivers/applespi modules
 printf '\n# applespi\napple_ibridge\napple_ib_tb\napple_ib_als' >>/etc/modules-load.d/applespi.conf
-#printf "\n# applespi\napplespi\nspi_pxa2xx_platform\nintel_lpss_pci" >> /etc/initramfs-tools/modules
+printf '\n# display f* key in touchbar\noptions apple-ib-tb fnmode=2\n'  >> /etc/modprobe.d/apple-tb.conf
 cp -rf /opt/drivers/applespi/*.ko /lib/modules/"${KERNEL_VERSION}"/kernel/drivers/
 
 rm -rf /opt/drivers
@@ -134,12 +135,6 @@ echo >&2 "===]> Info: Update initramfs... "
 ## Add custom drivers to be loaded at boot
 /usr/sbin/depmod -a "${KERNEL_VERSION}"
 update-initramfs -u -v -k "${KERNEL_VERSION}"
-
-## Copy audio config files
-mkdir -p /usr/share/alsa/cards/
-mv -fv /tmp/setup_files/audio/AppleT2.conf /usr/share/alsa/cards/AppleT2.conf
-mv -fv /tmp/setup_files/audio/apple-t2.conf /usr/share/pulseaudio/alsa-mixer/profile-sets/apple-t2.conf
-mv -fv /tmp/setup_files/audio/91-pulseaudio-custom.rules /usr/lib/udev/rules.d/91-pulseaudio-custom.rules
 
 echo >&2 "===]> Info: Remove unused applications ... "
 
@@ -156,10 +151,15 @@ apt-get purge -y -qq \
   make \
   gcc \
   vim \
-  binutils
-#  \
-#  initramfs-tools
-#  "linux-headers-${KERNEL_VERSION}"
+  binutils \
+  linux-generic \
+  linux-headers-5.4.0-28 \
+  linux-headers-5.4.0-28-generic \
+  linux-headers-generic \
+  linux-image-5.4.0-28-generic \
+  linux-image-generic \
+  linux-modules-5.4.0-28-generic \
+  linux-modules-extra-5.4.0-28-generic
 
 apt-get autoremove -y
 

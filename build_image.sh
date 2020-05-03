@@ -11,15 +11,12 @@ fi
 mkdir -p "${IMAGE_PATH}"/{casper,install,isolinux}
 cp "${CHROOT_PATH}"/boot/vmlinuz-"${KERNEL_VERSION}" "${IMAGE_PATH}"/casper/vmlinuz
 cp "${CHROOT_PATH}"/boot/initrd.img-"${KERNEL_VERSION}" "${IMAGE_PATH}"/casper/initrd
-#cd "${IMAGE_PATH}/casper" && lz4 initrd.lz4 # TODO: Workarround for lz4 format not recongnised
 
 touch "${IMAGE_PATH}"/ubuntu
 
 echo >&2 "===]> Info: Grub configuration... "
-cp -r "${ROOT_PATH}"/files/preseed "${IMAGE_PATH}"/pressed
-#cp -r "${ROOT_PATH}"/files/boot/* "${IMAGE_PATH}/"
+cp -r "${ROOT_PATH}"/files/preseed "${IMAGE_PATH}"/preseed
 cp "${ROOT_PATH}/files/grub/grub.cfg" "${IMAGE_PATH}"/isolinux/grub.cfg
-#cp "${ROOT_PATH}/files/isolinux/txt.cfg" "${IMAGE_PATH}"/isolinux/txt.cfg
 
 
 echo >&2 "===]> Info: Compress the chroot... "
@@ -33,7 +30,7 @@ chroot "${CHROOT_PATH}" dpkg-query -W --showformat='${Package} ${Version}\n' |
   tee "${IMAGE_PATH}"/casper/filesystem.manifest
 cp -v "${IMAGE_PATH}"/casper/filesystem.manifest "${IMAGE_PATH}"/casper/filesystem.manifest-desktop
 
-REMOVE='ubiquity ubiquity-frontend-gtk ubiquity-frontend-kde casper lupin-casper live-initramfs user-setup discover1 xresprobe os-prober libdebian-installer4'
+REMOVE='ubiquity casper lupin-casper user-setup discover discover-data os-prober laptop-detect'
 for i in $REMOVE; do
   sed -i "/${i}/d" "${IMAGE_PATH}"/casper/filesystem.manifest-desktop
 done

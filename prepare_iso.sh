@@ -32,5 +32,5 @@ grub-mkstandalone \
   "boot/grub/grub.cfg=isolinux/grub.cfg"
 
 ### Combine a bootable grub cdboot.img
-cat "${CHROOT_PATH}/usr/lib/grub/i386-pc/cdboot.img" "${IMAGE_PATH}/isolinux/core.img" \
+cat "/usr/lib/grub/i386-pc/cdboot.img" "${IMAGE_PATH}/isolinux/core.img" \
   >"${IMAGE_PATH}/isolinux/bios.img"

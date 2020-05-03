@@ -10,14 +10,14 @@ echo >&2 "===]> Info: Create Isolinux... "
 xorriso -as mkisofs \
   -iso-level 3 \
   -full-iso9660-filenames \
-  -volid "Ubuntu 20.04 LTS MBP" \
+  -volid "UBUNTU_MBP" \
   -b boot/grub/bios.img \
   -no-emul-boot \
   -boot-load-size 4 \
   -boot-info-table \
   -c boot/grub/boot.cat \
   --grub2-boot-info \
-  --grub2-mbr "${CHROOT_PATH}/usr/lib/grub/i386-pc/boot_hybrid.img" \
+  --grub2-mbr "/usr/lib/grub/i386-pc/boot_hybrid.img" \
   -eltorito-alt-boot \
   -e "EFI/efiboot.img" \
   -no-emul-boot \
