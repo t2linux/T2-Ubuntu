@@ -12,9 +12,9 @@ mkdir -p "${IMAGE_PATH}"/{casper,install,isolinux}
 cp "${CHROOT_PATH}"/boot/vmlinuz-"${KERNEL_VERSION}" "${IMAGE_PATH}"/casper/vmlinuz
 cp "${CHROOT_PATH}"/boot/initrd.img-"${KERNEL_VERSION}" "${IMAGE_PATH}"/casper/initrd
 
-touch "${IMAGE_PATH}"/ubuntu
-
 echo >&2 "===]> Info: Grub configuration... "
+# we add an empty file to use it with the search command in grub later on.
+touch "${IMAGE_PATH}"/ubuntu
 cp -r "${ROOT_PATH}"/files/preseed "${IMAGE_PATH}"/preseed
 cp "${ROOT_PATH}/files/grub/grub.cfg" "${IMAGE_PATH}"/isolinux/grub.cfg
 

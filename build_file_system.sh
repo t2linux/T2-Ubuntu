@@ -27,8 +27,9 @@ echo >&2 "===]> Info: Copy audio config files... "
 mkdir -p "${CHROOT_PATH}"/usr/share/alsa/cards/
 cp -fv "${ROOT_PATH}"/files/audio/AppleT2.conf "${CHROOT_PATH}"/usr/share/alsa/cards/AppleT2.conf
 cp -fv "${ROOT_PATH}"/files/audio/apple-t2.conf "${CHROOT_PATH}"/usr/share/pulseaudio/alsa-mixer/profile-sets/apple-t2.conf
-cp -fv "${ROOT_PATH}"/files/audio/91-pulseaudio-custom.rules "${CHROOT_PATH}"/usr/lib/udev/rules.d/91-pulseaudio-custom.rules
-
+cp -fv "${ROOT_PATH}"/files/audio/91-pulseaudio-custom.rules "${CHROOT_PATH}"/etc/udev/rules.d/91-pulseaudio-custom.rules
+printf "\n load-module module-combine-sink channels=6 channel_map=front-left,front-right,rear-left,rear-right,front-center,lfe" >> /etc/pulse/default.pa
+printf "\ndefault-sample-channels = 6\nremixing-produce-lfe = yes\nremixing-consume-lfe = yes" >> /etc/pulse/daemon.conf
 
 ### Copy grub config without finding macos partition
 echo >&2 "===]> Info: Patch Grub... "

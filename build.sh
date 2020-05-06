@@ -1,12 +1,12 @@
 #!/bin/bash
 set -eu -o pipefail
 
-export ROOT_PATH=$(pwd)
-export WORKING_PATH=/root/work
-export CHROOT_PATH="${WORKING_PATH}/chroot"
-export IMAGE_PATH="${WORKING_PATH}/image"
-#KERNEL_VERSION=5.4.0-26-generic
-export KERNEL_VERSION=5.6.10-mbp
+ROOT_PATH=$(pwd)
+WORKING_PATH=/root/work
+CHROOT_PATH="${WORKING_PATH}/chroot"
+IMAGE_PATH="${WORKING_PATH}/image"
+#KERNEL_VERSION=5.4.0-29-generic
+KERNEL_VERSION=5.6.11-mbp
 
 if [ -d "$WORKING_PATH" ]; then
   rm -rf "$WORKING_PATH"
