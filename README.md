@@ -20,9 +20,6 @@ Using additional drivers:
 
 Bootloader is configure correctly out of the box. No workaround needed.
 
-**IF YOU UPDATE THE KERNEL, REMEMBER TO ADD THE REQUIRED DRIVERS AGAIN.**
-Check <https://github.com/marcosfad/mbp-ubuntu/blob/master/files/chroot_build.sh> to see how it is done.
-
 ## Installation
 
 1. Reduce the size of the mac partition in MacOS
@@ -63,10 +60,33 @@ options hid_apple swap_opt_cmd=1
 - I switch the touchbar to show f* by default. If you like another configuration, change /etc/modprobe.d/apple-tb.conf or remove it.
 - To update grub, run: `grub-mkconfig -o /boot/grub/grub.cfg`
 
+## Update to newer kernels
+
+**IF YOU UPDATE THE KERNEL, REMEMBER TO ADD THE REQUIRED DRIVERS AGAIN.**
+
+### The easy way:
+```bash
+sudo apt install dkms
+sudo apt install linux-headers-<mbp-kernel-release>-mbp linux-image-<mbp-kernel-release>-mbp
+sudo git clone --branch mbp15 https://github.com/roadrunner2/macbook12-spi-driver.git /usr/src/apple-ibridge-0.1
+sudo dkms install -m apple-ibridge -v 0.1 -k <mbp-kernel-release>-mbp
+modprobe apple-ib-tb
+modprobe apple-ib-als
+sudo git clone --branch aur https://github.com/marcosfad/mbp2018-bridge-drv.git /usr/src/apple-bce-0.1
+sudo dkms install -m apple-bce -v 0.1 -k <mbp-kernel-release>-mbp
+modprobe apple-bce
+```
+
+### Another way:
+Check <https://github.com/marcosfad/mbp-ubuntu/blob/master/files/chroot_build.sh> to see how it is done.
+
+
 ## Know issues
 
-- Sound is not working after the install. Follow the instructions detailed by @kevineinarsson: <https://gist.github.com/kevineinarsson/8e5e92664f97508277fefef1b8015fba>
+- Sound is not working after the install. Follow the instructions detailed by @kevineinarsson: <https://gist.github.com/kevineinarsson/8e5e92664f97508277fefef1b8015fba> (it didn't worked for me on MBP 16,1, but I don't use sound)
+- Wifi is not working for bali (MBP 16,1). I'm using a 10$ usb wifi.
 - Checksum is failing for 2 files: md5sum.txt and /boot/grub/bios.img
+- I'm having troubles shutting down ubuntu. Screen is black but fan keeps on working. I have to force shutdown. 
 
 ## Not working (Following the mikeeq/mbp-fedora)
 

@@ -147,7 +147,6 @@ apt-get purge -y -qq \
   aisleriot \
   hitori \
   xiterm+thai \
-  firefox \
   make \
   gcc \
   vim \
