@@ -61,6 +61,7 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   initramfs-tools \
   binutils \
   linux-generic \
+  linux-headers-generic \
   grub-efi-amd64-signed \
   "linux-image-${KERNEL_VERSION}" \
   "linux-headers-${KERNEL_VERSION}" \
@@ -91,44 +92,43 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   curl \
   nano \
   make \
-  gcc
+  gcc \
+  dkms
 
 echo >&2 "===]> Info: Change initramfs format (for grub)... "
 sed -i "s/COMPRESS=lz4/COMPRESS=gzip/g" "/etc/initramfs-tools/initramfs.conf"
 
 echo >&2 "===]> Info: Add drivers... "
 
-APPLE_BCE_DRIVER_GIT_URL=https://github.com/aunali1/mbp2018-bridge-drv.git
+APPLE_BCE_DRIVER_GIT_URL=https://github.com/marcosfad/mbp2018-bridge-drv.git
 APPLE_BCE_DRIVER_BRANCH_NAME=aur
-APPLE_BCE_DRIVER_COMMIT_HASH=c884d9ca731f2118a58c28bb78202a0007935998
+APPLE_BCE_DRIVER_COMMIT_HASH=85347e71dd79e0be486a79af36862c96027c0836
+APPLE_BCE_DRIVER_MODULE_NAME=apple-bce
+APPLE_BCE_DRIVER_MODULE_VERSION=0.1
+
 APPLE_IB_DRIVER_GIT_URL=https://github.com/roadrunner2/macbook12-spi-driver.git
 APPLE_IB_DRIVER_BRANCH_NAME=mbp15
 APPLE_IB_DRIVER_COMMIT_HASH=90cea3e8e32db60147df8d39836bd1d2a5161871
+APPLE_IB_DRIVER_MODULE_NAME=apple-ibridge
+APPLE_IB_DRIVER_MODULE_VERSION=0.1
 
-mkdir -p /opt/drivers
-mkdir -p "/lib/modules/${KERNEL_VERSION}/kernel/drivers"
-
-printf '\nblacklist thunderbolt' >>/etc/modprobe.d/blacklist.conf
+# thunderbolt is working for me.
+#printf '\nblacklist thunderbolt' >>/etc/modprobe.d/blacklist.conf
 
 git clone --single-branch --branch ${APPLE_BCE_DRIVER_BRANCH_NAME} ${APPLE_BCE_DRIVER_GIT_URL} \
-  /opt/drivers/apple-bce
-git -C /opt/drivers/apple-bce/ checkout "${APPLE_BCE_DRIVER_COMMIT_HASH}"
-PATH=/usr/share/Modules/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/bin \
-  make -C /lib/modules/"${KERNEL_VERSION}"/build/ M=/opt/drivers/apple-bce modules
-cp -rf /opt/drivers/apple-bce/*.ko /lib/modules/"${KERNEL_VERSION}"/kernel/drivers/
-printf '\n# apple-bce\nhid-apple\nbcm5974\nsnd-seq\napple-bce' >>/etc/modules-load.d/apple-bce.conf
-printf '\n# apple-bce\nhid-apple\nsnd-seq\napple-bce' >>/etc/initramfs-tools/modules
+  /usr/src/"${APPLE_BCE_DRIVER_MODULE_NAME}-${APPLE_BCE_DRIVER_MODULE_VERSION}"
+git -C /usr/src/"${APPLE_BCE_DRIVER_MODULE_NAME}-${APPLE_BCE_DRIVER_MODULE_VERSION}" checkout "${APPLE_BCE_DRIVER_COMMIT_HASH}"
+dkms install -m "${APPLE_BCE_DRIVER_MODULE_NAME}" -v "${APPLE_BCE_DRIVER_MODULE_VERSION}" -k "${KERNEL_VERSION}"
+printf '\n### apple-bce start ###\nhid-apple\nbcm5974\nsnd-seq\napple-bce\n### apple-bce end ###' >>/etc/modules-load.d/apple-bce.conf
+printf '\n### apple-bce start ###\nhid-apple\nsnd-seq\napple-bce\n### apple-bce end ###' >>/etc/initramfs-tools/modules
 
 git clone --single-branch --branch ${APPLE_IB_DRIVER_BRANCH_NAME} ${APPLE_IB_DRIVER_GIT_URL} \
-  /opt/drivers/applespi
-git -C /opt/drivers/applespi/ checkout "${APPLE_IB_DRIVER_COMMIT_HASH}"
-PATH=/usr/share/Modules/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/root/bin \
-  make -C /lib/modules/"${KERNEL_VERSION}"/build/ M=/opt/drivers/applespi modules
-printf '\n# applespi\napple_ibridge\napple_ib_tb\napple_ib_als' >>/etc/modules-load.d/applespi.conf
-printf '\n# display f* key in touchbar\noptions apple-ib-tb fnmode=2\n'  >> /etc/modprobe.d/apple-tb.conf
-cp -rf /opt/drivers/applespi/*.ko /lib/modules/"${KERNEL_VERSION}"/kernel/drivers/
+    /usr/src/"${APPLE_IB_DRIVER_MODULE_NAME}-${APPLE_IB_DRIVER_MODULE_VERSION}"
+git -C /usr/src/"${APPLE_IB_DRIVER_MODULE_NAME}-${APPLE_IB_DRIVER_MODULE_VERSION}" checkout "${APPLE_IB_DRIVER_COMMIT_HASH}"
+dkms install -m "${APPLE_IB_DRIVER_MODULE_NAME}" -v "${APPLE_IB_DRIVER_MODULE_VERSION}" -k "${KERNEL_VERSION}"
+printf '\n### applespi start ###\napple_ibridge\napple_ib_tb\napple_ib_als\n### applespi end ###' >>/etc/modules-load.d/applespi.conf
+printf '\n# display f* key in touchbar\noptions apple-ib-tb fnmode=2\n'  >> /etc/modprobe.d/apple-touchbar.conf
 
-rm -rf /opt/drivers
 
 echo >&2 "===]> Info: Update initramfs... "
 
@@ -178,6 +178,10 @@ dns=dnsmasq
 managed=false
 EOF
 dpkg-reconfigure network-manager
+#echo >&2 "===]> Info: Configure Network Manager to use iwd... "
+#mkdir -p /etc/NetworkManager/conf.d
+#printf '[device]\nwifi.backend=iwd' > /etc/NetworkManager/conf.d/wifi_backend.conf
+#systemctl enable iwd.service
 
 echo >&2 "===]> Info: Cleanup the chroot environment... "
 

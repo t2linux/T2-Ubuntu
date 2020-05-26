@@ -8,4 +8,4 @@
 # well keep them installed.
 #ubiquity ubiquity/keep-installed string icedtea6-plugin openoffice.org
 
-d-i debian-installer/add-kernel-opts string efi=noruntime pcie_ports=compat
+d-i debian-installer/add-kernel-opts string efi=noruntime pcie_ports=compat acpi=force

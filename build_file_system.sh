@@ -38,5 +38,5 @@ chmod 755 "${CHROOT_PATH}"/etc/grub.d/30_os-prober
 
 ### Copy suspend fix
 echo >&2 "===]> Info: Fix suspend... "
-cp -rfv "${ROOT_PATH}"/files/suspend/rmmod_tb.sh ${CHROOT_PATH}/lib/systemd/system-sleep/rmmod_tb.sh
-chmod +x ${CHROOT_PATH}/lib/systemd/system-sleep/rmmod_tb.sh
+cp -rfv "${ROOT_PATH}"/files/suspend/rmmod_tb.sh "${CHROOT_PATH}"/lib/systemd/system-sleep/rmmod_tb.sh
+chmod +x "${CHROOT_PATH}"/lib/systemd/system-sleep/rmmod_tb.sh

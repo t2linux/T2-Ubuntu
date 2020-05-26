@@ -22,8 +22,8 @@ jobs:
       script: |
         docker run --rm -v $(pwd):/repo -it alpine:latest /bin/sh -c '
           cd /repo
-          apk add --no-cache python3
-          pip3 install yamllint
+          apk add --no-cache python3 py-pip
+          pip install yamllint
           yamllint .
         '
     - stage: test
