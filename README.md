@@ -83,7 +83,8 @@ Check <https://github.com/marcosfad/mbp-ubuntu/blob/master/files/chroot_build.sh
 
 ## Know issues
 
-- Sound is not working after the install. Follow the instructions detailed by @kevineinarsson: <https://gist.github.com/kevineinarsson/8e5e92664f97508277fefef1b8015fba> (it didn't worked for me on MBP 16,1, but I don't use sound)
+- Sound is not working after the install. Follow the instructions detailed by @kevineinarsson: <https://gist.github.com/kevineinarsson/8e5e92664f97508277fefef1b8015fba>  
+On MBP 16,1, you might also need to disable realtime scheduling if the above gist doesn't work, because the pulseaudio server might get killed if the realtime budget is exceeded (<https://bugs.freedesktop.org/show_bug.cgi?id=94629>). Just add `realtime-scheduling = no` to `/etc/pulse/daemon.conf`.
 - Wifi is not working for bali (MBP 16,1). I'm using a 10$ usb wifi.
 - Checksum is failing for 2 files: md5sum.txt and /boot/grub/bios.img
 - I'm having troubles shutting down ubuntu. Screen is black but fan keeps on working. I have to force shutdown. 
