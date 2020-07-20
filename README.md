@@ -1,12 +1,12 @@
 # mbp-ubuntu
 
-The ISO in from this repo should allow you to install ubuntu without using an external keyboard or mouse on a MacBook Pro 16,1. It work in my MacBook Pro 16,1.
+The ISO in from this repo should allow you to install ubuntu without using an external keyboard or mouse on a MacBook Pro. It work in my MacBook Pro 16,1.
 
 [![Build Status](https://travis-ci.com/marcosfad/mbp-ubuntu.svg?branch=master)](https://travis-ci.com/marcosfad/mbp-ubuntu)
 
 **If this repo helped you in any way, consider inviting a coffee to the people in the [credits](https://github.com/marcosfad/mbp-ubuntu#credits) or [me](https://paypal.me/marcosfad)**
 
-UBUNTU 20.04 ISO with Apple T2 patches built-in (Macbooks produced >= 2018).
+UBUNTU 20.04 ISO with Apple T2 patches built-in.
 
 Apple T2 drivers are integrated with this iso. 
 
@@ -19,6 +19,19 @@ Using additional drivers:
 - [Touchbar (apple-ibridge, apple-ib-tb, apple-ib-als)](https://github.com/roadrunner2/macbook12-spi-driver/tree/mbp15)
 
 Bootloader is configure correctly out of the box. No workaround needed.
+
+## Before I begin, what version should I use "mbp" or "mbp-alt"?
+
+The difference between the two is that the mbp-alt includes the kernel with the 2001 Patch from the great Aunali1.
+This patch made my screen blank, but it helped others to get rid of the blank screen.
+So, here is a list, with what I know through discord members:
+
+MBP | mbp | mbp-alt 
+--- | --- | ---
+16,1| x | 
+15,4| x | 
+
+If your mbp is not listed, please try both version and tell me which one is working for you on the issue [Blank screen](https://github.com/marcosfad/mbp-ubuntu/issues/7)
 
 ## Installation
 
@@ -65,6 +78,11 @@ options hid_apple swap_opt_cmd=1
 **IF YOU UPDATE THE KERNEL, REMEMBER TO ADD THE REQUIRED DRIVERS AGAIN.**
 
 ### The easy way:
+
+The live cd includes dkms and will automatically run when a new kernel is installed. You can use `dkms status` to see it.
+
+The step to install it from scratch would be:
+
 ```bash
 sudo apt install dkms
 sudo apt install linux-headers-<mbp-kernel-release>-mbp linux-image-<mbp-kernel-release>-mbp
@@ -78,8 +96,8 @@ modprobe apple-bce
 ```
 
 ### Another way:
-Check <https://github.com/marcosfad/mbp-ubuntu/blob/master/files/chroot_build.sh> to see how it is done.
 
+Check <https://github.com/marcosfad/mbp-ubuntu/blob/master/files/chroot_build.sh> to see how it is done.
 
 ## Know issues
 
