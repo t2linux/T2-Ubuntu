@@ -28,7 +28,7 @@ So, here is a list, with what I know through discord members:
 
 MBP | mbp | mbp-alt 
 --- | --- | ---
-16,1| :x: | 
+16,1| :x: | :x:
 15,4|  |  :x:
 
 If your mbp is not listed, please try both version and tell me which one is working for you on the issue [Blank screen](https://github.com/marcosfad/mbp-ubuntu/issues/7)
