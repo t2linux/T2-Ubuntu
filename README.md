@@ -4,7 +4,7 @@ The ISO in from this repo should allow you to install ubuntu without using an ex
 
 [![Build Status](https://travis-ci.com/marcosfad/mbp-ubuntu.svg?branch=master)](https://travis-ci.com/marcosfad/mbp-ubuntu)
 
-**If this repo helped you in any way, consider inviting a coffee to the people in the [credits](https://github.com/marcosfad/mbp-ubuntu#credits) or [me](https://paypal.me/marcosfad)**
+**If this repo helped you in any way, consider inviting a coffee to the people in the [credits](https://github.com/marcosfad/mbp-ubuntu#credits) or [me](https://paypal.me/marcosfad).**
 
 UBUNTU 20.04 ISO with Apple T2 patches built-in.
 
@@ -22,21 +22,23 @@ Bootloader is configure correctly out of the box. No workaround needed.
 
 ## Before I begin, what version should I use "mbp" or "mbp-alt"?
 
+**!! Warning: Starting from the kernel 5.8 the release naming were switch with respect to kernel 5.7: Before the "mbp" release did not include all the patches. **Now the "mbp" includes all patches** and the "mbp-alt" don't.**
+
 The difference between the two is that the mbp-alt includes the kernel with the 2001 Patch from the great Aunali1.
 This patch made my screen blank, but it helped others to get rid of the blank screen.
 So, here is a list, with what I know through discord members:
 
 MBP | mbp | mbp-alt 
 --- | --- | ---
-16,1| :x: | :x:
-15,4|  |  :x:
+16,1| :x: |
+15,4| :x: |
 
-If your mbp is not listed, please try both version and tell me which one is working for you on the issue [Blank screen](https://github.com/marcosfad/mbp-ubuntu/issues/7)
+If you don't know what version, start with the mbp and if it doesn't work ([Blank screen issue](https://github.com/marcosfad/mbp-ubuntu/issues/7)) try the mbp-alt. If your mbp is not listed, please tell me which one is working for you on the issue [Blank screen](https://github.com/marcosfad/mbp-ubuntu/issues/7)
 
 ## Installation
 
 1. Reduce the size of the mac partition in MacOS
-2. Download ISO file from releases.
+2. Download ISO file from releases. (Use the command line to unzip (`unzip /path/to/file.zip`) or "The Unarchiver" app)
 3. Copy it to a USB using dd (or gdd if installed over brew): 
 ```bash
 diskutil list # found which number has the USB
@@ -126,7 +128,7 @@ On MBP 16,1, you might also need to disable realtime scheduling if the above gis
 
 ## Docs
 
-- Discord: <https://discord.gg/Uw56rqW>
+- Discord: <https://discord.gg/Uw56rqW> Shout out to the great community support. If you are not there yet, you must definitely join us.
 - WiFi firmware: <https://packages.aunali1.com/apple/wifi-fw/18G2022>
 - Linux on a MBP Late 2016: <https://gist.github.com/gbrow004/096f845c8fe8d03ef9009fbb87b781a4>
 - Repack Bootable ISO: <https://wiki.debian.org/RepackBootableISO>
@@ -160,6 +162,6 @@ On MBP 16,1, you might also need to disable realtime scheduling if the above gis
 - @MCMrARM - thanks for all RE work
 - @ozbenh - thanks for submitting NVME patch
 - @roadrunner2 - thanks for SPI (touchbar) driver
-- @aunali1 - thanks for ArchLinux Kernel CI
+- @aunali1 - thanks for ArchLinux Kernel CI, the continuous support on discord and your continuous efforts.
 - @ppaulweber - thanks for keyboard and Macbook Air patches
 - @kevineinarsson - thanks for the audio settings

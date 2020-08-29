@@ -5,7 +5,7 @@ ROOT_PATH=$(pwd)
 WORKING_PATH=/root/work
 CHROOT_PATH="${WORKING_PATH}/chroot"
 IMAGE_PATH="${WORKING_PATH}/image"
-KERNEL_VERSION=5.7.19
+KERNEL_VERSION=5.8.5
 
 if [ -d "$WORKING_PATH" ]; then
   rm -rf "$WORKING_PATH"
