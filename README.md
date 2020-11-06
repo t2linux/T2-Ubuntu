@@ -75,6 +75,18 @@ options hid_apple swap_opt_cmd=1
 - I switch the touchbar to show f* by default. If you like another configuration, change /etc/modprobe.d/apple-tb.conf or remove it.
 - To update grub, run: `grub-mkconfig -o /boot/grub/grub.cfg`
 
+## MISC
+
+### Activate Grub Menu
+
+For the people who want to have a menu, they can modify `/etc/default/grub` with the following changes:
+```
+GRUB_TIMEOUT_STYLE=menu
+GRUB_TIMEOUT=10
+```
+and then:
+`sudo update-grub`
+
 ## Update to newer kernels
 
 **IF YOU UPDATE THE KERNEL, REMEMBER TO ADD THE REQUIRED DRIVERS AGAIN.**
