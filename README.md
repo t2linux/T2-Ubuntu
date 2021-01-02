@@ -37,6 +37,8 @@ If you don't know what version, start with the mbp and if it doesn't work ([Blan
 
 ## Installation
 
+**!! Warning: Versions newer than [5.7.19](https://github.com/marcosfad/mbp-ubuntu/releases/tag/v20.04-5.7.19-1) have various issues with init order and kernel modules. For now it's not recommended to use anything newer**
+
 1. Reduce the size of the mac partition in MacOS
 2. Download ISO file from releases. (Use the command line to unzip (`unzip /path/to/file.zip`) or "The Unarchiver" app)
 3. Copy it to a USB using dd (or gdd if installed over brew): 
