@@ -37,7 +37,7 @@ If you don't know what version, start with the mbp and if it doesn't work ([Blan
 
 ## Installation
 
-**!! Warning: Versions newer than [5.7.19](https://github.com/marcosfad/mbp-ubuntu/releases/tag/v20.04-5.7.19-1) have various issues with init order and kernel modules and it's not recommended to use those**
+*!! Warning: Versions newer than [5.7.19](https://github.com/marcosfad/mbp-ubuntu/releases/tag/v20.04-5.7.19-1) are considered in-development builds and **should not** be used due to issues from within the kernel and the init system.*
 
 1. Reduce the size of the mac partition in MacOS
 2. Download ISO file from releases. (Use the command line to unzip (`unzip /path/to/file.zip`) or "The Unarchiver" app)
