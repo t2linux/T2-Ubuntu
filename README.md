@@ -63,9 +63,7 @@ sudo gdd bs=4M if=ubuntu-20.04-5.6.10-mbp.iso of=/dev/diskX conv=fdatasync statu
 
 ## Configuration
 
-- Put wifi firmware files to `/lib/firmware/brcm/`
-  - tutorial - <https://github.com/mikeeq/mbp-fedora-kernel/#working-with-mbp-fedora-kernel>
-  - this is not working with MBP 16,1
+- See <https://wiki.t2linux.org/guides/wifi/>
 - To install additional languages, install appropriate langpack via apt `sudo apt-get install language-pack-[cod] language-pack-gnome-[cod] language-pack-[cod]-base language-pack-gnome-[cod]-base `
     - see https://askubuntu.com/questions/149876/how-can-i-install-one-language-by-command-line
 - You can change mappings of ctrl, fn, option keys (PC keyboard mappings) by creating `/etc/modprobe.d/hid_apple.conf` file and recreating grub config. All available modifications could be found here: <https://github.com/free5lot/hid-apple-patched>
