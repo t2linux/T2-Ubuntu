@@ -35,9 +35,30 @@ jobs:
           echo Version is $VER
           echo "::set-output name=tag::${VER}"
         
-      - name: Upload iso artifact
+      - name: Upload iso artifact part 1
         uses: actions/upload-artifact@v2
         with:
-          name: mbp-ubuntu-${{ steps.tag.outputs.tag }}
-          path: ${{ github.workspace }}/*.iso
+          name: mbp-ubuntu-${{ steps.tag.outputs.tag }}.z01
+          path: ${{ github.workspace }}/output/livecd-${{ steps.tag.outputs.tag }}-mbp.z01
+          
+      - name: Upload iso artifact part 2
+        uses: actions/upload-artifact@v2
+        with:
+          name: mbp-ubuntu-${{ steps.tag.outputs.tag }}.z02
+          path: ${{ github.workspace }}/output/livecd-${{ steps.tag.outputs.tag }}-mbp.z02
+          
+      - name: Upload iso artifact part 3
+        uses: actions/upload-artifact@v2
+        with:
+          name: mbp-ubuntu-${{ steps.tag.outputs.tag }}.z03
+          path: ${{ github.workspace }}/output/livecd-${{ steps.tag.outputs.tag }}-mbp.z03
+          
+      - name: Upload iso artifact part 4
+        uses: actions/upload-artifact@v2
+        with:
+          name: mbp-ubuntu-${{ steps.tag.outputs.tag }}.zip
+          path: ${{ github.workspace }}/output/livecd-${{ steps.tag.outputs.tag }}-mbp.zip
+
+      - name: Instructions for putting it back together
+        run: echo cat livecd-${{ steps.tag.outputs.tag }}-mbp.z01 livecd-${{ steps.tag.outputs.tag }}-mbp.z02 livecd-${{ steps.tag.outputs.tag }}-mbp.z03 livecd-${{ steps.tag.outputs.tag }}-mbp.zip
           
