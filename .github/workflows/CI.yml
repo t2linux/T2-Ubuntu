@@ -60,5 +60,9 @@ jobs:
           path: ${{ github.workspace }}/output/livecd-${{ steps.tag.outputs.tag }}-mbp.zip
 
       - name: Instructions for putting it back together
-        run: echo cat livecd-${{ steps.tag.outputs.tag }}-mbp.z01 livecd-${{ steps.tag.outputs.tag }}-mbp.z02 livecd-${{ steps.tag.outputs.tag }}-mbp.z03 livecd-${{ steps.tag.outputs.tag }}-mbp.zip
+        run: |
+          echo Download all the artifacts, and put them in a folder without other files. Then run:
+          echo "for i in *; do file $i; done"
+          echo "cat livecd-${{ steps.tag.outputs.tag }}-mbp.z01 livecd-${{ steps.tag.outputs.tag }}-mbp.z02 livecd-${{ steps.tag.outputs.tag }}-mbp.z03 livecd-${{ steps.tag.outputs.tag }}-mbp.zip > cd.zip"
+          echo unzip cd.zip
           
