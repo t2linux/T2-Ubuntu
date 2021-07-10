@@ -93,7 +93,8 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   nano \
   make \
   gcc \
-  dkms
+  dkms \
+  iwd
 
 echo >&2 "===]> Info: Change initramfs format (for grub)... "
 sed -i "s/COMPRESS=lz4/COMPRESS=gzip/g" "/etc/initramfs-tools/initramfs.conf"
@@ -178,9 +179,10 @@ dns=dnsmasq
 managed=false
 EOF
 dpkg-reconfigure network-manager
-#echo >&2 "===]> Info: Configure Network Manager to use iwd... "
-#mkdir -p /etc/NetworkManager/conf.d
-#printf '[device]\nwifi.backend=iwd' > /etc/NetworkManager/conf.d/wifi_backend.conf
+
+echo >&2 "===]> Info: Configure Network Manager to use iwd... "
+mkdir -p /etc/NetworkManager/conf.d
+printf '[device]\nwifi.backend=iwd\n' > /etc/NetworkManager/conf.d/wifi_backend.conf
 #systemctl enable iwd.service
 
 echo >&2 "===]> Info: Cleanup the chroot environment... "
