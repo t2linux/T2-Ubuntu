@@ -53,7 +53,8 @@ jobs:
           name: mbp-ubuntu-${{ steps.tag.outputs.tag }}.z03
           path: ${{ github.workspace }}/output/livecd-${{ steps.tag.outputs.tag }}-mbp.z03
           
-      - name: Upload iso artifact part 4
+      - name: Upload iso artifact final part
+        if:  always()
         uses: actions/upload-artifact@v2
         with:
           name: mbp-ubuntu-${{ steps.tag.outputs.tag }}.zip
@@ -62,7 +63,7 @@ jobs:
       - name: Instructions for putting it back together
         run: |
           echo Download all the artifacts, and put them in a folder without other files. Then run:
-          echo "for i in *; do file $i; done"
-          echo "cat livecd-${{ steps.tag.outputs.tag }}-mbp.z01 livecd-${{ steps.tag.outputs.tag }}-mbp.z02 livecd-${{ steps.tag.outputs.tag }}-mbp.z03 livecd-${{ steps.tag.outputs.tag }}-mbp.zip > cd.zip"
+          echo 'unzip "*.z??.zip"'
+          echo 'cat livecd-${{ steps.tag.outputs.tag }}-mbp.z?? > cd.zip'
           echo unzip cd.zip
           
