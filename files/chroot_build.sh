@@ -63,10 +63,15 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   linux-generic \
   linux-headers-generic \
   grub-efi-amd64-signed \
-  "linux-image-${KERNEL_VERSION}" \
-  "linux-headers-${KERNEL_VERSION}" \
   intel-microcode \
   thermald
+
+# This is not ideal, but it should work until the apt repo gets updated.
+
+curl -L https://github.com/marcosfad/mbp-ubuntu-kernel/releases/download/v5.10.47/linux-headers-5.10.47-mbp_5.10.47-1_amd64.deb > /tmp/headers.deb
+curl -L https://github.com/marcosfad/mbp-ubuntu-kernel/releases/download/v5.10.47/linux-image-5.10.47-mbp_5.10.47-1_amd64.deb > /tmp/image.deb
+file /tmp/*
+apt install /tmp/headers.deb /tmp/image.deb
 
 echo >&2 "===]> Info: Install window manager... "
 
@@ -101,17 +106,17 @@ sed -i "s/COMPRESS=lz4/COMPRESS=gzip/g" "/etc/initramfs-tools/initramfs.conf"
 
 echo >&2 "===]> Info: Add drivers... "
 
-APPLE_BCE_DRIVER_GIT_URL=https://github.com/marcosfad/mbp2018-bridge-drv.git
+APPLE_BCE_DRIVER_GIT_URL=https://github.com/t2linux/apple-bce-drv.git
 APPLE_BCE_DRIVER_BRANCH_NAME=aur
-APPLE_BCE_DRIVER_COMMIT_HASH=85347e71dd79e0be486a79af36862c96027c0836
+APPLE_BCE_DRIVER_COMMIT_HASH=f93c6566f98b3c95677de8010f7445fa19f75091
 APPLE_BCE_DRIVER_MODULE_NAME=apple-bce
-APPLE_BCE_DRIVER_MODULE_VERSION=0.1
+APPLE_BCE_DRIVER_MODULE_VERSION=0.2
 
-APPLE_IB_DRIVER_GIT_URL=https://github.com/roadrunner2/macbook12-spi-driver.git
+APPLE_IB_DRIVER_GIT_URL=https://github.com/t2linux/apple-ib-drv
 APPLE_IB_DRIVER_BRANCH_NAME=mbp15
-APPLE_IB_DRIVER_COMMIT_HASH=90cea3e8e32db60147df8d39836bd1d2a5161871
+APPLE_IB_DRIVER_COMMIT_HASH=fc9aefa5a564e6f2f2bb0326bffb0cef0446dc05
 APPLE_IB_DRIVER_MODULE_NAME=apple-ibridge
-APPLE_IB_DRIVER_MODULE_VERSION=0.1
+APPLE_IB_DRIVER_MODULE_VERSION=0.2
 
 # thunderbolt is working for me.
 #printf '\nblacklist thunderbolt' >>/etc/modprobe.d/blacklist.conf
@@ -119,6 +124,18 @@ APPLE_IB_DRIVER_MODULE_VERSION=0.1
 git clone --single-branch --branch ${APPLE_BCE_DRIVER_BRANCH_NAME} ${APPLE_BCE_DRIVER_GIT_URL} \
   /usr/src/"${APPLE_BCE_DRIVER_MODULE_NAME}-${APPLE_BCE_DRIVER_MODULE_VERSION}"
 git -C /usr/src/"${APPLE_BCE_DRIVER_MODULE_NAME}-${APPLE_BCE_DRIVER_MODULE_VERSION}" checkout "${APPLE_BCE_DRIVER_COMMIT_HASH}"
+
+cat << EOF > /usr/src/${APPLE_BCE_DRIVER_MODULE_NAME}-${APPLE_BCE_DRIVER_MODULE_VERSION}/dkms.conf
+PACKAGE_NAME=apple-bce
+PACKAGE_VERSION=0.1
+CLEAN="make clean"
+MAKE="make"
+BUILT_MODULE_NAME[0]="apple-bce"
+DEST_MODULE_LOCATION[0]="/updates"
+AUTOINSTALL="yes"
+REMAKE_INITRD="yes"
+EOF
+
 dkms install -m "${APPLE_BCE_DRIVER_MODULE_NAME}" -v "${APPLE_BCE_DRIVER_MODULE_VERSION}" -k "${KERNEL_VERSION}"
 printf '\n### apple-bce start ###\nhid-apple\nbcm5974\nsnd-seq\napple-bce\n### apple-bce end ###' >>/etc/modules-load.d/apple-bce.conf
 printf '\n### apple-bce start ###\nhid-apple\nsnd-seq\napple-bce\n### apple-bce end ###' >>/etc/initramfs-tools/modules
