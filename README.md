@@ -15,8 +15,8 @@ This repo is a rework of the great work done by [@mikeeq](https://github.com/mik
 I'm using the Kernel from - <https://github.com/marcosfad/mbp-ubuntu-kernel>
 
 Using additional drivers:
-- [Apple T2 (apple-bce) (audio, keyboard, touchpad)](https://github.com/MCMrARM/mbp2018-bridge-drv)
-- [Touchbar (apple-ibridge, apple-ib-tb, apple-ib-als)](https://github.com/roadrunner2/macbook12-spi-driver/tree/mbp15)
+- [Apple T2 (apple-bce) (audio, keyboard, touchpad)](https://github.com/t2linux/apple-bce-drv)
+- [Touchbar (apple-ibridge, apple-ib-tb, apple-ib-als)](https://github.com/t2linux/apple-ib-drv)
 
 Bootloader is configure correctly out of the box. No workaround needed.
 
@@ -37,7 +37,7 @@ If you don't know what version, start with the mbp and if it doesn't work ([Blan
 
 ## Installation
 
-*!! Warning: Versions newer than [5.7.19](https://github.com/marcosfad/mbp-ubuntu/releases/tag/v20.04-5.7.19-1) are considered in-development builds and **should not** be used due to issues from within the kernel and the init system.*
+*!! Warning: Versions between 5.8 and 5.9 can be very unstable and **should not** be used due to issues from within the kernel and the init system. Please use [5.7.19](https://github.com/marcosfad/mbp-ubuntu/releases/tag/v20.04-5.7.19-1).*
 
 1. Reduce the size of the mac partition in MacOS
 2. Download ISO file from releases. (Use the command line to unzip (`unzip /path/to/file.zip`) or "The Unarchiver" app)
@@ -95,19 +95,7 @@ and then:
 
 The live cd includes dkms and will automatically run when a new kernel is installed. You can use `dkms status` to see it.
 
-The step to install it from scratch would be:
-
-```bash
-sudo apt install dkms
-sudo apt install linux-headers-<mbp-kernel-release>-mbp linux-image-<mbp-kernel-release>-mbp
-sudo git clone --branch mbp15 https://github.com/roadrunner2/macbook12-spi-driver.git /usr/src/apple-ibridge-0.1
-sudo dkms install -m apple-ibridge -v 0.1 -k <mbp-kernel-release>-mbp
-modprobe apple-ib-tb
-modprobe apple-ib-als
-sudo git clone --branch aur https://github.com/marcosfad/mbp2018-bridge-drv.git /usr/src/apple-bce-0.1
-sudo dkms install -m apple-bce -v 0.1 -k <mbp-kernel-release>-mbp
-modprobe apple-bce
-```
+If you upgrade from 5.7.19 to a newer kernel version (5.10+), you will need updated versions of these kernel modules. Instructions for installing updated ones are [here](https://wiki.t2linux.org/guides/dkms/).
 
 ### Another way:
 
