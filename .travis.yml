@@ -7,7 +7,7 @@ os:
 services:
   - docker
 
-#branches:
+# branches:
 #  only:
 #    - master
 
@@ -44,5 +44,6 @@ jobs:
         file_glob: true
         file: "output/*"
         skip_cleanup: true
+        # yamllint disable-line rule:truthy
         on:
           tags: true

@@ -63,15 +63,10 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   linux-generic \
   linux-headers-generic \
   grub-efi-amd64-signed \
+  "linux-image-${KERNEL_VERSION}" \
+  "linux-headers-${KERNEL_VERSION}" \
   intel-microcode \
   thermald
-
-# This is not ideal, but it should work until the apt repo gets updated.
-
-curl -L https://github.com/marcosfad/mbp-ubuntu-kernel/releases/download/v5.10.47/linux-headers-5.10.47-mbp_5.10.47-1_amd64.deb > /tmp/headers.deb
-curl -L https://github.com/marcosfad/mbp-ubuntu-kernel/releases/download/v5.10.47/linux-image-5.10.47-mbp_5.10.47-1_amd64.deb > /tmp/image.deb
-file /tmp/*
-apt install /tmp/headers.deb /tmp/image.deb
 
 echo >&2 "===]> Info: Install window manager... "
 
