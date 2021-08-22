@@ -42,8 +42,8 @@ jobs:
         if: github.ref == 'refs/heads/master'
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ github.workspace }}/output/*
-          tag_name: v${{ steps.tag.outputs.tag }}
+          data: ${{ github.workspace }}/output/*
+          tag_name: v20.04-${{ steps.tag.outputs.tag }}
           draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

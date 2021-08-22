@@ -2,7 +2,7 @@
 
 The ISO in from this repo should allow you to install ubuntu without using an external keyboard or mouse on a MacBook Pro. It work in my MacBook with T2.
 
-[![Build Status](https://travis-ci.com/marcosfad/mbp-ubuntu.svg?branch=master)](https://travis-ci.com/marcosfad/mbp-ubuntu)
+[![CI](https://github.com/marcosfad/mbp-ubuntu/actions/workflows/CI.yml/badge.svg)](https://github.com/marcosfad/mbp-ubuntu/actions/workflows/CI.yml)
 
 **If this repo helped you in any way, consider inviting a coffee to the people in the [credits](https://github.com/marcosfad/mbp-ubuntu#credits) or [me](https://paypal.me/marcosfad).**
 
