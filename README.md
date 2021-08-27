@@ -20,24 +20,13 @@ Using additional drivers:
 
 Bootloader is configure correctly out of the box. No workaround needed.
 
-## Before I begin, what version should I use "mbp" or "mbp-alt"?
+## Before I begin, what version should I use? "mbp" or "mbp-16x-wifi"?
 
-**!! Warning: Starting from the kernel 5.8 the release naming were switch with respect to kernel 5.7: Before the "mbp" release did not include all the patches. **Now the "mbp" includes all patches** and the "mbp-alt" don't.**
+The difference between the two is that the mbp-16x-wifi version includes a different version of the brcmfmac wifi driver, made by corellium for M1 macs. This version of the wifi driver works on some models that the brcmfmac driver included with the mbp version doesn't support. Refer to the table on [this page](https://wiki.t2linux.org/guides/wifi/) to figure out which versions will work (Look at the "Firmware Options" column, Mojave means you can use the "mbp" version, and Big Sur means you can use the "mbp-16x-wifi" version).
 
-The difference between the two is that the mbp-alt includes the kernel with the 2001 Patch from the great Aunali1.
-This patch made my screen blank, but it helped others to get rid of the blank screen.
-So, here is a list, with what I know through discord members:
-
-MBP | mbp | mbp-alt 
---- | --- | ---
-16,1| :x: |
-15,4| :x: |
-
-If you don't know what version, start with the mbp and if it doesn't work ([Blank screen issue](https://github.com/marcosfad/mbp-ubuntu/issues/7)) try the mbp-alt. If your mbp is not listed, please tell me which one is working for you on the issue [Blank screen](https://github.com/marcosfad/mbp-ubuntu/issues/7)
+**!! Please note that as of the v20.04-5.10.52 release, the mbp-16x-wifi iso does not support wifi on models with the BCM4377 chipset. For now, you can install a kernel from [here](https://github.com/AdityaGarg8/mbp-16.x-ubuntu-kernel/releases/tag/v5.13.12-1) after installing ubuntu if you have the BCM4377 chipset.**
 
 ## Installation
-
-*!! Warning: Versions between 5.8 and 5.9 can be very unstable and **should not** be used due to issues from within the kernel and the init system. Please use [5.7.19](https://github.com/marcosfad/mbp-ubuntu/releases/tag/v20.04-5.7.19-1).*
 
 1. Reduce the size of the mac partition in MacOS
 2. Download ISO file from releases. (Use the command line to unzip (`unzip /path/to/file.zip`) or "The Unarchiver" app)
@@ -95,7 +84,7 @@ and then:
 
 The live cd includes dkms and will automatically run when a new kernel is installed. You can use `dkms status` to see it.
 
-If you upgrade from 5.7.19 to a newer kernel version (5.10+), you will need updated versions of these kernel modules. Instructions for installing updated ones are [here](https://wiki.t2linux.org/guides/dkms/).
+If you are upgrading from 5.7.19 to a newer kernel version (5.10+), you will need updated versions of these kernel modules. Instructions for installing updated ones are [here](https://wiki.t2linux.org/guides/dkms/).
 
 ### Another way:
 
