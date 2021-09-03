@@ -60,8 +60,8 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   locales \
   initramfs-tools \
   binutils \
-  linux-generic \
-  linux-headers-generic \
+  linux-generic-hwe-20.04 \
+  linux-headers-generic-hwe-20.04 \
   grub-efi-amd64-signed \
   "linux-image-${KERNEL_VERSION}" \
   "linux-headers-${KERNEL_VERSION}" \
@@ -107,22 +107,13 @@ APPLE_BCE_DRIVER_COMMIT_HASH=f93c6566f98b3c95677de8010f7445fa19f75091
 APPLE_BCE_DRIVER_MODULE_NAME=apple-bce
 APPLE_BCE_DRIVER_MODULE_VERSION=0.2
 
-APPLE_IB_DRIVER_GIT_URL=https://github.com/t2linux/apple-ib-drv
-APPLE_IB_DRIVER_BRANCH_NAME=mbp15
-APPLE_IB_DRIVER_COMMIT_HASH=fc9aefa5a564e6f2f2bb0326bffb0cef0446dc05
-APPLE_IB_DRIVER_MODULE_NAME=apple-ibridge
-APPLE_IB_DRIVER_MODULE_VERSION=0.2
-
-# thunderbolt is working for me.
-#printf '\nblacklist thunderbolt' >>/etc/modprobe.d/blacklist.conf
-
 git clone --single-branch --branch ${APPLE_BCE_DRIVER_BRANCH_NAME} ${APPLE_BCE_DRIVER_GIT_URL} \
   /usr/src/"${APPLE_BCE_DRIVER_MODULE_NAME}-${APPLE_BCE_DRIVER_MODULE_VERSION}"
 git -C /usr/src/"${APPLE_BCE_DRIVER_MODULE_NAME}-${APPLE_BCE_DRIVER_MODULE_VERSION}" checkout "${APPLE_BCE_DRIVER_COMMIT_HASH}"
 
 cat << EOF > /usr/src/${APPLE_BCE_DRIVER_MODULE_NAME}-${APPLE_BCE_DRIVER_MODULE_VERSION}/dkms.conf
 PACKAGE_NAME=apple-bce
-PACKAGE_VERSION=0.1
+PACKAGE_VERSION=0.2
 CLEAN="make clean"
 MAKE="make"
 BUILT_MODULE_NAME[0]="apple-bce"
@@ -132,16 +123,45 @@ REMAKE_INITRD="yes"
 EOF
 
 dkms install -m "${APPLE_BCE_DRIVER_MODULE_NAME}" -v "${APPLE_BCE_DRIVER_MODULE_VERSION}" -k "${KERNEL_VERSION}"
-printf '\n### apple-bce start ###\nhid-apple\nbcm5974\nsnd-seq\napple-bce\n### apple-bce end ###' >>/etc/modules-load.d/apple-bce.conf
-printf '\n### apple-bce start ###\nhid-apple\nsnd-seq\napple-bce\n### apple-bce end ###' >>/etc/initramfs-tools/modules
+printf '\n### apple-bce start ###\napple-bce\n### apple-bce end ###' >>/etc/modules-load.d/apple-bce.conf
+printf '\n### apple-bce start ###\nhapple-bce\n### apple-bce end ###' >>/etc/initramfs-tools/modules
+
+APPLE_IB_DRIVER_GIT_URL=https://github.com/t2linux/apple-ib-drv
+APPLE_IB_DRIVER_BRANCH_NAME=mbp15
+APPLE_IB_DRIVER_COMMIT_HASH=fc9aefa5a564e6f2f2bb0326bffb0cef0446dc05
+APPLE_IB_DRIVER_MODULE_NAME=apple-ibridge
+APPLE_IB_DRIVER_MODULE_VERSION=0.1
 
 git clone --single-branch --branch ${APPLE_IB_DRIVER_BRANCH_NAME} ${APPLE_IB_DRIVER_GIT_URL} \
     /usr/src/"${APPLE_IB_DRIVER_MODULE_NAME}-${APPLE_IB_DRIVER_MODULE_VERSION}"
 git -C /usr/src/"${APPLE_IB_DRIVER_MODULE_NAME}-${APPLE_IB_DRIVER_MODULE_VERSION}" checkout "${APPLE_IB_DRIVER_COMMIT_HASH}"
 dkms install -m "${APPLE_IB_DRIVER_MODULE_NAME}" -v "${APPLE_IB_DRIVER_MODULE_VERSION}" -k "${KERNEL_VERSION}"
-printf '\n### applespi start ###\napple_ibridge\napple_ib_tb\napple_ib_als\n### applespi end ###' >>/etc/modules-load.d/applespi.conf
+printf '\n### applespi start ###\napple_ib_tb\napple_ib_als\n### applespi end ###' >>/etc/modules-load.d/applespi.conf
 printf '\n# display f* key in touchbar\noptions apple-ib-tb fnmode=2\n'  >> /etc/modprobe.d/apple-touchbar.conf
 
+## Add optional dkms for brcm80211-mbp16x
+#cd /tmp
+#wget https://gist.github.com/hexchain/22932a13a892e240d71cb98fad62a6a0/archive/50ce4513d2865b1081a972bc09e8da639f94a755.zip
+#unzip *55.zip
+#cd 22*
+#cp -r /usr/src/linux-headers-*-generic/drivers/net/wireless/broadcom/brcm80211 .
+#cd brcm80211
+#patch -Np6 -i "../8001-corellium-wifi-bigsur.patch"
+#patch -Np6 -i "../8002-brcmfmac-4377-mod.patch"
+#patch -Np6 -i "../8003-brcmfmac-4377-64bit-regs.patch"
+#patch -Np6 -i "../8004-brcmfmac-4377-chip-ids.patch"
+#patch -Np1 -i "../out-of-tree.patch"
+#mv Makefile Kbuild
+#cp ../Makefile .
+#sed -e "s,@PACKAGE_NAME@,brcm80211-mbp16x," -e "s,@PACKAGE_VERSION@,2.0," ../dkms.conf.in > dkms.conf
+#cp ./brcm80211 /usr/src/brcm80211-mbp16x-2.0
+#cd /tmp
+#rm -rf *55.zip 22*
+
+echo >&2 "===]> Configure amdgpu"
+cat << EOF > /etc/udev/rules.d/30-amdgpu-pm.rules
+KERNEL=="card0", SUBSYSTEM=="drm", DRIVERS=="amdgpu", ATTR{device/power_dpm_force_performance_level}="high"
+EOF
 
 echo >&2 "===]> Info: Update initramfs... "
 

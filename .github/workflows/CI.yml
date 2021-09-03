@@ -10,23 +10,29 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Configure variables
+        id: variables
+        run: |
+          sudo apt install curl
+          VERSION=5.10
+          ALTERNATIVE=mbp
+          LATEST_BUILD=$(curl -s https://mbp-ubuntu-kernel.herokuapp.com/ -L |
+                         grep "linux-image-5.10" | grep ${ALTERNATIVE} |
+                         grep a | cut -d'>' -f2 | cut -d'<' -f1 |sort -r | head -n 1 | cut -d'_' -f1 |
+                         cut -d'-' -f 3-20)
+          echo "Using kernel ${LATEST_BUILD}"
+          echo "::set-output name=version::${LATEST_BUILD}"
+
       - name: Build
-        run: sudo ./build.sh
+        run: KERNEL_VERSION=${{ steps.variables.outputs.version }} sudo ./build.sh
 
       - name: print sha256sum
         run: cat output/sha256
 
-      - name: Generate Tag
-        id: tag
-        run: |
-          VER=$(egrep ^KERNEL_VERSION build.sh|cut -d= -f2)
-          echo Version is $VER
-          echo "::set-output name=tag::${VER}"
-
       - name: Upload iso artifact
         uses: actions/upload-artifact@v2
         with:
-          name: mbp-ubuntu-${{ steps.tag.outputs.tag }}.z01
+          name: mbp-ubuntu-${{ steps.variables.outputs.version }}
           path: ${{ github.workspace }}/output/*
 
       - name: Instructions for putting it back together
@@ -35,15 +41,16 @@ jobs:
           Download all the artifacts, and put them in a folder
           without other files. Then run:"
           unzip "*.z??.zip"
-          cat livecd-${{ steps.tag.outputs.tag }}-mbp.z?? > cd.zip
+          cat livecd-${{ steps.variables.outputs.version }}-mbp.z?? > cd.zip
           echo unzip cd.zip
           EOF
+
       - name: Release
         if: github.ref == 'refs/heads/master'
         uses: softprops/action-gh-release@v1
         with:
-          data: ${{ github.workspace }}/output/*
-          tag_name: v20.04-${{ steps.tag.outputs.tag }}
+          files: ${{ github.workspace }}/output/*
+          tag_name: v20.04-${{ steps.variables.outputs.version }}
           draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
