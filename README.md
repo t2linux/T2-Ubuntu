@@ -43,8 +43,9 @@ sudo gdd bs=4M if=ubuntu-20.04-5.6.10-mbp.iso of=/dev/diskX conv=fdatasync statu
 8. Use Ubiquity to install (just click on it)
 9. Select the options that work for you and use for the partition the following setup:
     * Leave the efi boot as preselected by the installer. Your Mac will keep on working with out problems.
-    * Add a ext4 partition and mounted as /boot (1024MB)
-    * Add a ext4 partition and monted as / (rest)
+    * Add a ext4 partition and mounted as `/boot` (1024MB).
+    * Add a ext4 partition and monted as `/` (rest).
+    * Select the `/boot` partition as a target for GRUB installation, otherwise the system won't boot.
 10. Run the installer (In my case it had some problem removing some packages at the end, but this is no real problem)
 11. Shutdown and remove the USB Drive
 12. Start again using the option key. Select the new efi boot.
