@@ -34,7 +34,7 @@ The difference between the two is that the mbp-16x-wifi version includes a diffe
 ```bash
 diskutil list # found which number has the USB
 diskutil umountDisk /dev/diskX
-sudo gdd bs=4M if=ubuntu-20.04-5.6.10-mbp.iso of=/dev/diskX conv=fdatasync status=progress
+sudo dd bs=4096 if=ubuntu-20.04-5.6.10-mbp.iso of=/dev/diskX
 ```
 4. Boot in Recovery mode and allow booting unknown OS
 5. Restart and immediately press the option key until the Logo come up
