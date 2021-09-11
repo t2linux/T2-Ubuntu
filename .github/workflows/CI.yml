@@ -13,18 +13,11 @@ jobs:
       - name: Configure variables
         id: variables
         run: |
-          sudo apt install curl
-          VERSION=5.10
-          ALTERNATIVE=mbp
-          LATEST_BUILD=$(curl -s https://mbp-ubuntu-kernel.herokuapp.com/ -L |
-                         grep "linux-image-5.10" | grep ${ALTERNATIVE} |
-                         grep a | cut -d'>' -f2 | cut -d'<' -f1 |sort -r | head -n 1 | cut -d'_' -f1 |
-                         cut -d'-' -f 3-20)
-          echo "Using kernel ${LATEST_BUILD}"
-          echo "::set-output name=version::${LATEST_BUILD}"
+          BUILD=$(date '+%Y%m%d%H%M%S')
+          echo "::set-output name=build::${BUILD}"
 
       - name: Build
-        run: KERNEL_VERSION=${{ steps.variables.outputs.version }} sudo ./build.sh
+        run: sudo ./build.sh
 
       - name: print sha256sum
         run: cat output/sha256
@@ -32,7 +25,7 @@ jobs:
       - name: Upload iso artifact
         uses: actions/upload-artifact@v2
         with:
-          name: mbp-ubuntu-${{ steps.variables.outputs.version }}
+          name: mbp-ubuntu-${{ steps.variables.outputs.build }}
           path: ${{ github.workspace }}/output/*
 
       - name: Instructions for putting it back together
@@ -41,7 +34,7 @@ jobs:
           Download all the artifacts, and put them in a folder
           without other files. Then run:"
           unzip "*.z??.zip"
-          cat livecd-${{ steps.variables.outputs.version }}-mbp.z?? > cd.zip
+          cat livecd-${{ steps.variables.outputs.build }}-mbp.z?? > cd.zip
           echo unzip cd.zip
           EOF
 
@@ -50,7 +43,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ github.workspace }}/output/*
-          tag_name: v20.04-${{ steps.variables.outputs.version }}
+          tag_name: v20.04-${{ steps.variables.outputs.build }}
           draft: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

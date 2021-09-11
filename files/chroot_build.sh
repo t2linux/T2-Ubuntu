@@ -43,6 +43,7 @@ ln -s /bin/true /sbin/initctl
 
 echo >&2 "===]> Info: Install packages needed for Live System... "
 
+# todo: Install the latest kernel automatically
 export DEBIAN_FRONTEND=noninteractive
 apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
   ubuntu-standard \
@@ -60,13 +61,34 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   locales \
   initramfs-tools \
   binutils \
-  linux-generic-hwe-20.04 \
-  linux-headers-generic-hwe-20.04 \
+  linux-firmware \
   grub-efi-amd64-signed \
-  "linux-image-${KERNEL_VERSION}" \
-  "linux-headers-${KERNEL_VERSION}" \
   intel-microcode \
+  linux-headers-5.11.22-t2-hwe-bigsur \
+  linux-headers-5.11.22-t2-hwe-mojave \
+  linux-headers-5.12.19-t2-a-bigsur \
+  linux-headers-5.12.19-t2-a-mojave \
+  linux-headers-5.13.15-t2-j-bigsur \
+  linux-headers-5.13.15-t2-j-mojave \
+  linux-image-5.11.22-t2-hwe-bigsur \
+  linux-image-5.11.22-t2-hwe-mojave \
+  linux-image-5.12.19-t2-a-bigsur \
+  linux-image-5.12.19-t2-a-mojave \
+  linux-image-5.13.15-t2-j-bigsur \
+  linux-image-5.13.15-t2-j-mojave \
   thermald
+
+echo >&2 "===]> Info: Add firmwares"
+for file in skl_guc_49.0.1.bin bxt_guc_49.0.1.bin kbl_guc_49.0.1.bin glk_guc_49.0.1.bin kbl_guc_49.0.1.bin kbl_guc_49.0.1.bin cml_guc_49.0.1.bin icl_guc_49.0.1.bin ehl_guc_49.0.1.bin ehl_guc_49.0.1.bin tgl_huc_7.5.0.bin tgl_guc_49.0.1.bin tgl_huc_7.5.0.bin tgl_guc_49.0.1.bin tgl_huc_7.5.0.bin tgl_guc_49.0.1.bin dg1_dmc_ver2_02.bin
+do
+curl -L https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git/plain/i915/$file \
+  --output /lib/firmware/i915/$file
+done
+
+if [ -d /tmp/setup_files/kernels ]; then
+  echo >&2 "===]> Info: Install patched kernels... "
+  dpkg -i /tmp/setup_files/kernels/*.deb
+fi
 
 echo >&2 "===]> Info: Install window manager... "
 
@@ -74,6 +96,7 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   plymouth-theme-ubuntu-logo \
   ubuntu-desktop-minimal \
   ubuntu-gnome-wallpapers \
+  netplan.io \
   snapd
 
 echo >&2 "===]> Info: Install Graphical installer... "
@@ -87,7 +110,7 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
 
 echo >&2 "===]> Info: Install useful applications... "
 
-apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+apt-get install -y --no-install-recommends -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
   git \
   curl \
   nano \
@@ -112,17 +135,17 @@ git clone --single-branch --branch ${APPLE_BCE_DRIVER_BRANCH_NAME} ${APPLE_BCE_D
 git -C /usr/src/"${APPLE_BCE_DRIVER_MODULE_NAME}-${APPLE_BCE_DRIVER_MODULE_VERSION}" checkout "${APPLE_BCE_DRIVER_COMMIT_HASH}"
 
 cat << EOF > /usr/src/${APPLE_BCE_DRIVER_MODULE_NAME}-${APPLE_BCE_DRIVER_MODULE_VERSION}/dkms.conf
-PACKAGE_NAME=apple-bce
-PACKAGE_VERSION=0.2
+PACKAGE_NAME="apple-bce"
+PACKAGE_VERSION="${APPLE_BCE_DRIVER_MODULE_VERSION}"
+MAKE[0]="make KVERSION=\$kernelver"
 CLEAN="make clean"
-MAKE="make"
 BUILT_MODULE_NAME[0]="apple-bce"
-DEST_MODULE_LOCATION[0]="/updates"
+DEST_MODULE_LOCATION[0]="/kernel/drivers/misc"
 AUTOINSTALL="yes"
-REMAKE_INITRD="yes"
 EOF
 
-dkms install -m "${APPLE_BCE_DRIVER_MODULE_NAME}" -v "${APPLE_BCE_DRIVER_MODULE_VERSION}" -k "${KERNEL_VERSION}"
+dkms install -m "${APPLE_BCE_DRIVER_MODULE_NAME}" -v "${APPLE_BCE_DRIVER_MODULE_VERSION}" --all
+
 printf '\n### apple-bce start ###\napple-bce\n### apple-bce end ###' >>/etc/modules-load.d/apple-bce.conf
 printf '\n### apple-bce start ###\nhapple-bce\n### apple-bce end ###' >>/etc/initramfs-tools/modules
 
@@ -135,8 +158,10 @@ APPLE_IB_DRIVER_MODULE_VERSION=0.1
 git clone --single-branch --branch ${APPLE_IB_DRIVER_BRANCH_NAME} ${APPLE_IB_DRIVER_GIT_URL} \
     /usr/src/"${APPLE_IB_DRIVER_MODULE_NAME}-${APPLE_IB_DRIVER_MODULE_VERSION}"
 git -C /usr/src/"${APPLE_IB_DRIVER_MODULE_NAME}-${APPLE_IB_DRIVER_MODULE_VERSION}" checkout "${APPLE_IB_DRIVER_COMMIT_HASH}"
-dkms install -m "${APPLE_IB_DRIVER_MODULE_NAME}" -v "${APPLE_IB_DRIVER_MODULE_VERSION}" -k "${KERNEL_VERSION}"
-printf '\n### applespi start ###\napple_ib_tb\napple_ib_als\n### applespi end ###' >>/etc/modules-load.d/applespi.conf
+
+dkms install -m "${APPLE_IB_DRIVER_MODULE_NAME}" -v "${APPLE_IB_DRIVER_MODULE_VERSION}" --all
+
+printf '\n### applespi start ###\napple_ib_tb\napple_ib_als\n### applespi end ###' >> /etc/modules-load.d/applespi.conf
 printf '\n# display f* key in touchbar\noptions apple-ib-tb fnmode=2\n'  >> /etc/modprobe.d/apple-touchbar.conf
 
 ## Add optional dkms for brcm80211-mbp16x
@@ -158,6 +183,9 @@ printf '\n# display f* key in touchbar\noptions apple-ib-tb fnmode=2\n'  >> /etc
 #cd /tmp
 #rm -rf *55.zip 22*
 
+echo >&2 "===]> Debug dkms status"
+dkms status
+
 echo >&2 "===]> Configure amdgpu"
 cat << EOF > /etc/udev/rules.d/30-amdgpu-pm.rules
 KERNEL=="card0", SUBSYSTEM=="drm", DRIVERS=="amdgpu", ATTR{device/power_dpm_force_performance_level}="high"
@@ -166,8 +194,18 @@ EOF
 echo >&2 "===]> Info: Update initramfs... "
 
 ## Add custom drivers to be loaded at boot
-/usr/sbin/depmod -a "${KERNEL_VERSION}"
-update-initramfs -u -v -k "${KERNEL_VERSION}"
+for kernel in $(dpkg -l | grep linux-image | grep ii | grep t2 | cut -d' ' -f3|cut -d'-' -f3-10); do
+  echo "==> Adding $kernel"
+  /usr/sbin/depmod -a "$kernel"
+  update-initramfs -u -v -k "$kernel"
+done
+
+#echo >&2 "===]> Info: install mpbfan ... "
+#git clone https://github.com/networkException/mbpfan /tmp/mbpfan
+#cd /tmp/mbpfan
+#make install
+#cp mbpfan.service /etc/systemd/system/
+#systemctl enable mbpfan.service
 
 echo >&2 "===]> Info: Remove unused applications ... "
 
@@ -185,13 +223,12 @@ apt-get purge -y -qq \
   vim \
   binutils \
   linux-generic \
-  linux-headers-5.4.0-28 \
-  linux-headers-5.4.0-28-generic \
+  '^linux-headers-5\.4\..*' \
   linux-headers-generic \
-  linux-image-5.4.0-28-generic \
+  '^linux-image-5\.4\..*' \
   linux-image-generic \
-  linux-modules-5.4.0-28-generic \
-  linux-modules-extra-5.4.0-28-generic
+  '^linux-modules-5\.4\..*' \
+  '^linux-modules-extra-5\.4\..*'
 
 apt-get autoremove -y
 

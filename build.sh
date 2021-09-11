@@ -5,10 +5,6 @@ ROOT_PATH=$(pwd)
 WORKING_PATH=/root/work
 CHROOT_PATH="${WORKING_PATH}/chroot"
 IMAGE_PATH="${WORKING_PATH}/image"
-if [ -z "${KERNEL_VERSION}" ]; then
-  echo "Kernel version is undefined, fallback set."
-  KERNEL_VERSION=5.10.52-mbp
-fi
 
 if [ -d "$WORKING_PATH" ]; then
   rm -rf "$WORKING_PATH"
@@ -35,7 +31,7 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   isolinux \
   syslinux
 
-echo >&2 "===]> Info: Start building ${KERNEL_VERSION}... "
+echo >&2 "===]> Info: Start building... "
 
 echo >&2 "===]> Info: Build Ubuntu FS... "
 /bin/bash -c "
@@ -43,7 +39,6 @@ echo >&2 "===]> Info: Build Ubuntu FS... "
   WORKING_PATH=${WORKING_PATH} \\
   CHROOT_PATH=${CHROOT_PATH} \\
   IMAGE_PATH=${IMAGE_PATH} \\
-  KERNEL_VERSION=${KERNEL_VERSION}\\
   ${ROOT_PATH}/01_build_file_system.sh
 "
 
@@ -53,7 +48,6 @@ echo >&2 "===]> Info: Build Image FS... "
   WORKING_PATH=${WORKING_PATH} \\
   CHROOT_PATH=${CHROOT_PATH} \\
   IMAGE_PATH=${IMAGE_PATH} \\
-  KERNEL_VERSION=${KERNEL_VERSION} \\
   ${ROOT_PATH}/02_build_image.sh
 "
 
@@ -69,17 +63,16 @@ echo >&2 "===]> Info: Create ISO... "
   ROOT_PATH=${ROOT_PATH} \\
   IMAGE_PATH=${IMAGE_PATH} \\
   CHROOT_PATH=${CHROOT_PATH} \\
-  KERNEL_VERSION=${KERNEL_VERSION} \\
   ${ROOT_PATH}/04_create_iso.sh
 "
 livecd_exitcode=$?
 if [ "${livecd_exitcode}" -ne 0 ]; then
-  echo "Error building ${KERNEL_VERSION}"
+  echo "Error building"
   exit "${livecd_exitcode}"
 fi
 ### Zip iso and split it into multiple parts - github max size of release attachment is 2GB, where ISO is sometimes bigger than that
 cd "${ROOT_PATH}"
-zip -s 1500m "${ROOT_PATH}/output/livecd-${KERNEL_VERSION}.zip" "${ROOT_PATH}/ubuntu-20.04-${KERNEL_VERSION}.iso"
+zip -s 1500m "${ROOT_PATH}/output/livecd.zip" "${ROOT_PATH}/ubuntu-20.04.iso"
 
 ### Calculate sha256 sums of built ISO
 sha256sum "${ROOT_PATH}"/*.iso >"${ROOT_PATH}/output/sha256"
