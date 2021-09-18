@@ -135,16 +135,24 @@ git clone --single-branch --branch ${APPLE_BCE_DRIVER_BRANCH_NAME} ${APPLE_BCE_D
 git -C /usr/src/"${APPLE_BCE_DRIVER_MODULE_NAME}-${APPLE_BCE_DRIVER_MODULE_VERSION}" checkout "${APPLE_BCE_DRIVER_COMMIT_HASH}"
 
 cat << EOF > /usr/src/${APPLE_BCE_DRIVER_MODULE_NAME}-${APPLE_BCE_DRIVER_MODULE_VERSION}/dkms.conf
-PACKAGE_NAME="apple-bce"
+PACKAGE_NAME="${APPLE_BCE_DRIVER_MODULE_NAME}"
 PACKAGE_VERSION="${APPLE_BCE_DRIVER_MODULE_VERSION}"
 MAKE[0]="make KVERSION=\$kernelver"
 CLEAN="make clean"
-BUILT_MODULE_NAME[0]="apple-bce"
+BUILT_MODULE_NAME[0]="${APPLE_BCE_DRIVER_MODULE_NAME}"
 DEST_MODULE_LOCATION[0]="/kernel/drivers/misc"
 AUTOINSTALL="yes"
 EOF
 
-dkms install -m "${APPLE_BCE_DRIVER_MODULE_NAME}" -v "${APPLE_BCE_DRIVER_MODULE_VERSION}" --all
+while IFS= read -r kernel; do
+  echo "==> Debug: Adding $kernel"
+  rm -rf "/lib/modules/$kernel/build"
+  ln -sf "/usr/src/linux-headers-$kernel"  "/lib/modules/$kernel/build"
+  dkms --verbose install -m "${APPLE_BCE_DRIVER_MODULE_NAME}" -v "${APPLE_BCE_DRIVER_MODULE_VERSION}" -k "$kernel"
+  if [ -f "/var/lib/dkms/${APPLE_BCE_DRIVER_MODULE_NAME}/${APPLE_BCE_DRIVER_MODULE_VERSION}/build/make.log" ]; then
+    cat "/var/lib/dkms/${APPLE_BCE_DRIVER_MODULE_NAME}/${APPLE_BCE_DRIVER_MODULE_VERSION}/build/make.log"
+  fi
+done < <(dpkg -l | grep linux-image | grep t2 | grep ii | grep t2 | cut -d' ' -f3|cut -d'-' -f3-10)
 
 printf '\n### apple-bce start ###\napple-bce\n### apple-bce end ###' >>/etc/modules-load.d/apple-bce.conf
 printf '\n### apple-bce start ###\nhapple-bce\n### apple-bce end ###' >>/etc/initramfs-tools/modules
@@ -159,7 +167,18 @@ git clone --single-branch --branch ${APPLE_IB_DRIVER_BRANCH_NAME} ${APPLE_IB_DRI
     /usr/src/"${APPLE_IB_DRIVER_MODULE_NAME}-${APPLE_IB_DRIVER_MODULE_VERSION}"
 git -C /usr/src/"${APPLE_IB_DRIVER_MODULE_NAME}-${APPLE_IB_DRIVER_MODULE_VERSION}" checkout "${APPLE_IB_DRIVER_COMMIT_HASH}"
 
-dkms install -m "${APPLE_IB_DRIVER_MODULE_NAME}" -v "${APPLE_IB_DRIVER_MODULE_VERSION}" --all
+echo >&2 "===]> Debug: Add apple-ib-drv ... "
+cat /usr/src/"${APPLE_IB_DRIVER_MODULE_NAME}-${APPLE_IB_DRIVER_MODULE_VERSION}"/dkms.conf
+while IFS= read -r kernel; do
+  echo "==> Debug: Adding $kernel"
+  rm -rf "/lib/modules/$kernel/build"
+  ln -sf "/usr/src/linux-headers-$kernel"  "/lib/modules/$kernel/build"
+  dkms --verbose install -m "${APPLE_IB_DRIVER_MODULE_NAME}" -v "${APPLE_IB_DRIVER_MODULE_VERSION}" -k "$kernel"
+  if [ -f "/var/lib/dkms/${APPLE_IB_DRIVER_MODULE_NAME}/${APPLE_IB_DRIVER_MODULE_VERSION}/build/make.log" ]; then
+    cat "/var/lib/dkms/${APPLE_IB_DRIVER_MODULE_NAME}/${APPLE_IB_DRIVER_MODULE_VERSION}/build/make.log"
+  fi
+done < <(dpkg -l | grep linux-image | grep t2 | grep ii | grep t2 | cut -d' ' -f3|cut -d'-' -f3-10)
+
 
 printf '\n### applespi start ###\napple_ib_tb\napple_ib_als\n### applespi end ###' >> /etc/modules-load.d/applespi.conf
 printf '\n# display f* key in touchbar\noptions apple-ib-tb fnmode=2\n'  >> /etc/modprobe.d/apple-touchbar.conf
@@ -209,7 +228,7 @@ done
 
 echo >&2 "===]> Info: Remove unused applications ... "
 
-apt-get purge -y -qq \
+apt-get purge \
   transmission-gtk \
   transmission-common \
   gnome-mahjongg \
@@ -218,10 +237,7 @@ apt-get purge -y -qq \
   aisleriot \
   hitori \
   xiterm+thai \
-  make \
-  gcc \
   vim \
-  binutils \
   linux-generic \
   '^linux-headers-5\.4\..*' \
   linux-headers-generic \
