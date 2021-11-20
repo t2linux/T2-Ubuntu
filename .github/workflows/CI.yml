@@ -35,7 +35,7 @@ jobs:
           Download all the artifacts, and put them in a folder
           without other files. Then run:"
           unzip "*.z??.zip"
-          cat livecd-${{ steps.tag.outputs.tag }}-mbp.z?? > cd.zip
+          cat livecd-${{ steps.tag.outputs.tag }}-t2-big-sur.z?? > cd.zip
           echo unzip cd.zip
           EOF
       - name: Release
