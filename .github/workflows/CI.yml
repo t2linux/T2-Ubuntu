@@ -41,6 +41,7 @@ jobs:
           
       - name: Put ISO back for release
         run: |
+          sudo su
           cd ${{ github.workspace }}/output
           cat livecd-${{ steps.tag.outputs.tag }}-t2-big-sur.z?? > cd.zip
           unzip cd.zip
