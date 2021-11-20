@@ -110,7 +110,7 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
 
 echo >&2 "===]> Info: Install useful applications... "
 
-apt-get install -y --no-install-recommends -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
+apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
   git \
   curl \
   nano \
