@@ -228,7 +228,7 @@ done
 
 echo >&2 "===]> Info: Remove unused applications ... "
 
-apt-get purge \
+apt-get purge -y \
   transmission-gtk \
   transmission-common \
   gnome-mahjongg \
