@@ -33,7 +33,7 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   syslinux
 
 echo >&2 "===]> Info: Start loop... "
-for ALTERNATIVE in mbp mbp-16x-wifi
+for ALTERNATIVE in t2-big-sur
 do
   echo >&2 "===]> Info: Start building ${ALTERNATIVE}... "
 
