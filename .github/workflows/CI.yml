@@ -11,8 +11,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build
-        run: echo "${{ github.workspace }}" 
-             sudo ./build.sh
+        run: sudo ./build.sh
 
       - name: print sha256sum
         run: cat output/sha256
@@ -39,11 +38,17 @@ jobs:
           cat livecd-${{ steps.tag.outputs.tag }}-t2-big-sur.z?? > cd.zip
           echo unzip cd.zip
           EOF
+          
+      - name: Put ISO back for release
+        run: |
+          cd ${{ github.workspace }}/output
+          cat livecd-${{ steps.tag.outputs.tag }}-t2-big-sur.z?? > cd.zip
+          unzip cd.zip
       - name: Release
         if: github.ref == 'refs/heads/master'
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ github.workspace }}/output/*
+          files: ${{ github.workspace }}/output/${{ github.workspace }}/*
           tag_name: v20.04-${{ steps.tag.outputs.tag }}
           draft: true
         env:
