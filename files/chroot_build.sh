@@ -64,6 +64,7 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   linux-firmware \
   grub-efi-amd64-signed \
   intel-microcode \
+  linux-headers-azure \
   linux-headers-5.11.22-t2-hwe-bigsur \
   linux-headers-5.11.22-t2-hwe-mojave \
   linux-headers-5.12.19-t2-a-bigsur \
@@ -239,6 +240,7 @@ apt-get purge -y \
   xiterm+thai \
   vim \
   linux-generic \
+  linux-headers-azure \
   '^linux-headers-5\.4\..*' \
   linux-headers-generic \
   '^linux-image-5\.4\..*' \
