@@ -73,8 +73,8 @@ curl -L https://github.com/AdityaGarg8/T2-Big-Sur-Ubuntu-Kernel/releases/downloa
 file /tmp/*
 apt install /tmp/headers-bs.deb /tmp/image-bs.deb
 
-curl -L https://github.com/AdityaGarg8/T2-Mojave-Ubuntu-Kernel/releases/download/v${KERNEL_VERSION}-1/linux-headers-${KERNEL_VERSION}-t2-mojave_${KERNEL_VERSION}-1_amd64.deb > /tmp/headers-m.deb
-curl -L https://github.com/AdityaGarg8/T2-Mojave-Ubuntu-Kernel/releases/download/v${KERNEL_VERSION}-1/linux-image-${KERNEL_VERSION}-t2-mojave_${KERNEL_VERSION}-1_amd64.deb > /tmp/image-m.deb
+curl -L "https://github.com/AdityaGarg8/T2-Mojave-Ubuntu-Kernel/releases/download/v${KERNEL_VERSION}-1/linux-headers-${KERNEL_VERSION}-t2-mojave_${KERNEL_VERSION}-1_amd64.deb" > /tmp/headers-m.deb
+curl -L "https://github.com/AdityaGarg8/T2-Mojave-Ubuntu-Kernel/releases/download/v${KERNEL_VERSION}-1/linux-image-${KERNEL_VERSION}-t2-mojave_${KERNEL_VERSION}-1_amd64.deb" > /tmp/image-m.deb
 file /tmp/*
 apt install /tmp/headers-m.deb /tmp/image-m.deb
 
