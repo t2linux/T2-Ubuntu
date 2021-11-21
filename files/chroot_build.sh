@@ -68,10 +68,15 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
 
 # This is not ideal, but it should work until the apt repo gets updated.
 
-curl -L https://github.com/AdityaGarg8/T2-Big-Sur-Ubuntu-Kernel/releases/download/v5.15.3-1/linux-headers-5.15.3-t2-big-sur_5.15.3-1_amd64.deb > /tmp/headers.deb
-curl -L https://github.com/AdityaGarg8/T2-Big-Sur-Ubuntu-Kernel/releases/download/v5.15.3-1/linux-image-5.15.3-t2-big-sur_5.15.3-1_amd64.deb > /tmp/image.deb
+curl -L https://github.com/AdityaGarg8/T2-Big-Sur-Ubuntu-Kernel/releases/download/v${KERNEL_VERSION}-1/linux-headers-${KERNEL_VERSION}-t2-big-sur_${KERNEL_VERSION}-1_amd64.deb > /tmp/headers_bs.deb
+curl -L https://github.com/AdityaGarg8/T2-Big-Sur-Ubuntu-Kernel/releases/download/v${KERNEL_VERSION}-1/linux-image-${KERNEL_VERSION}-t2-big-sur_${KERNEL_VERSION}-1_amd64.deb > /tmp/image_bs.deb
 file /tmp/*
-apt install /tmp/headers.deb /tmp/image.deb
+apt install /tmp/headers_bs.deb /tmp/image_bs.deb
+
+curl -L https://github.com/AdityaGarg8/T2-Mojave-Ubuntu-Kernel/releases/download/v${KERNEL_VERSION}-1/linux-headers-${KERNEL_VERSION}-t2-mojave_${KERNEL_VERSION}-1_amd64.deb > /tmp/headers_m.deb
+curl -L https://github.com/AdityaGarg8/T2-Mojave-Ubuntu-Kernel/releases/download/v${KERNEL_VERSION}-1/linux-image-${KERNEL_VERSION}-t2-mojave_${KERNEL_VERSION}-1_amd64.deb > /tmp/image_m.deb
+file /tmp/*
+apt install /tmp/headers_m.deb /tmp/image_m.deb
 
 echo >&2 "===]> Info: Install window manager... "
 
