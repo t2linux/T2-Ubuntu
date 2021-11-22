@@ -106,7 +106,7 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   dkms \
   iwd
   
-snap install snap-store
+#snap install snap-store
 
 echo >&2 "===]> Info: Change initramfs format (for grub)... "
 sed -i "s/COMPRESS=lz4/COMPRESS=gzip/g" "/etc/initramfs-tools/initramfs.conf"
