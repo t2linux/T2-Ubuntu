@@ -33,8 +33,7 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   syslinux
 
 echo >&2 "===]> Info: Start loop... "
-for ALTERNATIVE in t2-big-sur t2-mojave
-do
+for ALTERNATIVE in t2-big-sur
   echo >&2 "===]> Info: Start building ${ALTERNATIVE}... "
 
   echo >&2 "===]> Info: Build Ubuntu FS... "

@@ -73,11 +73,6 @@ curl -L https://github.com/AdityaGarg8/T2-Big-Sur-Ubuntu-Kernel/releases/downloa
 file /tmp/*
 apt install /tmp/headers-bs.deb /tmp/image-bs.deb
 
-curl -L https://github.com/AdityaGarg8/T2-Mojave-Ubuntu-Kernel/releases/download/v5.15.3-1/linux-headers-5.15.3-t2-mojave_5.15.3-1_amd64.deb > /tmp/headers-m.deb
-curl -L https://github.com/AdityaGarg8/T2-Mojave-Ubuntu-Kernel/releases/download/v5.15.3-1/linux-image-5.15.3-t2-mojave_5.15.3-1_amd64.deb > /tmp/image-m.deb
-file /tmp/*
-apt install /tmp/headers-m.deb /tmp/image-m.deb
-
 echo >&2 "===]> Info: Install window manager... "
 
 apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
