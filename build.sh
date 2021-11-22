@@ -34,6 +34,7 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
 
 echo >&2 "===]> Info: Start loop... "
 for ALTERNATIVE in t2-big-sur
+do
   echo >&2 "===]> Info: Start building ${ALTERNATIVE}... "
 
   echo >&2 "===]> Info: Build Ubuntu FS... "
