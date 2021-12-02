@@ -23,6 +23,7 @@ deb-src http://archive.ubuntu.com/ubuntu/ focal-security main restricted univers
 deb http://archive.ubuntu.com/ubuntu/ focal-updates main restricted universe multiverse
 deb-src http://archive.ubuntu.com/ubuntu/ focal-updates main restricted universe multiverse
 EOF
+apt-get install linuxmint-keyring
 apt-get update
 
 echo >&2 "===]> Info: Install systemd and Ubuntu MBP Repo... "
