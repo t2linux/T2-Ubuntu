@@ -23,7 +23,6 @@ deb-src http://archive.ubuntu.com/ubuntu/ focal-security main restricted univers
 deb http://archive.ubuntu.com/ubuntu/ focal-updates main restricted universe multiverse
 deb-src http://archive.ubuntu.com/ubuntu/ focal-updates main restricted universe multiverse
 EOF
-apt-get install linuxmint-keyring
 apt-get update
 
 echo >&2 "===]> Info: Install systemd and Ubuntu MBP Repo... "
@@ -69,8 +68,8 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
 
 # This is not ideal, but it should work until the apt repo gets updated.
 
-curl -L https://github.com/AdityaGarg8/T2-Big-Sur-Ubuntu-Kernel/releases/download/v5.15.3-1/linux-headers-5.15.3-t2-big-sur_5.15.3-1_amd64.deb > /tmp/headers-bs.deb
-curl -L https://github.com/AdityaGarg8/T2-Big-Sur-Ubuntu-Kernel/releases/download/v5.15.3-1/linux-image-5.15.3-t2-big-sur_5.15.3-1_amd64.deb > /tmp/image-bs.deb
+curl -L https://github.com/AdityaGarg8/T2-Big-Sur-Ubuntu-Kernel/releases/download/v5.15.6-1/linux-headers-5.15.6-t2-big-sur_5.15.6-1_amd64.deb > /tmp/headers-bs.deb
+curl -L https://github.com/AdityaGarg8/T2-Big-Sur-Ubuntu-Kernel/releases/download/v5.15.6-1/linux-image-5.15.6-t2-big-sur_5.15.6-1_amd64.deb > /tmp/image-bs.deb
 file /tmp/*
 apt install /tmp/headers-bs.deb /tmp/image-bs.deb
 
