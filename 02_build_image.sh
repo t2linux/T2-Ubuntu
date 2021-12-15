@@ -9,15 +9,54 @@ if [ -d "${IMAGE_PATH}" ]; then
 fi
 
 mkdir -p "${IMAGE_PATH}"/{casper,install,isolinux}
-cp "${CHROOT_PATH}"/boot/vmlinuz-"${KERNEL_VERSION}" "${IMAGE_PATH}"/casper/vmlinuz
-cp "${CHROOT_PATH}"/boot/initrd.img-"${KERNEL_VERSION}" "${IMAGE_PATH}"/casper/initrd
 
 echo >&2 "===]> Info: Grub configuration... "
 # we add an empty file to use it with the search command in grub later on.
 touch "${IMAGE_PATH}"/ubuntu
 cp -r "${ROOT_PATH}"/files/preseed "${IMAGE_PATH}"/preseed
-cp "${ROOT_PATH}/files/grub/grub.cfg" "${IMAGE_PATH}"/isolinux/grub.cfg
 
+cat <<EOF > "${IMAGE_PATH}"/isolinux/grub.cfg
+search --set=root --file /ubuntu
+insmod all_video
+EOF
+
+find "${CHROOT_PATH}"/boot -maxdepth 1 -type f -name 'vmlinuz-*'
+find "${CHROOT_PATH}"/boot -maxdepth 1 -type f -name 'initrd*'
+
+for file in $(find "${CHROOT_PATH}"/boot -maxdepth 1 -type f -name 'vmlinuz-*' | grep t2 | cut -d'/' -f 6 | cut -d'-' -f2-10 | sort); do
+  echo "==> Adding $file"
+  cp "${CHROOT_PATH}/boot/vmlinuz-${file}" "${IMAGE_PATH}/casper/vmlinuz-${file}"
+  cp "${CHROOT_PATH}/boot/initrd.img-${file}" "${IMAGE_PATH}/casper/initrd-${file}"
+  cat <<EOF >> "${IMAGE_PATH}"/isolinux/grub.cfg
+submenu "Ubuntu, with Linux $file" {
+
+  menuentry "Try Ubuntu FS without installing" {
+     linux /casper/vmlinuz-$file file=/cdrom/preseed/mbp.seed boot=casper ro efi=noruntime pcie_ports=compat ---
+     initrd /casper/initrd-$file
+  }
+  menuentry "Try Ubuntu FS without installing (blacklist=thunderbolt)" {
+     linux /casper/vmlinuz-$file file=/cdrom/preseed/mbp.seed boot=casper ro efi=noruntime pcie_ports=compat --- modprobe.blacklist=thunderbolt
+     initrd /casper/initrd-$file
+  }
+  menuentry "Install Ubuntu FS" {
+     linux /casper/vmlinuz-$file preseed/file=/cdrom/preseed/mbp.seed boot=casper only-ubiquity efi=noruntime pcie_ports=compat ---
+     initrd /casper/initrd-$file
+  }
+  menuentry "Install Ubuntu FS (blacklist=thunderbolt)" {
+     linux /casper/vmlinuz-$file preseed/file=/cdrom/preseed/mbp.seed boot=casper only-ubiquity efi=noruntime pcie_ports=compat --- modprobe.blacklist=thunderbolt
+     initrd /casper/initrd-$file
+  }
+  menuentry "Check disc for defects" {
+     linux /casper/vmlinuz-$file boot=casper integrity-check efi=noruntime enforcing=0 efi=noruntime pcie_ports=compat ---
+     initrd /casper/initrd-$file
+  }
+  menuentry "Check disc for defects (blacklist=thunderbolt)" {
+     linux /casper/vmlinuz-$file boot=casper integrity-check efi=noruntime enforcing=0 efi=noruntime pcie_ports=compat --- modprobe.blacklist=thunderbolt
+     initrd /casper/initrd-$file
+  }
+}
+EOF
+done
 
 echo >&2 "===]> Info: Compress the chroot... "
 cd "${WORKING_PATH}"

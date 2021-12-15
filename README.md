@@ -17,14 +17,21 @@ I'm using the Kernel from - <https://github.com/marcosfad/mbp-ubuntu-kernel>
 Using additional drivers:
 - [Apple T2 (apple-bce) (audio, keyboard, touchpad)](https://github.com/t2linux/apple-bce-drv)
 - [Touchbar (apple-ibridge, apple-ib-tb, apple-ib-als)](https://github.com/t2linux/apple-ib-drv)
+- [mbpfan](https://github.com/networkException/mbpfan)
 
 Bootloader is configure correctly out of the box. No workaround needed.
 
-## Before I begin, what version should I use? "mbp" or "mbp-16x-wifi"?
+## Which kernel to choose
 
-The difference between the two is that the mbp-16x-wifi version includes a different version of the brcmfmac wifi driver, made by corellium for M1 macs. This version of the wifi driver works on some models that the brcmfmac driver included with the mbp version doesn't support. Refer to the table on [this page](https://wiki.t2linux.org/guides/wifi/) to figure out which versions will work (Look at the "Firmware Options" column, Mojave means you can use the "mbp" version, and Big Sur means you can use the "mbp-16x-wifi" version).
+I've pre installed several different kernel, to allow better support to different hardware.
 
-**!! Please note that as of the v20.04-5.10.52 release, the mbp-16x-wifi iso does not support wifi on models with the BCM4377 chipset. For now, you can install a kernel from [here](https://github.com/AdityaGarg8/mbp-16.x-ubuntu-kernel/releases/tag/v5.13.12-1) after installing ubuntu if you have the BCM4377 chipset.**
+If your macbook came with Big Sur preinstalled, you should use a bigsur version of kernel. 
+
+If your macbook came with mojave, you should use a mojave version of the kernel.
+
+This will allow you to activate wifi in your macbook. See [this page for more information about wifi drivers](https://wiki.t2linux.org/guides/wifi/)
+
+I've recommend starting with the HWE Kernel. That one comes from Ubuntu own repository and I have had great performance with it.
 
 ## Installation
 
@@ -50,6 +57,8 @@ sudo dd bs=4096 if=ubuntu-20.04-5.6.10-mbp.iso of=/dev/diskX
 11. Shutdown and remove the USB Drive
 12. Start again using the option key. Select the new efi boot.
 13. Enjoy.
+
+See <https://wiki.t2linux.org/distributions/ubuntu/installation/> for more details.
 
 ## Configuration
 

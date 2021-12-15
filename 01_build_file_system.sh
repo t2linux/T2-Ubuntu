@@ -14,7 +14,7 @@ mount --bind /dev "${CHROOT_PATH}/dev"
 mount --bind /run "${CHROOT_PATH}/run"
 
 cp -r "${ROOT_PATH}/files" "${CHROOT_PATH}/tmp/setup_files"
-chroot "${CHROOT_PATH}" /bin/bash -c "KERNEL_VERSION=${KERNEL_VERSION} /tmp/setup_files/chroot_build.sh"
+chroot "${CHROOT_PATH}" /bin/bash -c "/tmp/setup_files/chroot_build.sh"
 
 echo >&2 "===]> Info: Cleanup the chroot environment... "
 # In docker there is no run?
