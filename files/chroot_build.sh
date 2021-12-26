@@ -192,11 +192,13 @@ dpkg-reconfigure -f readline resolvconf
 
 cat <<EOF >/etc/NetworkManager/NetworkManager.conf
 [main]
-rc-manager=resolvconf
 plugins=ifupdown,keyfile
-dns=dnsmasq
+
 [ifupdown]
 managed=false
+
+[device]
+wifi.scan-rand-mac-address=no
 EOF
 dpkg-reconfigure network-manager
 
