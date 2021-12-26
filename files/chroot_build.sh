@@ -68,9 +68,9 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
 
 # This is not ideal, but it should work until the apt repo gets updated.
 
-curl -L https://github.com/AdityaGarg8/mbp-16.1-linux-wifi/releases/download/v5.15.11-ubuntu/linux-headers-5.15.11-t2_5.15.11-1_amd64.deb > /tmp/headers.deb
-curl -L https://github.com/AdityaGarg8/mbp-16.1-linux-wifi/releases/download/v5.15.11-ubuntu/linux-image-5.15.11-t2_5.15.11-1_amd64.deb > /tmp/image.deb
-curl -L https://github.com/AdityaGarg8/mbp-16.1-linux-wifi/releases/download/v5.15.11-ubuntu/iso-firmware.deb > /tmp/firmware.deb
+curl -L https://github.com/AdityaGarg8/mbp-16.1-linux-wifi/releases/download/5.15.11-txcap-ubuntu/linux-headers-5.15.11-t2_5.15.11-1_amd64.deb > /tmp/headers.deb
+curl -L https://github.com/AdityaGarg8/mbp-16.1-linux-wifi/releases/download/5.15.11-txcap-ubuntu/linux-image-5.15.11-t2_5.15.11-1_amd64.deb > /tmp/image.deb
+curl -L https://github.com/AdityaGarg8/mbp-16.1-linux-wifi/releases/download/5.15.11-txcap-ubuntu/iso-firmware.deb > /tmp/firmware.deb
 file /tmp/*
 apt install /tmp/headers.deb /tmp/image.deb /tmp/firmware.deb
 
