@@ -5,7 +5,10 @@ ROOT_PATH=$(pwd)
 WORKING_PATH=/root/work
 CHROOT_PATH="${WORKING_PATH}/chroot"
 IMAGE_PATH="${WORKING_PATH}/image"
-KERNEL_VERSION=5.16.0
+KERNEL_VERSION=5.15.14
+PKGREL=2
+sed -i "s/KVER/${KERNEL_VERSION}/g" $(pwd)/files/chroot_build.sh
+sed -i "s/PREL/${PKGREL}/g" $(pwd)/files/chroot_build.sh
 
 if [ -d "$WORKING_PATH" ]; then
   rm -rf "$WORKING_PATH"
