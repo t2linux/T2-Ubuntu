@@ -46,6 +46,6 @@ jobs:
           files: ${{ github.workspace }}/*.iso
           tag_name: v20.04-${{ steps.tag.outputs.tag }}
           draft: false
-          prerelease: true
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
