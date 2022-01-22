@@ -107,46 +107,14 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
 echo >&2 "===]> Info: Change initramfs format (for grub)... "
 sed -i "s/COMPRESS=lz4/COMPRESS=gzip/g" "/etc/initramfs-tools/initramfs.conf"
 
-echo >&2 "===]> Info: Add drivers... "
-
-APPLE_BCE_DRIVER_GIT_URL=https://github.com/t2linux/apple-bce-drv.git
-APPLE_BCE_DRIVER_BRANCH_NAME=aur
-APPLE_BCE_DRIVER_COMMIT_HASH=f93c6566f98b3c95677de8010f7445fa19f75091
-APPLE_BCE_DRIVER_MODULE_NAME=apple-bce
-APPLE_BCE_DRIVER_MODULE_VERSION=r183.c884d9c
-
-APPLE_IB_DRIVER_GIT_URL=https://github.com/Redecorating/apple-ib-drv
-APPLE_IB_DRIVER_BRANCH_NAME=mbp15
-APPLE_IB_DRIVER_COMMIT_HASH=467df9b11cb55456f0365f40dd11c9e666623bf3
-APPLE_IB_DRIVER_MODULE_NAME=apple-ibridge
-APPLE_IB_DRIVER_MODULE_VERSION=0.1
+echo >&2 "===]> Info: Configure drivers... "
 
 # thunderbolt is working for me.
 #printf '\nblacklist thunderbolt' >>/etc/modprobe.d/blacklist.conf
 
-git clone --single-branch --branch ${APPLE_BCE_DRIVER_BRANCH_NAME} ${APPLE_BCE_DRIVER_GIT_URL} \
-  /usr/src/"${APPLE_BCE_DRIVER_MODULE_NAME}-${APPLE_BCE_DRIVER_MODULE_VERSION}"
-git -C /usr/src/"${APPLE_BCE_DRIVER_MODULE_NAME}-${APPLE_BCE_DRIVER_MODULE_VERSION}" checkout "${APPLE_BCE_DRIVER_COMMIT_HASH}"
-
-cat << EOF > /usr/src/${APPLE_BCE_DRIVER_MODULE_NAME}-${APPLE_BCE_DRIVER_MODULE_VERSION}/dkms.conf
-PACKAGE_NAME=apple-bce
-PACKAGE_VERSION=r183.c884d9c
-CLEAN="make clean"
-MAKE="make"
-BUILT_MODULE_NAME[0]="apple-bce"
-DEST_MODULE_LOCATION[0]="/updates"
-AUTOINSTALL="yes"
-REMAKE_INITRD="yes"
-EOF
-
-dkms install -m "${APPLE_BCE_DRIVER_MODULE_NAME}" -v "${APPLE_BCE_DRIVER_MODULE_VERSION}" -k "${KERNEL_VERSION}"
 printf '\n### apple-bce start ###\nhid-apple\nbcm5974\nsnd-seq\napple-bce\n### apple-bce end ###' >>/etc/modules-load.d/apple-bce.conf
 printf '\n### apple-bce start ###\nhid-apple\nsnd-seq\napple-bce\n### apple-bce end ###' >>/etc/initramfs-tools/modules
 
-git clone --single-branch --branch ${APPLE_IB_DRIVER_BRANCH_NAME} ${APPLE_IB_DRIVER_GIT_URL} \
-    /usr/src/"${APPLE_IB_DRIVER_MODULE_NAME}-${APPLE_IB_DRIVER_MODULE_VERSION}"
-git -C /usr/src/"${APPLE_IB_DRIVER_MODULE_NAME}-${APPLE_IB_DRIVER_MODULE_VERSION}" checkout "${APPLE_IB_DRIVER_COMMIT_HASH}"
-dkms install -m "${APPLE_IB_DRIVER_MODULE_NAME}" -v "${APPLE_IB_DRIVER_MODULE_VERSION}" -k "${KERNEL_VERSION}"
 printf '\n### applespi start ###\napple_ibridge\napple_ib_tb\napple_ib_als\n### applespi end ###' >>/etc/modules-load.d/applespi.conf
 printf '\n# display f* key in touchbar\noptions apple-ib-tb fnmode=1\n'  >> /etc/modprobe.d/apple-tb.conf
 
