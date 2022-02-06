@@ -112,12 +112,10 @@ echo >&2 "===]> Info: Configure drivers... "
 # thunderbolt is working for me.
 #printf '\nblacklist thunderbolt' >>/etc/modprobe.d/blacklist.conf
 
-printf '\n### apple-bce start ###\nhid-apple\nbcm5974\nsnd-seq\napple-bce\n### apple-bce end ###' >>/etc/modules-load.d/apple-bce.conf
+printf 'apple-bce' >>/etc/modules-load.d/t2.conf
 printf '\n### apple-bce start ###\nhid-apple\nsnd-seq\napple-bce\n### apple-bce end ###' >>/etc/initramfs-tools/modules
-
-printf '\n### applespi start ###\napple_ibridge\napple_ib_tb\napple_ib_als\n### applespi end ###' >>/etc/modules-load.d/applespi.conf
 printf '\n# display f* key in touchbar\noptions apple-ib-tb fnmode=1\n'  >> /etc/modprobe.d/apple-tb.conf
-printf '\n# delay loading of the touchbar driver\ninstall apple-ib-tb /bin/sleep 7; /sbin/modprobe --ignore-install apple-ib-tb' >> /etc/modprobe.d/delay-tb.conf
+#printf '\n# delay loading of the touchbar driver\ninstall apple-ib-tb /bin/sleep 7; /sbin/modprobe --ignore-install apple-ib-tb' >> /etc/modprobe.d/delay-tb.conf
 
 echo '
 #!/usr/bin/env bash
