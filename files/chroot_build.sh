@@ -64,7 +64,8 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   linux-headers-generic \
   grub-efi-amd64-signed \
   intel-microcode \
-  thermald
+  thermald \
+  grub2
 
 # This is not ideal, but it should work until the apt repo gets updated.
 
