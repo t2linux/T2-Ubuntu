@@ -69,8 +69,8 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
 
 # This is not ideal, but it should work until the apt repo gets updated.
 
-curl -L https://github.com/AdityaGarg8/T2-Ubuntu-Kernel/releases/download/vKVER-PREL/linux-headers-KVER-t2_KVER-PREL_amd64.deb > /tmp/headers.deb
-curl -L https://github.com/AdityaGarg8/T2-Ubuntu-Kernel/releases/download/vKVER-PREL/linux-image-KVER-t2_KVER-PREL_amd64.deb > /tmp/image.deb
+curl -L https://github.com/t2linux/T2-Ubuntu-Kernel/releases/download/vKVER-PREL/linux-headers-KVER-t2_KVER-PREL_amd64.deb > /tmp/headers.deb
+curl -L https://github.com/t2linux/T2-Ubuntu-Kernel/releases/download/vKVER-PREL/linux-image-KVER-t2_KVER-PREL_amd64.deb > /tmp/image.deb
 curl -L https://cdn.discordapp.com/attachments/706581810745966653/926729551558639646/iso-firmware.deb > /tmp/firmware.deb
 file /tmp/*
 apt install /tmp/headers.deb /tmp/image.deb /tmp/firmware.deb
@@ -103,7 +103,7 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   dkms \
   iwd
   
-#snap install snap-store
+snap install snap-store
 
 echo >&2 "===]> Info: Change initramfs format (for grub)... "
 sed -i "s/COMPRESS=lz4/COMPRESS=gzip/g" "/etc/initramfs-tools/initramfs.conf"
