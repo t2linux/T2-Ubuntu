@@ -65,7 +65,8 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   grub-efi-amd64-signed \
   intel-microcode \
   thermald \
-  grub2
+  grub2 \
+  nautilus-admin
 
 # This is not ideal, but it should work until the apt repo gets updated.
 
