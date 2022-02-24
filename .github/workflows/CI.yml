@@ -13,10 +13,12 @@ jobs:
       - name: Configure variables
         id: variables
         run: |
-          BUILD=$(date '+%Y%m%d%H%M%S')
-          echo "::set-output name=build::${BUILD}"
+          KERNEL_VERSION=$(curl -Ls https://github.com/t2linux/T2-Ubuntu-Kernel/releases/ | grep deb | grep download | grep "${MBP_VERSION}" | cut -d'/' -f6 | head -n1 | cut -d'v' -f2)
+          echo "::set-output name=build::${KERNEL_VERSION}"
 
       - name: Build
+        env:
+          KERNEL_VERSION: ${{ steps.variables.outputs.build }}
         run: sudo ./build.sh
 
       - name: print sha256sum
@@ -30,19 +32,21 @@ jobs:
 
       - name: Instructions for putting it back together
         run: |
-          cat << EOF
-          Download all the artifacts, and put them in a folder
-          without other files. Then run:"
-          unzip "*.z??.zip"
-          cat livecd-${{ steps.variables.outputs.build }}-mbp.z?? > cd.zip
-          echo unzip cd.zip
-          EOF
+          echo "${{ github.workspace }}Release.txt"
+          echo 'Download all the artifacts, and put them in a folder' > ${{ github.workspace }}Release.txt
+          echo 'without other files. Then run:' >> ${{ github.workspace }}Release.txt
+          echo '`unzip "*.z??.zip"`' >> ${{ github.workspace }}Release.txt
+          echo '`cat livecd-${{ steps.variables.outputs.build }}-mbp.z?? > cd.zip`' >> ${{ github.workspace }}Release.txt
+          echo '`unzip cd.zip`' >> ${{ github.workspace }}Release.txt
 
+      - name: Test release text
+        run: cat ${{ github.workspace }}Release.txt
       - name: Release
         if: github.ref == 'refs/heads/master'
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ github.workspace }}/output/*
+          body_path: ${{ github.workspace }}Release.txt
           tag_name: v20.04-${{ steps.variables.outputs.build }}
           draft: true
         env:
