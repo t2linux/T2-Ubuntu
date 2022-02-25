@@ -97,6 +97,22 @@ GRUB_TIMEOUT=10
 and then:
 `sudo update-grub`
 
+### Crashes with amdgpu or shutdown issues
+
+Try to disable the power management by adding `amdgpu.dpm=0` to the kernel command line or disabling it temporarily using: 
+```shell
+echo high | sudo tee /sys/bus/pci/drivers/amdgpu/0000:??:??.?/power_dpm_force_performance_level
+```
+
+if that fix the issue for you, you can make this change permanent using:
+
+```shell
+sudo su
+cat << EOF > /etc/udev/rules.d/30-amdgpu-pm.rules
+KERNEL=="card0", SUBSYSTEM=="drm", DRIVERS=="amdgpu", ATTR{device/power_dpm_force_performance_level}="high"
+EOF
+```
+
 ## Update to newer kernels
 
 **IF YOU UPDATE THE KERNEL, REMEMBER TO ADD THE REQUIRED DRIVERS AGAIN.**

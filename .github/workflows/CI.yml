@@ -10,6 +10,8 @@ on:
         type: string
         default: ''
         description: (optional) Choose kernel version to use from T2Linux. Without the "v".
+env:
+  KERNEL_VERSION: ${{ github.event.inputs.KERNEL_VERSION }}
 
 jobs:
   build:
@@ -17,11 +19,23 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: debug
+        env:
+          TEST: ${{ github.event.inputs.KERNEL_VERSION }}
+        run:
+          echo "inputs.KERNEL_VERSION ${{ github.event.inputs.KERNEL_VERSION}}"
+          echo "env.KERNEL_VERSION ${{env.KERNEL_VERSION}}"
+          echo "env.TEST ${{env.TEST}}"
+
       - name: Configure variables
         id: variables
-        if: ${{ inputs.KERNEL_VERSION == '' }}
+        env:
+          KERNEL_VERSION: ${{ env.KERNEL_VERSION }}
         run: |
-          KERNEL_VERSION=$(curl -Ls https://github.com/t2linux/T2-Ubuntu-Kernel/releases/ | grep deb | grep download | grep "${MBP_VERSION}" | cut -d'/' -f6 | head -n1 | cut -d'v' -f2)
+          if [ -z "${KERNEL_VERSION}" ]; then
+            echo "KERNEL_VERSION not set, calculating it"
+            KERNEL_VERSION=$(curl -Ls https://github.com/t2linux/T2-Ubuntu-Kernel/releases/ | grep deb | grep download | grep "${MBP_VERSION}" | cut -d'/' -f6 | head -n1 | cut -d'v' -f2)
+          fi
           echo "::set-output name=build::${KERNEL_VERSION}"
 
       - name: Download kernel packages
