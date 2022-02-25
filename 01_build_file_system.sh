@@ -22,8 +22,10 @@ fi
 
 while IFS='' read -r line; do KERNEL_PACKAGES+=("$line"); done <  <(curl -sL https://github.com/t2linux/T2-Ubuntu-Kernel/releases/tag/v"${MBP_KERNEL_TAG}" | grep deb | grep span | cut -d'>' -f2 | cut -d'<' -f1)
 
+mkdir -p "${ROOT_PATH}/files/kernels"
+
 for i in "${KERNEL_PACKAGES[@]}"; do
-  curl -L  https://github.com/t2linux/T2-Ubuntu-Kernel/releases/download/v"${MBP_KERNEL_TAG}"/"${i}" -o "${ROOT_PATH}/files/kernels"
+  curl -L  https://github.com/t2linux/T2-Ubuntu-Kernel/releases/download/v"${MBP_KERNEL_TAG}"/"${i}" -o "${ROOT_PATH}/files/kernels/${i}"
 done
 
 echo >&2 "===]> Info: Creating chroot environment... "
@@ -39,6 +41,7 @@ echo >&2 "===]> Info: Cleanup the chroot environment... "
 umount "${CHROOT_PATH}/dev"
 
 ### Add update_kernel_mbp script
+echo >&2 "===]> Info: Add update_kernel_mbp script... "
 curl -L https://raw.githubusercontent.com/marcosfad/mbp-ubuntu/master/update_kernel_mbp.sh -o /usr/bin/update_kernel_mbp
 chmod +x /usr/bin/update_kernel_mbp
 
