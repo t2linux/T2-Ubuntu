@@ -2,7 +2,14 @@
 name: CI
 # yamllint disable-line rule:truthy
 on:
-  [push]
+  push:
+  workflow_dispatch:
+    inputs:
+      KERNEL_VERSION:
+        required: false
+        type: string
+        default: ''
+        description: (optional) Choose kernel version to use from T2Linux. Without the "v".
 
 jobs:
   build:
@@ -12,6 +19,7 @@ jobs:
 
       - name: Configure variables
         id: variables
+        if: ${{ inputs.KERNEL_VERSION == '' }}
         run: |
           KERNEL_VERSION=$(curl -Ls https://github.com/t2linux/T2-Ubuntu-Kernel/releases/ | grep deb | grep download | grep "${MBP_VERSION}" | cut -d'/' -f6 | head -n1 | cut -d'v' -f2)
           echo "::set-output name=build::${KERNEL_VERSION}"
@@ -55,21 +63,21 @@ jobs:
 
       - name: Instructions for putting it back together
         run: |
-          echo "${{ github.workspace }}Release.txt"
-          echo 'Download all the artifacts, and put them in a folder' > ${{ github.workspace }}Release.txt
-          echo 'without other files. Then run:' >> ${{ github.workspace }}Release.txt
-          echo '`unzip "*.z??.zip"`' >> ${{ github.workspace }}Release.txt
-          echo '`cat livecd-${{ steps.variables.outputs.build }}-mbp.z?? > cd.zip`' >> ${{ github.workspace }}Release.txt
-          echo '`unzip cd.zip`' >> ${{ github.workspace }}Release.txt
+          echo "${{ github.workspace }}/Release.txt"
+          echo 'Download all the artifacts, and put them in a folder' > ${{ github.workspace }}/Release.txt
+          echo 'without other files. Then run:' >> ${{ github.workspace }}/Release.txt
+          echo '`unzip "*.z??.zip"`' >> ${{ github.workspace }}/Release.txt
+          echo '`cat livecd-${{ steps.variables.outputs.build }}-mbp.z?? > cd.zip`' >> ${{ github.workspace }}/Release.txt
+          echo '`unzip cd.zip`' >> ${{ github.workspace }}/Release.txt
 
       - name: Test release text
-        run: cat ${{ github.workspace }}Release.txt
+        run: cat ${{ github.workspace }}/Release.txt
       - name: Release
         if: github.ref == 'refs/heads/master'
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ github.workspace }}/output/*
-          body_path: ${{ github.workspace }}Release.txt
+          body_path: ${{ github.workspace }}/Release.txt
           tag_name: v20.04-${{ steps.variables.outputs.build }}
           draft: true
         env:
