@@ -9,25 +9,6 @@ debootstrap \
   "${CHROOT_PATH}" \
   http://archive.ubuntu.com/ubuntu/
 
-### Download kernel packages
-KERNEL_PACKAGES=()
-if [[ -n "${KERNEL_VERSION:-}" ]]; then
-  MBP_KERNEL_TAG=${KERNEL_VERSION}
-  echo >&2 "===]> Info: Downloading specified kernel: ${MBP_KERNEL_TAG}";
-else
-  MBP_VERSION=t2
-  MBP_KERNEL_TAG=$(curl -Ls https://github.com/t2linux/T2-Ubuntu-Kernel/releases/ | grep deb | grep download | grep "${MBP_VERSION}" | cut -d'/' -f6 | head -n1 | cut -d'v' -f2)
-  echo >&2 "===]> Info: Downloading latest ${MBP_VERSION} kernel: ${MBP_KERNEL_TAG}";
-fi
-
-while IFS='' read -r line; do KERNEL_PACKAGES+=("$line"); done <  <(curl -sL https://github.com/t2linux/T2-Ubuntu-Kernel/releases/tag/v"${MBP_KERNEL_TAG}" | grep deb | grep span | cut -d'>' -f2 | cut -d'<' -f1)
-
-mkdir -p "${ROOT_PATH}/files/kernels"
-
-for i in "${KERNEL_PACKAGES[@]}"; do
-  curl -L  https://github.com/t2linux/T2-Ubuntu-Kernel/releases/download/v"${MBP_KERNEL_TAG}"/"${i}" -o "${ROOT_PATH}/files/kernels/${i}"
-done
-
 echo >&2 "===]> Info: Creating chroot environment... "
 mount --bind /dev "${CHROOT_PATH}/dev"
 mount --bind /run "${CHROOT_PATH}/run"

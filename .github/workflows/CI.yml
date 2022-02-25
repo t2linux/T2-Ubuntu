@@ -16,9 +16,32 @@ jobs:
           KERNEL_VERSION=$(curl -Ls https://github.com/t2linux/T2-Ubuntu-Kernel/releases/ | grep deb | grep download | grep "${MBP_VERSION}" | cut -d'/' -f6 | head -n1 | cut -d'v' -f2)
           echo "::set-output name=build::${KERNEL_VERSION}"
 
-      - name: Build
+      - name: Download kernel packages
         env:
           KERNEL_VERSION: ${{ steps.variables.outputs.build }}
+        run: |
+          KERNEL_PACKAGES=()
+          if [[ -n "${KERNEL_VERSION:-}" ]]; then
+            MBP_KERNEL_TAG=${KERNEL_VERSION}
+            echo >&2 "===]> Info: Downloading specified kernel: ${MBP_KERNEL_TAG}";
+          else
+            MBP_VERSION=t2
+            MBP_KERNEL_TAG=$(curl -Ls https://github.com/t2linux/T2-Ubuntu-Kernel/releases/ | grep deb | grep download | grep "${MBP_VERSION}" | cut -d'/' -f6 | head -n1 | cut -d'v' -f2)
+            echo >&2 "===]> Info: Downloading latest ${MBP_VERSION} kernel: ${MBP_KERNEL_TAG}";
+          fi
+
+          while IFS='' read -r line; do KERNEL_PACKAGES+=("$line"); done <  <(curl -sL https://github.com/t2linux/T2-Ubuntu-Kernel/releases/tag/v"${MBP_KERNEL_TAG}" | grep deb | grep span | cut -d'>' -f2 | cut -d'<' -f1)
+
+          mkdir -p "${{ github.workspace }}/files/kernels"
+
+          for i in "${KERNEL_PACKAGES[@]}"; do
+            curl -L  https://github.com/t2linux/T2-Ubuntu-Kernel/releases/download/v"${MBP_KERNEL_TAG}"/"${i}" -o "${{ github.workspace }}/files/kernels/${i}"
+          done
+
+      - name: Check kernel files
+        run: ls -al "${{ github.workspace }}/files/kernels"
+
+      - name: Build
         run: sudo ./build.sh
 
       - name: print sha256sum
