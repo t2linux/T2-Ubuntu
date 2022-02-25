@@ -1,18 +1,14 @@
-# mbp-ubuntu
+# mbp-ubunt.
 
-The ISO in from this repo should allow you to install ubuntu without using an external keyboard or mouse on a MacBook Pro. It work in my MacBook with T2.
+UBUNTU 20.04 ISO with Apple T2 patches built-in. The ISO in from this repo should allow you to install ubuntu without using an external keyboard or mouse on a MacBook Pro. It work in my MacBook with T2.
 
 [![CI](https://github.com/marcosfad/mbp-ubuntu/actions/workflows/CI.yml/badge.svg)](https://github.com/marcosfad/mbp-ubuntu/actions/workflows/CI.yml)
 
 **If this repo helped you in any way, consider inviting a coffee to the people in the [credits](https://github.com/marcosfad/mbp-ubuntu#credits) or [me](https://paypal.me/marcosfad).**
 
-UBUNTU 20.04 ISO with Apple T2 patches built-in.
-
-Apple T2 drivers are integrated with this iso. 
-
 This repo is a rework of the great work done by [@mikeeq](https://github.com/mikeeq/mbp-fedora)
 
-I'm using the Kernel from - <https://github.com/marcosfad/mbp-ubuntu-kernel>
+I'm using the Kernel from - <https://github.com/t2linux/T2-Ubuntu-Kernel>
 
 Using additional drivers:
 - [Apple T2 (apple-bce) (audio, keyboard, touchpad)](https://github.com/t2linux/apple-bce-drv)
@@ -21,42 +17,57 @@ Using additional drivers:
 
 Bootloader is configure correctly out of the box. No workaround needed.
 
-## Which kernel to choose
-
-I've pre installed several different kernel, to allow better support to different hardware.
-
-If your macbook came with Big Sur preinstalled, you should use a bigsur version of kernel. 
-
-If your macbook came with mojave, you should use a mojave version of the kernel.
-
-This will allow you to activate wifi in your macbook. See [this page for more information about wifi drivers](https://wiki.t2linux.org/guides/wifi/)
-
-I've recommend starting with the HWE Kernel. That one comes from Ubuntu own repository and I have had great performance with it.
-
-## Installation
+## How to install (Based on mikeeq/mbp-fedora)
 
 1. Reduce the size of the mac partition in MacOS
-2. Download ISO file from releases. (Use the command line to unzip (`unzip /path/to/file.zip`) or "The Unarchiver" app)
-3. Copy it to a USB using dd (or gdd if installed over brew): 
-```bash
-diskutil list # found which number has the USB
-diskutil umountDisk /dev/diskX
-sudo dd bs=4096 if=ubuntu-20.04-5.6.10-mbp.iso of=/dev/diskX
-```
-4. Boot in Recovery mode and allow booting unknown OS
-5. Restart and immediately press the option key until the Logo come up
-6. Select "EFI Boot" (the third option was the one that worked for me)
-7. Launch Ubuntu Live
-8. Use Ubiquity to install (just click on it)
-9. Select the options that work for you and use for the partition the following setup:
-    * Leave the efi boot as preselected by the installer. Your Mac will keep on working with out problems.
-    * Add a ext4 partition and mounted as `/boot` (1024MB).
-    * Add a ext4 partition and monted as `/` (rest).
-    * Select the `/boot` partition as a target for GRUB installation, otherwise the system won't boot.
-10. Run the installer (In my case it had some problem removing some packages at the end, but this is no real problem)
-11. Shutdown and remove the USB Drive
-12. Start again using the option key. Select the new efi boot.
-13. Enjoy.
+   * HowTo: [Steps to Resize Mac Partition](https://www.anyrecover.com/hard-drive-recovery-data/resize-partition-mac/)
+2. Turn off secure boot and allow booting from external media - <https://support.apple.com/en-us/HT208330>
+3. Download .iso from releases section - <https://github.com/marcosfad/mbp-ubuntu/releases/latest>
+   
+   If it's split into multiple zip parts, i.e.: livecd.zip and livecd.z01 you need to download all zip parts and then
+    * join split files into one and then extract it via unzip 
+      * <https://unix.stackexchange.com/questions/40480/how-to-unzip-a-multipart-spanned-zip-on-linux>
+    * or extract downloaded zip parts directly using:
+      * on Windows winrar or other supported tool like 7zip
+      * on Linux you can use p7zip, dnf install p7zip and then to extract 7za x livecd.zip
+      * on MacOS you can use
+        * the unarchiver from AppStore: <https://apps.apple.com/us/app/the-unarchiver/id425424353?mt=12>
+        * or you can install p7zip via brew brew install p7zip and use 7za x livecd.zip command mentioned above
+          * to install brew follow this tutorial: <https://brew.sh/>
+4. Next you can check the SHA256 checksum of extracted .ISO to verify if your extraction process went well
+
+   MacOS: `shasum -a 256 ubuntu-20.04.iso`
+   Linux `sha256sum ubuntu-20.04.iso`
+   please compare it with a value in sha256 file available in github releases
+
+5. Burn the image on USB stick >=8GB via:
+   * `dd`
+     * Linux `sudo dd bs=4M if=/home/user/Downloads/ubuntu-20.04.iso of=/dev/sdc conv=fdatasync status=progress`
+     * MacOS 
+       ```bash
+       diskutil list # found which number has the USB
+       sudo diskutil umountDisk /dev/diskX
+       sudo dd bs=4096 if=ubuntu-20.04-XXX.iso of=/dev/diskX
+       ```
+     * if `dd` is not working for you for some reason you can try to install `gdd` via `brew` and use GNU `dd` command instead `sudo gdd bs=4M if=ubuntu-20.04-XXX.iso of=/dev/diskX conv=fdatasync status=progress`
+     
+   * Rufus (GPT)- <https://rufus.ie/>, if prompted use DD mode
+   * Please don't use livecd-iso-to-disk as it's overwriting ISO default grub settings and Ubuntu will not boot correctly!
+    
+6. Boot in Recovery mode and allow booting unknown OS
+7. Restart and immediately press the option key until the Logo come up
+8. Select "EFI Boot" (the third option was the one that worked for me)
+9. Launch Ubuntu Live
+10. Use Ubiquity to install (just click on it)
+11. **[IMPORTANT]** Select the options that work for you and use for the partition the following setup:
+     * Leave the efi boot as preselected by the installer. Your Mac will keep on working without problems.
+     * Add a ext4 partition and mounted as `/boot` (1024MB).
+     * Add a ext4 partition and monted as `/` (rest).
+     * Select the `/boot` partition as a target for GRUB installation, otherwise the system won't boot.
+12. Run the installer (In my case it had some problem removing some packages at the end, but this is no real problem)
+13. Shutdown and remove the USB Drive
+14. Start again using the option key. Select the new efi boot.
+15. Enjoy.
 
 See <https://wiki.t2linux.org/distributions/ubuntu/installation/> for more details.
 
@@ -64,7 +75,7 @@ See <https://wiki.t2linux.org/distributions/ubuntu/installation/> for more detai
 
 - See <https://wiki.t2linux.org/guides/wifi/>
 - To install additional languages, install appropriate langpack via apt `sudo apt-get install language-pack-[cod] language-pack-gnome-[cod] language-pack-[cod]-base language-pack-gnome-[cod]-base `
-    - see https://askubuntu.com/questions/149876/how-can-i-install-one-language-by-command-line
+    - see <https://askubuntu.com/questions/149876/how-can-i-install-one-language-by-command-line>
 - You can change mappings of ctrl, fn, option keys (PC keyboard mappings) by creating `/etc/modprobe.d/hid_apple.conf` file and recreating grub config. All available modifications could be found here: <https://github.com/free5lot/hid-apple-patched>
 ```
 # /etc/modprobe.d/hid_apple.conf
@@ -92,26 +103,22 @@ and then:
 
 ### The easy way:
 
-The live cd includes dkms and will automatically run when a new kernel is installed. You can use `dkms status` to see it.
-
-If you are upgrading from 5.7.19 to a newer kernel version (5.10+), you will need updated versions of these kernel modules. Instructions for installing updated ones are [here](https://wiki.t2linux.org/guides/dkms/).
+The live cd includes a script to download the latest T2-Ubuntu-Kernel. Just run `update_kernel_mbp`.
 
 ### Another way:
 
 Check <https://github.com/marcosfad/mbp-ubuntu/blob/master/files/chroot_build.sh> to see how it is done.
 
+Or read <https://wiki.t2linux.org/guides/kernel/>
+
 ## Know issues
 
-- Sound is not working after the install. Follow the instructions detailed by @kevineinarsson: <https://gist.github.com/kevineinarsson/8e5e92664f97508277fefef1b8015fba>  
-On MBP 16,1, you might also need to disable realtime scheduling if the above gist doesn't work, because the pulseaudio server might get killed if the realtime budget is exceeded (<https://bugs.freedesktop.org/show_bug.cgi?id=94629>). Just add `realtime-scheduling = no` to `/etc/pulse/daemon.conf`.
 - Checksum is failing for 2 files: md5sum.txt and /boot/grub/bios.img
-- I'm having troubles shutting down ubuntu. Screen is black but fan keeps on working. I have to force shutdown. 
 
 ## Not working (Following the mikeeq/mbp-fedora)
 
 - Dynamic audio input/output change (on connecting/disconnecting headphones jack)
-- TouchID - (@MCMrARM is working on it - https://github.com/Dunedan/mbp-2016-linux/issues/71#issuecomment-528545490)
-- Thunderbolt (is disabled, because driver was causing kernel panics (not tested with 5.5 kernel))
+- TouchID - (@MCMrARM is working on it - <https://github.com/Dunedan/mbp-2016-linux/issues/71#issuecomment-528545490>)
 - Microphone (it's recognised with new apple t2 sound driver, but there is a low mic volume amp)
 
 ## TODO
@@ -163,3 +170,15 @@ On MBP 16,1, you might also need to disable realtime scheduling if the above gis
 - @aunali1 - thanks for ArchLinux Kernel CI, the continuous support on discord and your continuous efforts.
 - @ppaulweber - thanks for keyboard and Macbook Air patches
 - @kevineinarsson - thanks for the audio settings
+
+## (deprecated) Which kernel to choose
+
+I've pre installed several different kernel, to allow better support to different hardware.
+
+If your macbook came with Big Sur preinstalled, you should use a bigsur version of kernel.
+
+If your macbook came with mojave, you should use a mojave version of the kernel.
+
+This will allow you to activate wifi in your macbook. See [this page for more information about wifi drivers](https://wiki.t2linux.org/guides/wifi/)
+
+I've recommend starting with the HWE Kernel. That one comes from Ubuntu own repository and I have had great performance with it.
