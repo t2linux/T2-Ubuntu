@@ -34,24 +34,12 @@ submenu "Ubuntu, with Linux $file" {
      linux /casper/vmlinuz-$file file=/cdrom/preseed/mbp.seed boot=casper ro efi=noruntime pcie_ports=compat ---
      initrd /casper/initrd-$file
   }
-  menuentry "Try Ubuntu FS without installing (blacklist=thunderbolt)" {
-     linux /casper/vmlinuz-$file file=/cdrom/preseed/mbp.seed boot=casper ro efi=noruntime pcie_ports=compat --- modprobe.blacklist=thunderbolt
-     initrd /casper/initrd-$file
-  }
   menuentry "Install Ubuntu FS" {
      linux /casper/vmlinuz-$file preseed/file=/cdrom/preseed/mbp.seed boot=casper only-ubiquity efi=noruntime pcie_ports=compat ---
      initrd /casper/initrd-$file
   }
-  menuentry "Install Ubuntu FS (blacklist=thunderbolt)" {
-     linux /casper/vmlinuz-$file preseed/file=/cdrom/preseed/mbp.seed boot=casper only-ubiquity efi=noruntime pcie_ports=compat --- modprobe.blacklist=thunderbolt
-     initrd /casper/initrd-$file
-  }
   menuentry "Check disc for defects" {
      linux /casper/vmlinuz-$file boot=casper integrity-check efi=noruntime enforcing=0 efi=noruntime pcie_ports=compat ---
-     initrd /casper/initrd-$file
-  }
-  menuentry "Check disc for defects (blacklist=thunderbolt)" {
-     linux /casper/vmlinuz-$file boot=casper integrity-check efi=noruntime enforcing=0 efi=noruntime pcie_ports=compat --- modprobe.blacklist=thunderbolt
      initrd /casper/initrd-$file
   }
 }

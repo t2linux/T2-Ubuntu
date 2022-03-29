@@ -19,14 +19,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: debug
-        env:
-          TEST: ${{ github.event.inputs.KERNEL_VERSION }}
-        run:
-          echo "inputs.KERNEL_VERSION ${{ github.event.inputs.KERNEL_VERSION}}"
-          echo "env.KERNEL_VERSION ${{env.KERNEL_VERSION}}"
-          echo "env.TEST ${{env.TEST}}"
-
       - name: Configure variables
         id: variables
         env:

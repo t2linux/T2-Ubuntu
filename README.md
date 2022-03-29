@@ -1,4 +1,4 @@
-# mbp-ubunt.
+# mbp-ubuntu
 
 UBUNTU 20.04 ISO with Apple T2 patches built-in. The ISO in from this repo should allow you to install ubuntu without using an external keyboard or mouse on a MacBook Pro. It work in my MacBook with T2.
 
@@ -73,7 +73,8 @@ See <https://wiki.t2linux.org/distributions/ubuntu/installation/> for more detai
 
 ## Configuration
 
-- See <https://wiki.t2linux.org/guides/wifi/>
+- If wifi do not work out of the box, you can try to install the firmware using `sudo dpkg -i /usr/src/iso-firmware.deb`
+  More details you can find on <https://wiki.t2linux.org/guides/wifi/>
 - To install additional languages, install appropriate langpack via apt `sudo apt-get install language-pack-[cod] language-pack-gnome-[cod] language-pack-[cod]-base language-pack-gnome-[cod]-base `
     - see <https://askubuntu.com/questions/149876/how-can-i-install-one-language-by-command-line>
 - You can change mappings of ctrl, fn, option keys (PC keyboard mappings) by creating `/etc/modprobe.d/hid_apple.conf` file and recreating grub config. All available modifications could be found here: <https://github.com/free5lot/hid-apple-patched>
@@ -84,6 +85,7 @@ options hid_apple swap_opt_cmd=1
 ```
 - I switch the touchbar to show f* by default. If you like another configuration, change /etc/modprobe.d/apple-tb.conf or remove it.
 - To update grub, run: `grub-mkconfig -o /boot/grub/grub.cfg`
+- If you have problems with shutdown and your mac has an AMD video Card, try deactivating the dpm on kernel (by adding `amdgpu.dpm=0` to the kernel options) or use copy the udev rule (`sudo cp /usr/src/udev_rules_d_30-amdgpu-pm.rules /etc/udev/rules.d/30-amdgpu-pm.rules`)
 
 ## MISC
 

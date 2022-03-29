@@ -23,8 +23,18 @@ umount "${CHROOT_PATH}/dev"
 
 ### Add update_kernel_mbp script
 echo >&2 "===]> Info: Add update_kernel_mbp script... "
-curl -L https://raw.githubusercontent.com/marcosfad/mbp-ubuntu/master/update_kernel_mbp.sh -o /usr/bin/update_kernel_mbp
+cp -r "${ROOT_PATH}/files/update_kernel_mbp.sh" /usr/bin/update_kernel_mbp
 chmod +x /usr/bin/update_kernel_mbp
+
+### Add wifi firmware script
+echo >&2 "===]> Info: Add wifi firmware... "
+cp -r "${ROOT_PATH}/files/wifi/iso-firmware.deb" "${CHROOT_PATH}"/usr/src/iso-firmware.deb
+
+### Add example to fix amdgpu power manager
+echo >&2 "===]> Configure amdgpu"
+cat << EOF > "${CHROOT_PATH}"/usr/src/udev_rules_d_30-amdgpu-pm.rules
+KERNEL=="card0", SUBSYSTEM=="drm", DRIVERS=="amdgpu", ATTR{device/power_dpm_force_performance_level}="high"
+EOF
 
 ### Copy grub config without finding macos partition
 echo >&2 "===]> Info: Patch Grub... "
