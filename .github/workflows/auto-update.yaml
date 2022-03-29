@@ -1,0 +1,26 @@
+---
+name: CI
+# yamllint disable-line rule:truthy
+on:
+  schedule:
+    - cron: '0 0 * * *'
+jobs:
+  check-update:
+    runs-on: ubuntu-latest
+    outputs:
+      update_available: ${{ steps.variables.outputs.update_available }}
+      latest_kernel: ${{ steps.variables.outputs.update_available }}
+    steps:
+      - name: Configure variables
+        id: variables
+        run: |
+          LATEST_KERNEL_VERSION=$(curl -Ls https://github.com/t2linux/T2-Ubuntu-Kernel/releases/ | grep deb | grep download | grep "${MBP_VERSION}" | cut -d'/' -f6 | head -n1 | cut -d'v' -f2)
+          curl -Ls https://github.com/marcosfad/mbp-ubuntu/releases | grep zip | grep download | grep "${KERNEL_VERSION}" | cut -d'/' -f6 && REQUIRE_BUILD="false" || REQUIRE_BUILD="true"
+          echo "::set-output name=update_available::${REQUIRE_BUILD}"
+          echo "::set-output name=latest_kernel::${LATEST_KERNEL_VERSION}"
+  trigger-build:
+    needs: ['check-update']
+    uses: ./.github/workflows/CI.yml
+    if: ${{ needs.check-update.outputs.update_available == true }}
+    with:
+      KERNEL_VERSION: ${{ needs.check-update.outputs.latest_kernel }}
