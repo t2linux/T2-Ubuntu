@@ -29,7 +29,8 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   dosfstools \
   zip \
   isolinux \
-  syslinux
+  syslinux \
+  curl
 
 echo >&2 "===]> Info: Start building... "
 
