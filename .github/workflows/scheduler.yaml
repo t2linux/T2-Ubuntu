@@ -1,5 +1,5 @@
 ---
-name: CI
+name: Scheduler
 # yamllint disable-line rule:truthy
 on:
   schedule:
