@@ -24,7 +24,7 @@ umount "${CHROOT_PATH}/dev"
 ### Add update_kernel_mbp script
 echo >&2 "===]> Info: Add update_kernel_mbp script... "
 cp -r "${ROOT_PATH}/files/update_kernel_mbp.sh" /usr/bin/update_kernel_mbp
-chmod +x /usr/bin/update_kernel_mbp
+chmod +x "${CHROOT_PATH}"/usr/bin/update_kernel_mbp
 
 ### Add wifi firmware script
 echo >&2 "===]> Info: Add wifi firmware... "
