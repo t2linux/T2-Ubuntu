@@ -103,7 +103,6 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
 echo >&2 "===]> Info: Change initramfs format (for grub)... "
 sed -i "s/COMPRESS=lz4/COMPRESS=gzip/g" "/etc/initramfs-tools/initramfs.conf"
 
-printf '\n### applespi start ###\napple_ib_tb\napple_ib_als\n### applespi end ###' >> /etc/modules-load.d/applespi.conf
 printf '\n# display f* key in touchbar\noptions apple-ib-tb fnmode=2\n'  >> /etc/modprobe.d/apple-touchbar.conf
 
 #if [ -d /tmp/setup_files/wifi/iso-firmware.deb ]; then
