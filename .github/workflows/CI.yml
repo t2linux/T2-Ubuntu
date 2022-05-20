@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
 
@@ -40,13 +40,13 @@ jobs:
           EOF
 
       - name: Release
-        if: github.ref == 'refs/heads/OTP'
+        if: github.ref == 'refs/heads/jammy'
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ github.workspace }}/*.iso
-          tag_name: v20.04-${{ steps.tag.outputs.tag }}
+          tag_name: v22.04-${{ steps.tag.outputs.tag }}
           body: If you are facing blank screen after installation, try [booting using refind](https://wiki.t2linux.org/guides/refind/).
           draft: false
-          prerelease: false
+          prerelease: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

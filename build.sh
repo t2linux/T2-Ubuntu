@@ -5,7 +5,7 @@ ROOT_PATH=$(pwd)
 WORKING_PATH=/root/work
 CHROOT_PATH="${WORKING_PATH}/chroot"
 IMAGE_PATH="${WORKING_PATH}/image"
-KERNEL_VERSION=5.17.7
+KERNEL_VERSION=5.17.9
 PKGREL=1
 sed -i "s/KVER/${KERNEL_VERSION}/g" $(pwd)/files/chroot_build.sh
 sed -i "s/PREL/${PKGREL}/g" $(pwd)/files/chroot_build.sh
@@ -40,7 +40,7 @@ for ALTERNATIVE in t2
 do
   echo >&2 "===]> Info: Start building ${ALTERNATIVE}... "
 
-  echo >&2 "===]> Info: Build Ubuntu FS... "
+  echo >&2 "===]> Info: Build Ubuntu Jammy... "
   /bin/bash -c "
     ROOT_PATH=${ROOT_PATH} \\
     WORKING_PATH=${WORKING_PATH} \\
@@ -50,7 +50,7 @@ do
     ${ROOT_PATH}/01_build_file_system.sh
   "
 
-  echo >&2 "===]> Info: Build Image FS... "
+  echo >&2 "===]> Info: Build Image Jammy... "
   /bin/bash -c "
     ROOT_PATH=${ROOT_PATH} \\
     WORKING_PATH=${WORKING_PATH} \\
