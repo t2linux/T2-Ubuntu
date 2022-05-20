@@ -48,7 +48,6 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   ubuntu-standard \
   sudo \
   casper \
-  lupin-casper \
   discover \
   laptop-detect \
   os-prober \
