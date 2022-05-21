@@ -6,7 +6,7 @@ The ISO in from this repo should allow you to install ubuntu without using an ex
 
 **If this repo helped you in any way, consider inviting a coffee to the people in the [credits](https://github.com/marcosfad/mbp-ubuntu#credits) or [me](https://paypal.me/marcosfad).**
 
-UBUNTU 20.04 ISO with Apple T2 patches built-in.
+UBUNTU ISO with Apple T2 patches built-in.
 
 Apple T2 drivers are integrated with this iso. 
 
