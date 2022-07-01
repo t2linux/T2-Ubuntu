@@ -47,6 +47,6 @@ jobs:
           tag_name: v22.04-${{ steps.tag.outputs.tag }}
           body: If you are facing blank screen after installation, try [booting using refind](https://wiki.t2linux.org/guides/refind/).
           draft: false
-          prerelease: true
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
