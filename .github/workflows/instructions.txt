@@ -1,0 +1,3 @@
+If you are facing blank screen after installation, try [booting using refind](https://wiki.t2linux.org/guides/refind/).
+
+Follow [this guide](https://wiki.t2linux.org/guides/wifi-bluetooth/) for Wi-Fi and Bluetooth to work.
