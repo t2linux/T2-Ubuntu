@@ -4,7 +4,7 @@ The ISOs from this repo should allow you to install Ubuntu without using an exte
 
 [![CI](https://github.com/AdityaGarg8/mbp-ubuntu/actions/workflows/CI.yml/badge.svg)](https://github.com/marcosfad/mbp-ubuntu/actions/workflows/CI.yml)
 
-**If this repo helped you in any way, consider inviting a coffee to the people in the [credits](https://github.com/AdityaGarg8/T2-Ubuntu#credits), [link](https://wiki.t2linux.org/contribute/).
+**If this repo helped you in any way, consider inviting a coffee to the people in the [credits](https://github.com/AdityaGarg8/T2-Ubuntu#credits), [link](https://wiki.t2linux.org/contribute/).**
 
 UBUNTU ISO with Apple T2 patches built-in.
 
