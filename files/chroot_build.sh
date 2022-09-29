@@ -30,8 +30,8 @@ echo >&2 "===]> Info: Install systemd and Ubuntu MBP Repo... "
 apt-get install -y systemd-sysv gnupg curl wget
 
 mkdir -p /etc/apt/sources.list.d
-echo "deb https://mbp-ubuntu-kernel.herokuapp.com/ /" >/etc/apt/sources.list.d/mbp-ubuntu-kernel.list
-curl -L https://mbp-ubuntu-kernel.herokuapp.com/KEY.gpg | apt-key add -
+curl -s --compressed "https://adityagarg8.github.io/t2-ubuntu-repo/KEY.gpg" | gpg --dearmor | tee /etc/apt/trusted.gpg.d/t2-ubuntu-repo.gpg >/dev/null
+curl -s --compressed -o /etc/apt/sources.list.d/t2.list "https://adityagarg8.github.io/t2-ubuntu-repo/t2.list"
 apt-get update
 
 echo >&2 "===]> Info: Configure machine-id and divert... "
@@ -91,7 +91,7 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   ubiquity-slideshow-ubuntu \
   ubiquity-ubuntu-artwork
 
-echo >&2 "===]> Info: Install useful applications... "
+echo >&2 "===]> Info: Install useful applications and sound configuration... "
 
 apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
   git \
@@ -100,7 +100,8 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   make \
   gcc \
   dkms \
-  iwd
+  iwd \
+  apple-t2-audio-config
 
 echo >&2 "===]> Info: Change initramfs format (for grub)... "
 sed -i "s/COMPRESS=lz4/COMPRESS=gzip/g" "/etc/initramfs-tools/initramfs.conf"
