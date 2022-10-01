@@ -40,7 +40,7 @@ jobs:
           EOF
 
       - name: Release
-        if: github.ref == 'refs/heads/jammy'
+        if: github.ref == 'refs/heads/jammy-16,4'
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ github.workspace }}/*.iso
