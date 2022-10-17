@@ -69,8 +69,8 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
 
 # This is not ideal, but it should work until the apt repo gets updated.
 
-curl -L https://github.com/t2linux/T2-Ubuntu-Kernel/releases/download/vKVER-PREL/linux-headers-KVER-t2_KVER-PREL_amd64.deb > /tmp/headers.deb
-curl -L https://github.com/t2linux/T2-Ubuntu-Kernel/releases/download/vKVER-PREL/linux-image-KVER-t2_KVER-PREL_amd64.deb > /tmp/image.deb
+curl -L https://github.com/t2linux/T2-Ubuntu-Kernel/releases/download/vKVER-PREL/linux-headers-KVER-${ALTERNATIVE}_KVER-PREL_amd64.deb > /tmp/headers.deb
+curl -L https://github.com/t2linux/T2-Ubuntu-Kernel/releases/download/vKVER-PREL/linux-image-KVER-${ALTERNATIVE}_KVER-PREL_amd64.deb > /tmp/image.deb
 file /tmp/*
 apt install /tmp/headers.deb /tmp/image.deb
 
