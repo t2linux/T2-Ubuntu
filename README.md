@@ -2,7 +2,7 @@
 
 The ISOs from this repo should allow you to install Ubuntu without using an external keyboard or mouse on a T2 Mac. It works in my MacBook Pro 16 inch, 2019.
 
-[![CI](https://github.com/AdityaGarg8/mbp-ubuntu/actions/workflows/CI.yml/badge.svg)](https://github.com/marcosfad/mbp-ubuntu/actions/workflows/CI.yml)
+![CI](https://github.com/AdityaGarg8/T2-Ubuntu/actions/workflows/CI.yml/badge.svg?branch=jammy)
 
 **If this repo helped you in any way, consider inviting a coffee to the people in the [credits](https://github.com/AdityaGarg8/T2-Ubuntu#credits), [link](https://wiki.t2linux.org/contribute/).**
 
