@@ -21,7 +21,7 @@ jobs:
         run: |
           VERSION=$(grep ^KERNEL_VERSION build.sh | head -n1| cut -d = -f2)
           REL=$(grep "PKGREL=\d*" build.sh | cut -d = -f2)
-          echo "::set-output name=tag::${VERSION}-${REL}"
+          echo "kerneltag=${VERSION}-${REL}" >> $GITHUB_ENV
           sudo apt install git
           mkdir /tmp/artifacts
           git clone https://github.com/t2linux/T2-Ubuntu-Kernel.git
@@ -38,7 +38,7 @@ jobs:
         with:
           files: |
             /tmp/artifacts/*.deb
-          tag_name: v${{ steps.build.outputs.tag }}-kernel
+          tag_name: v${{ env.kerneltag }}-kernel
           draft: false
           prerelease: true
         env:
@@ -49,10 +49,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Build
-        run: |
-          cd ${{ github.workspace }}
-          sudo rm -r ${{ github.workspace }}/T2-Ubuntu-Kernel
-          sudo ./build.sh
+        run: sudo ./build.sh
 
       - name: print sha256sum
         run: cat output/sha256
@@ -63,7 +60,7 @@ jobs:
           VER=$(egrep ^KERNEL_VERSION build.sh|cut -d= -f2)
           REL=$(grep "PKGREL=\d*" build.sh | cut -d = -f2)
           echo Version is $VER
-          echo "::set-output name=tag::${VER}-${REL}"
+          echo "isotag=${VER}-${REL}" >> $GITHUB_ENV
 
       - name: Upload iso artifact
         uses: actions/upload-artifact@v2
@@ -77,7 +74,7 @@ jobs:
           Download all the artifacts, and put them in a folder
           without other files. Then run:"
           unzip "*.z??.zip"
-          cat livecd-${{ steps.tag.outputs.tag }}-t2.z?? > cd.zip
+          cat livecd-${{ env.isotag }}-t2.z?? > cd.zip
           echo unzip cd.zip
           EOF
 
@@ -86,7 +83,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ github.workspace }}/*.iso
-          tag_name: v22.04-${{ steps.tag.outputs.tag }}
+          tag_name: v22.04-${{ env.isotag }}
           body_path: ${{ github.workspace }}/.github/workflows/instructions.txt
           draft: false
           prerelease: false
@@ -98,6 +95,6 @@ jobs:
         uses: dev-drprasad/delete-tag-and-release@v0.2.0
         with:
           delete_release: true
-          tag_name: v${{ steps.build.outputs.tag }}-kernel
+          tag_name: v${{ env.isotag }}-kernel
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
