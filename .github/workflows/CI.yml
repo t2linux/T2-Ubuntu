@@ -20,8 +20,9 @@ jobs:
         id: tag
         run: |
           VER=$(egrep ^KERNEL_VERSION build.sh|cut -d= -f2)
+          REL=$(grep "PKGREL=\d*" build.sh | cut -d = -f2)
           echo Version is $VER
-          echo "::set-output name=tag::${VER}"
+          echo "::set-output name=tag::${VER}-${REL}"
 
       - name: Upload iso artifact
         uses: actions/upload-artifact@v2
