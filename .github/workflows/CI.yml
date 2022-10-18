@@ -30,7 +30,6 @@ jobs:
           wget https://github.com/AdityaGarg8/T2-Ubuntu/raw/ssd/ssd.patch
           cd ${{ github.workspace }}/T2-Ubuntu-Kernel
           sudo ./build.sh
-          sudo rm -r /root/work
           sudo rm /tmp/artifacts/*dbg*
           sudo rm /tmp/artifacts/*libc-dev*
       - name: Release
