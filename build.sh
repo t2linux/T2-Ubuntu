@@ -36,7 +36,7 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   syslinux
 
 echo >&2 "===]> Info: Start loop... "
-for ALTERNATIVE in t2
+for ALTERNATIVE in t2 t2-external
 do
   echo >&2 "===]> Info: Start building ${ALTERNATIVE}... "
 

@@ -67,10 +67,14 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   grub2 \
   nautilus-admin
 
-# This is not ideal, but it should work until the apt repo gets updated.
-
+if [[ ${ALTERNATIVE} = t2-external ]]
+then
+curl -L https://github.com/t2linux/T2-Ubuntu/releases/download/vKVER-PREL-kernel/linux-headers-KVER-${ALTERNATIVE}_KVER-PREL_amd64.deb > /tmp/headers.deb
+curl -L https://github.com/t2linux/T2-Ubuntu/releases/download/vKVER-PREL-kernel/linux-image-KVER-${ALTERNATIVE}_KVER-PREL_amd64.deb > /tmp/image.deb
+else
 curl -L https://github.com/t2linux/T2-Ubuntu-Kernel/releases/download/vKVER-PREL/linux-headers-KVER-${ALTERNATIVE}_KVER-PREL_amd64.deb > /tmp/headers.deb
 curl -L https://github.com/t2linux/T2-Ubuntu-Kernel/releases/download/vKVER-PREL/linux-image-KVER-${ALTERNATIVE}_KVER-PREL_amd64.deb > /tmp/image.deb
+fi
 file /tmp/*
 apt install /tmp/headers.deb /tmp/image.deb
 

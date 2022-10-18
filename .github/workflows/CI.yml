@@ -5,13 +5,55 @@ on:
   [push]
 
 jobs:
-  build:
+  Kernel:
     runs-on: ubuntu-22.04
     steps:
+      - name: Free up disk space for the CI
+        uses: AdityaGarg8/remove-unwanted-software@v1
+        with:
+          remove-android: 'true'
+          remove-dotnet: 'true'
+          remove-haskell: 'false'
+
       - uses: actions/checkout@v2
 
+      - name: Build kernel with internal SSD removed
+        run: |
+          VERSION=$(grep ^KERNEL_VERSION build.sh | head -n1| cut -d = -f2)
+          REL=$(grep "PKGREL=\d*" build.sh | cut -d = -f2)
+          echo "::set-output name=tag::${VERSION}-${REL}"
+          sudo apt install git
+          mkdir /tmp/artifacts
+          git clone https://github.com/t2linux/T2-Ubuntu-Kernel.git
+          sed -i "s/LOCALVERSION=-t2/LOCALVERSION=-t2-external/g" ${{ github.workspace }}/T2-Ubuntu-Kernel/build.sh
+          cd ${{ github.workspace }}/T2-Ubuntu-Kernel/patches
+          wget https://github.com/AdityaGarg8/T2-Ubuntu/raw/ssd/ssd.patch
+          cd ${{ github.workspace }}/T2-Ubuntu-Kernel
+          sudo ./build.sh
+          sudo rm -r /root/work
+          sudo rm /tmp/artifacts/*dbg*
+          sudo rm /tmp/artifacts/*libc-dev*
+      - name: Release
+        if: github.ref == 'refs/heads/jammy'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            /tmp/artifacts/*.deb
+          tag_name: v${{ steps.build.outputs.tag }}-kernel
+          draft: false
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       
+  ISO:
+    needs: [Kernel]
+    runs-on: ubuntu-22.04
+    steps:
       - name: Build
-        run: sudo ./build.sh
+        run: |
+          cd ${{ github.workspace }}
+          sudo rm -r ${{ github.workspace }}/T2-Ubuntu-Kernel
+          sudo ./build.sh
 
       - name: print sha256sum
         run: cat output/sha256
@@ -20,8 +62,9 @@ jobs:
         id: tag
         run: |
           VER=$(egrep ^KERNEL_VERSION build.sh|cut -d= -f2)
+          REL=$(grep "PKGREL=\d*" build.sh | cut -d = -f2)
           echo Version is $VER
-          echo "::set-output name=tag::${VER}"
+          echo "::set-output name=tag::${VER}-${REL}"
 
       - name: Upload iso artifact
         uses: actions/upload-artifact@v2
@@ -48,5 +91,14 @@ jobs:
           body_path: ${{ github.workspace }}/.github/workflows/instructions.txt
           draft: false
           prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Delete kernel from releases
+        if: github.ref == 'refs/heads/jammy'
+        uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        with:
+          delete_release: true
+          tag_name: v${{ steps.build.outputs.tag }}-kernel
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
