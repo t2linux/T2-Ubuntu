@@ -15,7 +15,7 @@ jobs:
           remove-dotnet: 'true'
           remove-haskell: 'false'
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Build kernel with internal SSD removed
         run: |
@@ -32,6 +32,13 @@ jobs:
           sudo ./build.sh
           sudo rm /tmp/artifacts/*dbg*
           sudo rm /tmp/artifacts/*libc-dev*
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: kernel-${{ env.kerneltag }}
+          path: /tmp/artifacts/*
+
       - name: Release
         if: github.ref == 'refs/heads/jammy'
         uses: softprops/action-gh-release@v1
@@ -48,7 +55,7 @@ jobs:
     needs: [Kernel]
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Build
         run: sudo ./build.sh
