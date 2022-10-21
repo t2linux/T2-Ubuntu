@@ -50,7 +50,40 @@ jobs:
           prerelease: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-       
+
+  Safe-graphics:
+    needs: [Kernel]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: 'Checkout Jammy Repo'
+        uses: actions/checkout@v3
+
+      - name: Get version
+        run: |
+         VERSION=$(grep ^KERNEL_VERSION build.sh | head -n1| cut -d = -f2)
+         REL=$(grep "PKGREL=\d*" build.sh | cut -d = -f2)
+         echo "ver=${VERSION}" >> $GITHUB_ENV
+         echo "release=${REL}" >> $GITHUB_ENV
+          
+      - name: 'Checkout jammy-16,4 Repo'
+        uses: actions/checkout@v3
+        with:
+          ref: jammy-16,4
+
+      - name: 'Push new version to jammy-16,4'
+        id: publish
+        run: |
+         sed -i "s/KERNEL_VERSION=.*/KERNEL_VERSION=${{ env.ver }}/g" build.sh
+         sed -i "s/PKGREL=.*/PKGREL=${{ env.release }}/g" build.sh
+         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+         git config --local user.name "github-actions[bot]"
+         git commit -m "${{ env.ver }}-${{ env.release }}" -a
+      - name: Push changes to the repo
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: jammy-16,4
+
   ISO:
     needs: [Kernel]
     runs-on: ubuntu-22.04
