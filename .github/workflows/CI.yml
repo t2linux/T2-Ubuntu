@@ -73,7 +73,7 @@ jobs:
       - name: 'Push new version to jammy-16,4'
         id: publish
         run: |
-         sed -i "s/KERNEL_VERSION=.*/KERNEL_VERSION=${{ env.ver }}/g" build.sh
+         sed -i "s/KERNEL_VERSION=6.*/KERNEL_VERSION=${{ env.ver }}/g" build.sh
          sed -i "s/PKGREL=.*/PKGREL=${{ env.release }}/g" build.sh
          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
          git config --local user.name "github-actions[bot]"
