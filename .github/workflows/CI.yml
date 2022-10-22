@@ -69,6 +69,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: jammy-16,4
+          persist-credentials: false
 
       - name: 'Push new version to jammy-16,4'
         id: publish
@@ -81,7 +82,7 @@ jobs:
       - name: Push changes to the repo
         uses: ad-m/github-push-action@master
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.PAT }}
           branch: jammy-16,4
 
   ISO:
