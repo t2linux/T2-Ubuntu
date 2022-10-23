@@ -25,7 +25,7 @@ jobs:
           sudo apt install git
           mkdir /tmp/artifacts
           git clone https://github.com/t2linux/T2-Ubuntu-Kernel.git
-          sed -i "s/LOCALVERSION=-t2/LOCALVERSION=-t2-external/g" ${{ github.workspace }}/T2-Ubuntu-Kernel/build.sh
+          sed -i "s/LOCALVERSION=-t2.*/LOCALVERSION=-t2-external/g" ${{ github.workspace }}/T2-Ubuntu-Kernel/build.sh
           cd ${{ github.workspace }}/T2-Ubuntu-Kernel/patches
           wget https://github.com/AdityaGarg8/T2-Ubuntu/raw/ssd/ssd.patch
           cd ${{ github.workspace }}/T2-Ubuntu-Kernel
