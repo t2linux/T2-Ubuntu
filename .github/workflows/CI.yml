@@ -22,7 +22,7 @@ jobs:
           VER=$(egrep ^KERNEL_VERSION build.sh|cut -d= -f2)
           REL=$(grep "PKGREL=\d*" build.sh | cut -d = -f2)
           echo Version is $VER
-          echo "::set-output name=tag::${VER}-${REL}"
+          echo "tag=${VER}-${REL}" >> $GITHUB_OUTPUT
 
       - name: Upload iso artifact
         uses: actions/upload-artifact@v2
@@ -45,7 +45,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ github.workspace }}/*.iso
-          tag_name: v22.04-${{ steps.tag.outputs.tag }}
+          tag_name: ${{ steps.tag.outputs.tag }}
           body_path: ${{ github.workspace }}/.github/workflows/instructions.txt
           draft: false
           prerelease: false
