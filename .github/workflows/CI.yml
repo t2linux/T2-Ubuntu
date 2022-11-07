@@ -1,5 +1,5 @@
 ---
-name: CI
+name: CI - Jammy
 # yamllint disable-line rule:truthy
 on:
   [push]
