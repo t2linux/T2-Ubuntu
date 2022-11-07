@@ -29,19 +29,20 @@ jobs:
           -t \
           -v "$(pwd)":/repo \
           ${DOCKER_IMAGE} \
-          /bin/bash -c 'cd /repo && \
+          /bin/bash -c "cd /repo && \
           apt-get update && \
           apt-get install -y lsb-release git wget && \
           mkdir /tmp/artifacts && \
           git clone https://github.com/t2linux/T2-Ubuntu-Kernel.git && \
-          sed -i 's/LOCALVERSION=-t2-\"${CODENAME}\"/LOCALVERSION=-t2-external/g' /repo/T2-Ubuntu-Kernel/build.sh && cd /repo/T2-Ubuntu-Kernel && \
+          sed -i "s/CODENAME=.*/CODENAME=external/g" /repo/T2-Ubuntu-Kernel/build.sh && cd /repo/T2-Ubuntu-Kernel && \
           cd /repo/T2-Ubuntu-Kernel/patches && \
           wget https://github.com/AdityaGarg8/T2-Ubuntu/raw/ssd/ssd.patch && \
           cd /repo/T2-Ubuntu-Kernel && \
           ./build.sh && mkdir /repo/debs && \
           rm /tmp/artifacts/*dbg* && \
           rm /tmp/artifacts/*libc-dev* && \
-          cp -r /tmp/artifacts/* /repo/debs'
+          cp -r /tmp/artifacts/* /repo/debs"
+          mkdir /tmp/artifacts
           cp -r "$(pwd)"/debs/* /tmp/artifacts
 
       - name: Upload package artifact
