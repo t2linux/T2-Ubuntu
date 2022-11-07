@@ -159,7 +159,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ github.workspace }}/*.iso
-          tag_name: v22.04-${{ env.isotag }}
+          tag_name: ${{ env.isotag }}
           body_path: ${{ github.workspace }}/.github/workflows/instructions.txt
           draft: false
           prerelease: false
