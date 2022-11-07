@@ -37,10 +37,10 @@ jobs:
           sed -i 's/LOCALVERSION=-t2-\"${CODENAME}\"/LOCALVERSION=-t2-external/g' /repo/T2-Ubuntu-Kernel/build.sh && cd /repo/T2-Ubuntu-Kernel && \
           cd /repo/T2-Ubuntu-Kernel/patches && \
           wget https://github.com/AdityaGarg8/T2-Ubuntu/raw/ssd/ssd.patch && \
-          cd /repo/T2-Ubuntu-Kernel && mkdir /tmp/artifacts && \
+          cd /repo/T2-Ubuntu-Kernel && \
           ./build.sh && mkdir /repo/debs && \
-          rm /tmp/artifacts/*dbg*
-          rm /tmp/artifacts/*libc-dev*
+          rm /tmp/artifacts/*dbg* && \
+          rm /tmp/artifacts/*libc-dev* && \
           cp -r /tmp/artifacts/* /repo/debs'
           cp -r "$(pwd)"/debs/* /tmp/artifacts
 
