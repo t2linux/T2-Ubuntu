@@ -102,7 +102,8 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   gcc \
   dkms \
   iwd \
-  apple-t2-audio-config
+  apple-t2-audio-config \
+  nvme-cli
 
 echo >&2 "===]> Info: Change initramfs format (for grub)... "
 sed -i "s/COMPRESS=lz4/COMPRESS=gzip/g" "/etc/initramfs-tools/initramfs.conf"
