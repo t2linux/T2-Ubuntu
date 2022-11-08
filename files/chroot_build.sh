@@ -77,7 +77,7 @@ apt install /tmp/headers.deb /tmp/image.deb
 echo >&2 "===]> Info: Install window manager... "
 
 apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
-  plymouth-theme-ubuntu-logo \
+  plymouth-theme-ubuntu-gnome-logo \
   ubuntu-desktop-minimal \
   ubuntu-gnome-wallpapers \
   snapd
