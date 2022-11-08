@@ -45,7 +45,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ github.workspace }}/*.iso
-          tag_name: ${{ steps.tag.outputs.tag }}
+          tag_name: v${{ steps.tag.outputs.tag }}
           body_path: ${{ github.workspace }}/.github/workflows/instructions.txt
           draft: false
           prerelease: false
