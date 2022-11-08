@@ -19,7 +19,8 @@ jobs:
           -v "$(pwd)":/repo \
           ${DOCKER_IMAGE} \
           /bin/bash -c 'cd /repo && \
-          ./build.sh'
+          apt update && apt install -y sudo && \
+          sudo ./build.sh'
 
       - name: print sha256sum
         run: cat output/sha256
