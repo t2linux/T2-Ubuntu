@@ -81,7 +81,7 @@ apt install /tmp/headers.deb /tmp/image.deb
 echo >&2 "===]> Info: Install window manager... "
 
 apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
-  plymouth-theme-ubuntu-logo \
+  plymouth-theme-ubuntu-gnome-logo \
   ubuntu-desktop-minimal \
   ubuntu-gnome-wallpapers \
   snapd
@@ -176,8 +176,6 @@ echo >&2 "===]> Info: Reconfigure environment ... "
 
 locale-gen --purge en_US.UTF-8 en_US
 printf 'LANG="C.UTF-8"\nLANGUAGE="C.UTF-8"\n' >/etc/default/locale
-
-dpkg-reconfigure -f readline resolvconf
 
 cat <<EOF >/etc/NetworkManager/NetworkManager.conf
 [main]
