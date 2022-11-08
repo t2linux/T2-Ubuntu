@@ -170,6 +170,7 @@ apt-get autoremove -y
 
 echo >&2 "===]> Info: Reconfigure environment ... "
 
+apt-get install -y resolvconf
 locale-gen --purge en_US.UTF-8 en_US
 printf 'LANG="C.UTF-8"\nLANGUAGE="C.UTF-8"\n' >/etc/default/locale
 
