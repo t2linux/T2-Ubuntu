@@ -1,6 +1,6 @@
 #!/bin/sh
 if [ "${1}" = "pre" ]; then
-        modprobe -r apple_ib_tb
+        modprobe -r apple-touchbar
 elif [ "${1}" = "post" ]; then
-        modprobe apple_ib_tb
+        modprobe apple-touchbar
 fi
