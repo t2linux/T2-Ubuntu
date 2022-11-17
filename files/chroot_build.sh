@@ -118,26 +118,6 @@ printf '\n### apple-bce start ###\nsnd\nsnd_pcm\napple-bce\n### apple-bce end ##
 printf '\n# display f* key in touchbar\noptions apple-ib-tb fnmode=1\n'  >> /etc/modprobe.d/apple-tb.conf
 #printf '\n# delay loading of the touchbar driver\ninstall apple-ib-tb /bin/sleep 7; /sbin/modprobe --ignore-install apple-ib-tb' >> /etc/modprobe.d/delay-tb.conf
 
-echo '
-#!/usr/bin/env bash
-echo "Select Touch Bar mode"
-echo
-echo "0: Only show F1-F12"
-echo "1: Show media and brightness controls, use the fn key to switch to F1-12"
-echo "2: Show F1-F12, use the fn key to switch to media and brightness controls"
-echo "3: Only show media and brightness controls"
-echo "4: Only show the escape key"
-read tb
-echo "Changing default mode ..."
-echo "# display f* key in touchbar" > /etc/modprobe.d/apple-tb.conf
-echo "options apple-ib-tb fnmode=$tb" >> /etc/modprobe.d/apple-tb.conf
-bash -c "echo $tb > /sys/class/input/*/device/fnmode"
-echo "Done!"' | tee /usr/local/bin/touchbar >/dev/null
-
-chmod a+x /usr/local/bin/touchbar
-chown root:root /usr/local/bin/touchbar
-
-
 echo >&2 "===]> Info: Update initramfs... "
 
 ## Add custom drivers to be loaded at boot
