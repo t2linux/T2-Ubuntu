@@ -83,7 +83,7 @@ do
     echo "Error building ${KERNEL_VERSION}-${ALTERNATIVE}"
     exit "${livecd_exitcode}"
   fi
-  ### Zip iso and split it into multiple parts - github max size of release attachment is 2GB, where ISO is sometimes bigger than that
+  ### Zip iso and split it into multiple parts - GitHub max size of release attachment is 2GB, where ISO is sometimes bigger than that
   cd "${ROOT_PATH}"
   zip -s 1500m "${ROOT_PATH}/output/livecd-${KERNEL_VERSION}-${ALTERNATIVE}.zip" "${ROOT_PATH}/ubuntu-22.04-${KERNEL_VERSION}-${ALTERNATIVE}.iso"
 done
