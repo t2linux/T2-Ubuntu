@@ -38,52 +38,6 @@ jobs:
           github_token: ${{ secrets.PAT }}
           branch: kinetic
 
-  Kernel:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Free up disk space for the CI
-        uses: AdityaGarg8/remove-unwanted-software@v1
-        with:
-          remove-android: 'true'
-          remove-dotnet: 'true'
-          remove-haskell: 'false'
-
-      - uses: actions/checkout@v3
-
-      - name: Build kernel with internal SSD removed
-        run: |
-          VERSION=$(grep ^KERNEL_VERSION build.sh | head -n1| cut -d = -f2)
-          REL=$(grep "PKGREL=\d*" build.sh | cut -d = -f2)
-          echo "kerneltag=${VERSION}-${REL}" >> $GITHUB_ENV
-          sudo apt install git
-          mkdir /tmp/artifacts
-          git clone https://github.com/t2linux/T2-Ubuntu-Kernel.git
-          sed -i 's/LOCALVERSION=-t2-\"${CODENAME}\"/LOCALVERSION=-t2-external/g' ${{ github.workspace }}/T2-Ubuntu-Kernel/build.sh
-          cd ${{ github.workspace }}/T2-Ubuntu-Kernel/patches
-          wget https://github.com/AdityaGarg8/T2-Ubuntu/raw/ssd/ssd.patch
-          cd ${{ github.workspace }}/T2-Ubuntu-Kernel
-          sudo ./build.sh
-          sudo rm /tmp/artifacts/*dbg*
-          sudo rm /tmp/artifacts/*libc-dev*
-
-      - name: Upload package artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: kernel-${{ env.kerneltag }}
-          path: /tmp/artifacts/*
-
-      - name: Release
-        if: github.ref == 'refs/heads/jammy'
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            /tmp/artifacts/*.deb
-          tag_name: v${{ env.kerneltag }}-kernel
-          draft: false
-          prerelease: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   Safe-graphics:
     needs: [Kernel]
     runs-on: ubuntu-22.04
@@ -163,14 +117,5 @@ jobs:
           body_path: ${{ github.workspace }}/.github/workflows/instructions.txt
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Delete kernel from releases
-        if: github.ref == 'refs/heads/jammy'
-        uses: dev-drprasad/delete-tag-and-release@v0.2.0
-        with:
-          delete_release: true
-          tag_name: v${{ env.isotag }}-kernel
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
