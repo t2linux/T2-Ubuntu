@@ -1,5 +1,5 @@
 ---
-name: CI - Kinetic
+name: CI
 # yamllint disable-line rule:truthy
 on:
   [push]
