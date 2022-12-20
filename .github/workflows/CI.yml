@@ -7,7 +7,6 @@ on:
 jobs:
 
   Safe-graphics:
-    needs: [Kernel]
     runs-on: ubuntu-22.04
     steps:
       - name: 'Checkout Kinetic Repo'
@@ -41,7 +40,6 @@ jobs:
           branch: kinetic-16,4
 
   ISO:
-    needs: [Kernel]
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
