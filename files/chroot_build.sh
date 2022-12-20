@@ -67,14 +67,8 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   grub2 \
   nautilus-admin
 
-if [[ ${ALTERNATIVE} = t2-external ]]
-then
-curl -L https://github.com/AdityaGarg8/T2-Ubuntu/releases/download/vKVER-PREL-kernel-kinetic/linux-headers-KVER-${ALTERNATIVE}_KVER-PREL_amd64.deb > /tmp/headers.deb
-curl -L https://github.com/AdityaGarg8/T2-Ubuntu/releases/download/vKVER-PREL-kernel-kinetic/linux-image-KVER-${ALTERNATIVE}_KVER-PREL_amd64.deb > /tmp/image.deb
-else
 curl -L https://github.com/t2linux/T2-Ubuntu-Kernel/releases/download/vKVER-PREL/linux-headers-KVER-${ALTERNATIVE}_KVER-PREL_amd64.deb > /tmp/headers.deb
 curl -L https://github.com/t2linux/T2-Ubuntu-Kernel/releases/download/vKVER-PREL/linux-image-KVER-${ALTERNATIVE}_KVER-PREL_amd64.deb > /tmp/image.deb
-fi
 file /tmp/*
 apt install /tmp/headers.deb /tmp/image.deb
 

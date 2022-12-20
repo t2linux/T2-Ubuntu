@@ -1,67 +1,10 @@
 ---
-name: CI - Kinetic
+name: CI
 # yamllint disable-line rule:truthy
 on:
   [push]
 
 jobs:
-  Kernel:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Free up disk space for the CI
-        uses: AdityaGarg8/remove-unwanted-software@v1
-        with:
-          remove-android: 'true'
-          remove-dotnet: 'true'
-          remove-haskell: 'false'
-
-      - uses: actions/checkout@v3
-
-      - name: Build kernel with internal SSD removed
-        run: |
-          VERSION=$(grep ^KERNEL_VERSION build.sh | head -n1| cut -d = -f2)
-          REL=$(grep "PKGREL=\d*" build.sh | cut -d = -f2)
-          echo "kerneltag=${VERSION}-${REL}" >> $GITHUB_ENV
-
-          DOCKER_IMAGE=ubuntu:22.10
-          docker pull ${DOCKER_IMAGE}
-          docker run \
-          -t \
-          -v "$(pwd)":/repo \
-          ${DOCKER_IMAGE} \
-          /bin/bash -c "cd /repo && \
-          apt-get update && \
-          apt-get install -y lsb-release git wget && \
-          mkdir /tmp/artifacts && \
-          git clone https://github.com/t2linux/T2-Ubuntu-Kernel.git && \
-          sed -i "s/CODENAME=.*/CODENAME=external/g" /repo/T2-Ubuntu-Kernel/build.sh && cd /repo/T2-Ubuntu-Kernel && \
-          cd /repo/T2-Ubuntu-Kernel/patches && \
-          wget https://github.com/AdityaGarg8/T2-Ubuntu/raw/ssd/ssd.patch && \
-          cd /repo/T2-Ubuntu-Kernel && \
-          ./build.sh && mkdir /repo/debs && \
-          rm /tmp/artifacts/*dbg* && \
-          rm /tmp/artifacts/*libc-dev* && \
-          cp -r /tmp/artifacts/* /repo/debs"
-          mkdir /tmp/artifacts
-          cp -r "$(pwd)"/debs/* /tmp/artifacts
-
-      - name: Upload package artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: kernel-${{ env.kerneltag }}-kinetic
-          path: /tmp/artifacts/*
-
-      - name: Release
-        if: github.ref == 'refs/heads/kinetic'
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            /tmp/artifacts/*.deb
-          tag_name: v${{ env.kerneltag }}-kernel-kinetic
-          draft: false
-          prerelease: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   Safe-graphics:
     needs: [Kernel]
@@ -142,14 +85,5 @@ jobs:
           body_path: ${{ github.workspace }}/.github/workflows/instructions.txt
           draft: false
           prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Delete kernel from releases
-        if: github.ref == 'refs/heads/kinetic'
-        uses: dev-drprasad/delete-tag-and-release@v0.2.0
-        with:
-          delete_release: true
-          tag_name: v${{ env.isotag }}-kernel-kinetic
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
