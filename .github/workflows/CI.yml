@@ -39,7 +39,6 @@ jobs:
           branch: kinetic
 
   Safe-graphics:
-    needs: [Kernel]
     runs-on: ubuntu-22.04
     steps:
       - name: 'Checkout Jammy Repo'
@@ -73,7 +72,6 @@ jobs:
           branch: jammy-16,4
 
   ISO:
-    needs: [Kernel]
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
