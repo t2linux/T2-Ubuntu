@@ -142,7 +142,8 @@ apt-get purge -y -qq \
   linux-image-5.19.0-21-generic \
   linux-image-generic \
   linux-modules-5.19.0-21-generic \
-  linux-modules-extra-5.19.0-21-generic
+  linux-modules-extra-5.19.0-21-generic \
+  gedit
 
 apt-get autoremove -y
 
