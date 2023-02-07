@@ -5,10 +5,76 @@ on:
   [push]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  Kinetic:
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - name: 'Checkout Jammy Repo'
+        uses: actions/checkout@v3
+
+      - name: Get version
+        run: |
+         VERSION=$(grep ^KERNEL_VERSION build.sh | head -n1| cut -d = -f2)
+         REL=$(grep "PKGREL=\d*" build.sh | cut -d = -f2)
+         echo "ver=${VERSION}" >> $GITHUB_ENV
+         echo "release=${REL}" >> $GITHUB_ENV
+          
+      - name: 'Checkout kinetic Repo'
+        uses: actions/checkout@v3
+        with:
+          ref: kinetic
+          persist-credentials: false
+
+      - name: 'Push new version to kinetic'
+        id: publish
+        run: |
+         sed -i "s/KERNEL_VERSION=6.*/KERNEL_VERSION=${{ env.ver }}/g" build.sh
+         sed -i "s/PKGREL=.*/PKGREL=${{ env.release }}/g" build.sh
+         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+         git config --local user.name "github-actions[bot]"
+         git commit -m "${{ env.ver }}-${{ env.release }}" -a
+      - name: Push changes to the repo
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.PAT }}
+          branch: kinetic
+
+  Safe-graphics:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: 'Checkout Jammy Repo'
+        uses: actions/checkout@v3
+
+      - name: Get version
+        run: |
+         VERSION=$(grep ^KERNEL_VERSION build.sh | head -n1| cut -d = -f2)
+         REL=$(grep "PKGREL=\d*" build.sh | cut -d = -f2)
+         echo "ver=${VERSION}" >> $GITHUB_ENV
+         echo "release=${REL}" >> $GITHUB_ENV
+          
+      - name: 'Checkout jammy-16,4 Repo'
+        uses: actions/checkout@v3
+        with:
+          ref: jammy-16,4
+          persist-credentials: false
+
+      - name: 'Push new version to jammy-16,4'
+        id: publish
+        run: |
+         sed -i "s/KERNEL_VERSION=6.*/KERNEL_VERSION=${{ env.ver }}/g" build.sh
+         sed -i "s/PKGREL=.*/PKGREL=${{ env.release }}/g" build.sh
+         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+         git config --local user.name "github-actions[bot]"
+         git commit -m "${{ env.ver }}-${{ env.release }}" -a
+      - name: Push changes to the repo
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.PAT }}
+          branch: jammy-16,4
+
+  ISO:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
 
       - name: Build
         run: sudo ./build.sh
@@ -20,8 +86,9 @@ jobs:
         id: tag
         run: |
           VER=$(egrep ^KERNEL_VERSION build.sh|cut -d= -f2)
+          REL=$(grep "PKGREL=\d*" build.sh | cut -d = -f2)
           echo Version is $VER
-          echo "::set-output name=tag::${VER}"
+          echo "isotag=${VER}-${REL}" >> $GITHUB_ENV
 
       - name: Upload iso artifact
         uses: actions/upload-artifact@v2
@@ -35,15 +102,18 @@ jobs:
           Download all the artifacts, and put them in a folder
           without other files. Then run:"
           unzip "*.z??.zip"
-          cat livecd-${{ steps.tag.outputs.tag }}-mbp.z?? > cd.zip
+          cat livecd-${{ env.isotag }}-t2.z?? > cd.zip
           echo unzip cd.zip
           EOF
+
       - name: Release
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/jammy'
         uses: softprops/action-gh-release@v1
         with:
-          data: ${{ github.workspace }}/output/*
-          tag_name: v20.04-${{ steps.tag.outputs.tag }}
-          draft: true
+          files: ${{ github.workspace }}/*.iso
+          tag_name: v${{ env.isotag }}
+          body_path: ${{ github.workspace }}/.github/workflows/instructions.txt
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

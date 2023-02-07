@@ -11,17 +11,17 @@ mount none -t devpts /dev/pts
 export HOME=/root
 export LC_ALL=C
 
-echo "ubuntu-fs-live" >/etc/hostname
+echo "ubuntu-jammy-live" >/etc/hostname
 
 echo >&2 "===]> Info: Configure and update apt... "
 
 cat <<EOF >/etc/apt/sources.list
-deb http://archive.ubuntu.com/ubuntu/ focal main restricted universe multiverse
-deb-src http://archive.ubuntu.com/ubuntu/ focal main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu/ focal-security main restricted universe multiverse
-deb-src http://archive.ubuntu.com/ubuntu/ focal-security main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu/ focal-updates main restricted universe multiverse
-deb-src http://archive.ubuntu.com/ubuntu/ focal-updates main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse
 EOF
 apt-get update
 
@@ -30,8 +30,8 @@ echo >&2 "===]> Info: Install systemd and Ubuntu MBP Repo... "
 apt-get install -y systemd-sysv gnupg curl wget
 
 mkdir -p /etc/apt/sources.list.d
-echo "deb https://mbp-ubuntu-kernel.herokuapp.com/ /" >/etc/apt/sources.list.d/mbp-ubuntu-kernel.list
-curl -L https://mbp-ubuntu-kernel.herokuapp.com/KEY.gpg | apt-key add -
+curl -s --compressed "https://adityagarg8.github.io/t2-ubuntu-repo/KEY.gpg" | gpg --dearmor | tee /etc/apt/trusted.gpg.d/t2-ubuntu-repo.gpg >/dev/null
+curl -s --compressed -o /etc/apt/sources.list.d/t2.list "https://adityagarg8.github.io/t2-ubuntu-repo/t2.list"
 apt-get update
 
 echo >&2 "===]> Info: Configure machine-id and divert... "
@@ -48,7 +48,6 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   ubuntu-standard \
   sudo \
   casper \
-  lupin-casper \
   discover \
   laptop-detect \
   os-prober \
@@ -56,17 +55,21 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   resolvconf \
   net-tools \
   wireless-tools \
-  wpagui \
   locales \
   initramfs-tools \
   binutils \
   linux-generic \
   linux-headers-generic \
   grub-efi-amd64-signed \
-  "linux-image-${KERNEL_VERSION}" \
-  "linux-headers-${KERNEL_VERSION}" \
   intel-microcode \
-  thermald
+  thermald \
+  grub2 \
+  nautilus-admin
+
+curl -L https://github.com/t2linux/T2-Ubuntu-Kernel/releases/download/vKVER-PREL/linux-headers-KVER-${ALTERNATIVE}_KVER-PREL_amd64.deb > /tmp/headers.deb
+curl -L https://github.com/t2linux/T2-Ubuntu-Kernel/releases/download/vKVER-PREL/linux-image-KVER-${ALTERNATIVE}_KVER-PREL_amd64.deb > /tmp/image.deb
+file /tmp/*
+apt install /tmp/headers.deb /tmp/image.deb
 
 echo >&2 "===]> Info: Install window manager... "
 
@@ -85,7 +88,7 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   ubiquity-slideshow-ubuntu \
   ubiquity-ubuntu-artwork
 
-echo >&2 "===]> Info: Install useful applications... "
+echo >&2 "===]> Info: Install useful applications and sound configuration... "
 
 apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
   git \
@@ -94,54 +97,21 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   make \
   gcc \
   dkms \
-  iwd
+  iwd \
+  apple-t2-audio-config
 
 echo >&2 "===]> Info: Change initramfs format (for grub)... "
 sed -i "s/COMPRESS=lz4/COMPRESS=gzip/g" "/etc/initramfs-tools/initramfs.conf"
 
-echo >&2 "===]> Info: Add drivers... "
-
-APPLE_BCE_DRIVER_GIT_URL=https://github.com/t2linux/apple-bce-drv.git
-APPLE_BCE_DRIVER_BRANCH_NAME=aur
-APPLE_BCE_DRIVER_COMMIT_HASH=f93c6566f98b3c95677de8010f7445fa19f75091
-APPLE_BCE_DRIVER_MODULE_NAME=apple-bce
-APPLE_BCE_DRIVER_MODULE_VERSION=0.2
-
-APPLE_IB_DRIVER_GIT_URL=https://github.com/t2linux/apple-ib-drv
-APPLE_IB_DRIVER_BRANCH_NAME=mbp15
-APPLE_IB_DRIVER_COMMIT_HASH=fc9aefa5a564e6f2f2bb0326bffb0cef0446dc05
-APPLE_IB_DRIVER_MODULE_NAME=apple-ibridge
-APPLE_IB_DRIVER_MODULE_VERSION=0.2
+echo >&2 "===]> Info: Configure drivers... "
 
 # thunderbolt is working for me.
 #printf '\nblacklist thunderbolt' >>/etc/modprobe.d/blacklist.conf
 
-git clone --single-branch --branch ${APPLE_BCE_DRIVER_BRANCH_NAME} ${APPLE_BCE_DRIVER_GIT_URL} \
-  /usr/src/"${APPLE_BCE_DRIVER_MODULE_NAME}-${APPLE_BCE_DRIVER_MODULE_VERSION}"
-git -C /usr/src/"${APPLE_BCE_DRIVER_MODULE_NAME}-${APPLE_BCE_DRIVER_MODULE_VERSION}" checkout "${APPLE_BCE_DRIVER_COMMIT_HASH}"
-
-cat << EOF > /usr/src/${APPLE_BCE_DRIVER_MODULE_NAME}-${APPLE_BCE_DRIVER_MODULE_VERSION}/dkms.conf
-PACKAGE_NAME=apple-bce
-PACKAGE_VERSION=0.1
-CLEAN="make clean"
-MAKE="make"
-BUILT_MODULE_NAME[0]="apple-bce"
-DEST_MODULE_LOCATION[0]="/updates"
-AUTOINSTALL="yes"
-REMAKE_INITRD="yes"
-EOF
-
-dkms install -m "${APPLE_BCE_DRIVER_MODULE_NAME}" -v "${APPLE_BCE_DRIVER_MODULE_VERSION}" -k "${KERNEL_VERSION}"
-printf '\n### apple-bce start ###\nhid-apple\nbcm5974\nsnd-seq\napple-bce\n### apple-bce end ###' >>/etc/modules-load.d/apple-bce.conf
-printf '\n### apple-bce start ###\nhid-apple\nsnd-seq\napple-bce\n### apple-bce end ###' >>/etc/initramfs-tools/modules
-
-git clone --single-branch --branch ${APPLE_IB_DRIVER_BRANCH_NAME} ${APPLE_IB_DRIVER_GIT_URL} \
-    /usr/src/"${APPLE_IB_DRIVER_MODULE_NAME}-${APPLE_IB_DRIVER_MODULE_VERSION}"
-git -C /usr/src/"${APPLE_IB_DRIVER_MODULE_NAME}-${APPLE_IB_DRIVER_MODULE_VERSION}" checkout "${APPLE_IB_DRIVER_COMMIT_HASH}"
-dkms install -m "${APPLE_IB_DRIVER_MODULE_NAME}" -v "${APPLE_IB_DRIVER_MODULE_VERSION}" -k "${KERNEL_VERSION}"
-printf '\n### applespi start ###\napple_ibridge\napple_ib_tb\napple_ib_als\n### applespi end ###' >>/etc/modules-load.d/applespi.conf
-printf '\n# display f* key in touchbar\noptions apple-ib-tb fnmode=2\n'  >> /etc/modprobe.d/apple-touchbar.conf
-
+printf 'apple-bce' >>/etc/modules-load.d/t2.conf
+printf '\n### apple-bce start ###\nsnd\nsnd_pcm\napple-bce\n### apple-bce end ###' >>/etc/initramfs-tools/modules
+printf '\n# display f* key in touchbar\noptions apple-ib-tb fnmode=1\n'  >> /etc/modprobe.d/apple-tb.conf
+#printf '\n# delay loading of the touchbar driver\ninstall apple-ib-tb /bin/sleep 7; /sbin/modprobe --ignore-install apple-ib-tb' >> /etc/modprobe.d/delay-tb.conf
 
 echo >&2 "===]> Info: Update initramfs... "
 
@@ -165,13 +135,13 @@ apt-get purge -y -qq \
   vim \
   binutils \
   linux-generic \
-  linux-headers-5.4.0-28 \
-  linux-headers-5.4.0-28-generic \
+  linux-headers-5.15.0-30 \
+  linux-headers-5.15.0-30-generic \
   linux-headers-generic \
-  linux-image-5.4.0-28-generic \
+  linux-image-5.15.0-30-generic \
   linux-image-generic \
-  linux-modules-5.4.0-28-generic \
-  linux-modules-extra-5.4.0-28-generic
+  linux-modules-5.15.0-30-generic \
+  linux-modules-extra-5.15.0-30-generic
 
 apt-get autoremove -y
 
@@ -184,17 +154,19 @@ dpkg-reconfigure -f readline resolvconf
 
 cat <<EOF >/etc/NetworkManager/NetworkManager.conf
 [main]
-rc-manager=resolvconf
 plugins=ifupdown,keyfile
-dns=dnsmasq
+
 [ifupdown]
 managed=false
+
+[device]
+wifi.scan-rand-mac-address=no
 EOF
 dpkg-reconfigure network-manager
 
 echo >&2 "===]> Info: Configure Network Manager to use iwd... "
 mkdir -p /etc/NetworkManager/conf.d
-printf '[device]\nwifi.backend=iwd\n' > /etc/NetworkManager/conf.d/wifi_backend.conf
+printf '#[device]\n#wifi.backend=iwd\n' > /etc/NetworkManager/conf.d/wifi_backend.conf
 #systemctl enable iwd.service
 
 echo >&2 "===]> Info: Cleanup the chroot environment... "

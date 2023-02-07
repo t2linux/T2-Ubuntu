@@ -5,7 +5,10 @@ ROOT_PATH=$(pwd)
 WORKING_PATH=/root/work
 CHROOT_PATH="${WORKING_PATH}/chroot"
 IMAGE_PATH="${WORKING_PATH}/image"
-KERNEL_VERSION=5.10.52
+KERNEL_VERSION=6.1.9
+PKGREL=1
+sed -i "s/KVER/${KERNEL_VERSION}/g" $(pwd)/files/chroot_build.sh
+sed -i "s/PREL/${PKGREL}/g" $(pwd)/files/chroot_build.sh
 
 if [ -d "$WORKING_PATH" ]; then
   rm -rf "$WORKING_PATH"
@@ -33,27 +36,29 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   syslinux
 
 echo >&2 "===]> Info: Start loop... "
-for ALTERNATIVE in mbp mbp-16x-wifi
+for ALTERNATIVE in t2-jammy
 do
   echo >&2 "===]> Info: Start building ${ALTERNATIVE}... "
 
-  echo >&2 "===]> Info: Build Ubuntu FS... "
+  echo >&2 "===]> Info: Build Ubuntu Jammy... "
   /bin/bash -c "
     ROOT_PATH=${ROOT_PATH} \\
     WORKING_PATH=${WORKING_PATH} \\
     CHROOT_PATH=${CHROOT_PATH}_${ALTERNATIVE} \\
     IMAGE_PATH=${IMAGE_PATH} \\
     KERNEL_VERSION=${KERNEL_VERSION}-${ALTERNATIVE} \\
+    ALTERNATIVE=${ALTERNATIVE} \\
     ${ROOT_PATH}/01_build_file_system.sh
   "
 
-  echo >&2 "===]> Info: Build Image FS... "
+  echo >&2 "===]> Info: Build Image Jammy... "
   /bin/bash -c "
     ROOT_PATH=${ROOT_PATH} \\
     WORKING_PATH=${WORKING_PATH} \\
     CHROOT_PATH=${CHROOT_PATH}_${ALTERNATIVE} \\
     IMAGE_PATH=${IMAGE_PATH} \\
     KERNEL_VERSION=${KERNEL_VERSION}-${ALTERNATIVE} \\
+    ALTERNATIVE=${ALTERNATIVE} \\
     ${ROOT_PATH}/02_build_image.sh
   "
 
@@ -70,6 +75,7 @@ do
     IMAGE_PATH=${IMAGE_PATH} \\
     CHROOT_PATH=${CHROOT_PATH}_${ALTERNATIVE} \\
     KERNEL_VERSION=${KERNEL_VERSION}-${ALTERNATIVE} \\
+    ALTERNATIVE=${ALTERNATIVE} \\
     ${ROOT_PATH}/04_create_iso.sh
   "
   livecd_exitcode=$?
@@ -77,11 +83,11 @@ do
     echo "Error building ${KERNEL_VERSION}-${ALTERNATIVE}"
     exit "${livecd_exitcode}"
   fi
-  ### Zip iso and split it into multiple parts - github max size of release attachment is 2GB, where ISO is sometimes bigger than that
+  ## Zip iso and split it into multiple parts - github max size of release attachment is 2GB, where ISO is sometimes bigger than that
   cd "${ROOT_PATH}"
-  zip -s 1500m "${ROOT_PATH}/output/livecd-${KERNEL_VERSION}-${ALTERNATIVE}.zip" "${ROOT_PATH}/ubuntu-20.04-${KERNEL_VERSION}-${ALTERNATIVE}.iso"
+  zip -s 1500m "${ROOT_PATH}/output/livecd-${KERNEL_VERSION}-${ALTERNATIVE}.zip" "${ROOT_PATH}/ubuntu-22.04-${KERNEL_VERSION}-${ALTERNATIVE}.iso"
 done
-### Calculate sha256 sums of built ISO
+## Calculate sha256 sums of built ISO
 sha256sum "${ROOT_PATH}"/*.iso >"${ROOT_PATH}/output/sha256"
 
 find ./ | grep ".iso"
