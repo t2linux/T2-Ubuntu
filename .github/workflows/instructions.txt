@@ -4,4 +4,4 @@ Follow [this guide](https://wiki.t2linux.org/guides/wifi-bluetooth/) for Wi-Fi a
 
 Users of **MacBookPro16,4** are recommended to use the safe graphics ISO as the kernel doesn't have the driver for their AMD Graphics Card. Rest users can use the normal ISO.
 
-The **t2-external** ISO has the internal SSD support removed in the kernel. This can be useful if you wish to install in an external SSD. After installation, you can update your kernel to a **t2** kernel by following [this guide](https://github.com/t2linux/T2-Ubuntu-Kernel#installation) which shall bring back internal SSD support.
+**Getting kernel updates :-** Post installation, users are recommended to set up the [kernel update script](https://github.com/t2linux/T2-Ubuntu-Kernel#installation) to receive kernel updates.

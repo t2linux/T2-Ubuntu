@@ -11,17 +11,17 @@ mount none -t devpts /dev/pts
 export HOME=/root
 export LC_ALL=C
 
-echo "ubuntu-jammy-live" >/etc/hostname
+echo "ubuntu-kinetic-live" >/etc/hostname
 
 echo >&2 "===]> Info: Configure and update apt... "
 
 cat <<EOF >/etc/apt/sources.list
-deb http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse
-deb-src http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
-deb-src http://archive.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse
-deb-src http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ kinetic main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ kinetic main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ kinetic-security main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ kinetic-security main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ kinetic-updates main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ kinetic-updates main restricted universe multiverse
 EOF
 apt-get update
 
@@ -55,7 +55,6 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   resolvconf \
   net-tools \
   wireless-tools \
-  wpagui \
   locales \
   initramfs-tools \
   binutils \
@@ -67,21 +66,16 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   grub2 \
   nautilus-admin
 
-if [[ ${ALTERNATIVE} = t2-external ]]
-then
-curl -L https://github.com/AdityaGarg8/T2-Ubuntu/releases/download/vKVER-PREL-kernel/linux-headers-KVER-${ALTERNATIVE}_KVER-PREL_amd64.deb > /tmp/headers.deb
-curl -L https://github.com/AdityaGarg8/T2-Ubuntu/releases/download/vKVER-PREL-kernel/linux-image-KVER-${ALTERNATIVE}_KVER-PREL_amd64.deb > /tmp/image.deb
-else
 curl -L https://github.com/t2linux/T2-Ubuntu-Kernel/releases/download/vKVER-PREL/linux-headers-KVER-${ALTERNATIVE}_KVER-PREL_amd64.deb > /tmp/headers.deb
 curl -L https://github.com/t2linux/T2-Ubuntu-Kernel/releases/download/vKVER-PREL/linux-image-KVER-${ALTERNATIVE}_KVER-PREL_amd64.deb > /tmp/image.deb
-fi
 file /tmp/*
 apt install /tmp/headers.deb /tmp/image.deb
 
 echo >&2 "===]> Info: Install window manager... "
 
 apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
-  plymouth-theme-ubuntu-logo \
+  plymouth-theme-spinner \
+  plymouth-theme-ubuntu-text \
   ubuntu-desktop-minimal \
   ubuntu-gnome-wallpapers \
   snapd
@@ -120,26 +114,6 @@ printf '\n### apple-bce start ###\nsnd\nsnd_pcm\napple-bce\n### apple-bce end ##
 printf '\n# display f* key in touchbar\noptions apple-ib-tb fnmode=1\n'  >> /etc/modprobe.d/apple-tb.conf
 #printf '\n# delay loading of the touchbar driver\ninstall apple-ib-tb /bin/sleep 7; /sbin/modprobe --ignore-install apple-ib-tb' >> /etc/modprobe.d/delay-tb.conf
 
-echo '
-#!/usr/bin/env bash
-echo "Select Touch Bar mode"
-echo
-echo "0: Only show F1-F12"
-echo "1: Show media and brightness controls, use the fn key to switch to F1-12"
-echo "2: Show F1-F12, use the fn key to switch to media and brightness controls"
-echo "3: Only show media and brightness controls"
-echo "4: Only show the escape key"
-read tb
-echo "Changing default mode ..."
-echo "# display f* key in touchbar" > /etc/modprobe.d/apple-tb.conf
-echo "options apple-ib-tb fnmode=$tb" >> /etc/modprobe.d/apple-tb.conf
-bash -c "echo $tb > /sys/class/input/*/device/fnmode"
-echo "Done!"' | tee /usr/local/bin/touchbar >/dev/null
-
-chmod a+x /usr/local/bin/touchbar
-chown root:root /usr/local/bin/touchbar
-
-
 echo >&2 "===]> Info: Update initramfs... "
 
 ## Add custom drivers to be loaded at boot
@@ -162,13 +136,14 @@ apt-get purge -y -qq \
   vim \
   binutils \
   linux-generic \
-  linux-headers-5.15.0-30 \
-  linux-headers-5.15.0-30-generic \
+  linux-headers-5.19.0-21 \
+  linux-headers-5.19.0-21-generic \
   linux-headers-generic \
-  linux-image-5.15.0-30-generic \
+  linux-image-5.19.0-21-generic \
   linux-image-generic \
-  linux-modules-5.15.0-30-generic \
-  linux-modules-extra-5.15.0-30-generic
+  linux-modules-5.19.0-21-generic \
+  linux-modules-extra-5.19.0-21-generic \
+  gedit
 
 apt-get autoremove -y
 
@@ -176,8 +151,6 @@ echo >&2 "===]> Info: Reconfigure environment ... "
 
 locale-gen --purge en_US.UTF-8 en_US
 printf 'LANG="C.UTF-8"\nLANGUAGE="C.UTF-8"\n' >/etc/default/locale
-
-dpkg-reconfigure -f readline resolvconf
 
 cat <<EOF >/etc/NetworkManager/NetworkManager.conf
 [main]
