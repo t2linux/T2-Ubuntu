@@ -23,7 +23,7 @@ xorriso -as mkisofs \
   -no-emul-boot \
   -isohybrid-mbr "${ROOT_PATH}/files/isohdpfx.bin" \
   -isohybrid-gpt-basdat -isohybrid-apm-hfsplus \
-  -output "${ROOT_PATH}/ubuntu-22.04-${KERNEL_VERSION}.iso" \
+  -output "${ROOT_PATH}/ubuntu-22.10-${KERNEL_VERSION}-safe-graphics.iso" \
   -graft-points \
   "." \
   /boot/grub/bios.img=isolinux/bios.img \
