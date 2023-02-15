@@ -1,8 +1,8 @@
 # T2-Ubuntu
 
-The ISOs from this repo should allow you to install Ubuntu without using an external keyboard or mouse on a T2 Mac. It works in my MacBook Pro 16 inch, 2019.
+The ISOs from this repo should allow you to install Ubuntu without using an external keyboard or mouse on a T2 Mac.
 
-![CI](https://github.com/AdityaGarg8/T2-Ubuntu/actions/workflows/CI.yml/badge.svg?branch=jammy)
+![CI](https://github.com/t2linux/T2-Ubuntu/actions/workflows/CI.yml/badge.svg?branch=jammy)
 
 **If this repo helped you in any way, consider inviting a coffee to the people in the [credits](https://github.com/AdityaGarg8/T2-Ubuntu#credits), [link](https://wiki.t2linux.org/contribute/).**
 
@@ -10,13 +10,11 @@ UBUNTU ISO with Apple T2 patches built-in.
 
 Apple T2 drivers are integrated with this iso. 
 
-This repo is a rework of the great work done by [@mikeeq](https://github.com/mikeeq/mbp-fedora) and [@marcosfad](https://github.com/marcosfad/mbp-ubuntu)
+This repo is a rework of the great work done by [@mikeeq](https://github.com/mikeeq/mbp-fedora). It originally was [@marcosfad's mbp-ubuntu repo](https://github.com/marcosfad/mbp-ubuntu) and has been transferred to [t2linux](https://github.com/t2linux).
 
-I'm using the Kernel from - <https://github.com/t2linux/T2-Ubuntu-Kernel>
+Kernel is being used from - <https://github.com/t2linux/T2-Ubuntu-Kernel>
 
-Using additional drivers:
-- [Apple T2 (apple-bce) (audio, keyboard, touchpad)](https://github.com/t2linux/apple-bce-drv)
-- [Touchbar (apple-ibridge, apple-ib-tb, apple-ib-als)](https://github.com/t2linux/apple-ib-drv)
+Using additional patches to support T2 Macs - <https://github.com/t2linux/linux-t2-patches>
 
 Bootloader is configure correctly out of the box. No workaround needed.
 
