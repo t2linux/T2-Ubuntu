@@ -109,8 +109,8 @@ echo >&2 "===]> Info: Configure drivers... "
 #printf '\nblacklist thunderbolt' >>/etc/modprobe.d/blacklist.conf
 
 printf 'apple-bce' >>/etc/modules-load.d/t2.conf
-printf '\n### apple-bce start ###\nsnd\nsnd_pcm\napple-bce\n### apple-bce end ###' >>/etc/initramfs-tools/modules
-printf '\n# display f* key in touchbar\noptions apple-ib-tb fnmode=1\n'  >> /etc/modprobe.d/apple-tb.conf
+#printf '\n### apple-bce start ###\nsnd\nsnd_pcm\napple-bce\n### apple-bce end ###' >>/etc/initramfs-tools/modules
+#printf '\n# display f* key in touchbar\noptions apple-ib-tb fnmode=1\n'  >> /etc/modprobe.d/apple-tb.conf
 #printf '\n# delay loading of the touchbar driver\ninstall apple-ib-tb /bin/sleep 7; /sbin/modprobe --ignore-install apple-ib-tb' >> /etc/modprobe.d/delay-tb.conf
 
 echo >&2 "===]> Info: Update initramfs... "
