@@ -106,11 +106,21 @@ jobs:
           echo unzip cd.zip
           EOF
 
+      - name: Compress ISO
+        run: |
+          cd ${{ github.workspace }}
+          mkdir ISO
+          mv ${{ github.workspace }}/*.iso ${{ github.workspace }}/ISO
+          cd ISO
+          ISONAME=$(ls ${{ github.workspace }}/ISO | grep .iso | rev | cut -c 5- | rev)
+          tar -czvf ${ISONAME}.tar.gz ${{ github.workspace }}/ISO/${ISONAME}.iso
+          ls -l
+
       - name: Release
         if: github.ref == 'refs/heads/jammy'
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ github.workspace }}/*.iso
+          files: ${{ github.workspace }}/ISO/*.tar.gz
           tag_name: v${{ env.isotag }}
           body_path: ${{ github.workspace }}/.github/workflows/instructions.txt
           draft: false
