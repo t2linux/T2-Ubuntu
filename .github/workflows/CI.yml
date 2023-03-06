@@ -47,7 +47,7 @@ jobs:
           mv ${{ github.workspace }}/*.iso ${{ github.workspace }}/ISO
           cd ISO
           ISONAME=$(ls ${{ github.workspace }}/ISO | grep .iso | rev | cut -c 5- | rev)
-          tar -czvf ${ISONAME}.tar.gz ${{ github.workspace }}/ISO/${ISONAME}.iso
+          tar -czvf ${ISONAME}.tar.gz ${ISONAME}.iso
           ls -l
 
       - name: Release
