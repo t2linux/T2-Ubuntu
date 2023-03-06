@@ -40,11 +40,18 @@ jobs:
           echo unzip cd.zip
           EOF
 
+      - name: Compress ISO
+        run: |
+          cd ${{ github.workspace }}
+          ISONAME=$(ls ${{ github.workspace }} | grep .iso | rev | cut -c 5- | rev)
+          tar -czvf ${ISONAME}.tar.gz ${{ github.workspace }}/${ISONAME}.iso
+          ls -l
+
       - name: Release
         if: github.ref == 'refs/heads/kinetic-16,4'
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ github.workspace }}/*.iso
+          files: ${{ github.workspace }}/*.tar.gz
           tag_name: v${{ steps.tag.outputs.tag }}
           body_path: ${{ github.workspace }}/.github/workflows/instructions.txt
           draft: false
