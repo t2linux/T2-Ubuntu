@@ -2,6 +2,6 @@ If you are facing blank screen after installation, try [booting using refind](ht
 
 Follow [this guide](https://wiki.t2linux.org/guides/wifi-bluetooth/) for Wi-Fi and Bluetooth to work.
 
-Users of **MacBookPro16,4** are recommended to use the safe graphics ISO as the kernel doesn't have the driver for their AMD Graphics Card. Rest users can use the normal ISO.
+Users of **MacBookPro16,4** are recommended to use the safe graphics ISO as the kernel doesn't have the driver for their AMD Graphics Card. Rest users can use the normal ISO. After installing, follow [this guide](https://wiki.t2linux.org/guides/hybrid-graphics/#macbookpro164) to enable Intel GPU for graphics acceleration.
 
 **Getting kernel updates :-** Post installation, users are recommended to set up the [kernel update script](https://github.com/t2linux/T2-Ubuntu-Kernel#installation) to receive kernel updates.
