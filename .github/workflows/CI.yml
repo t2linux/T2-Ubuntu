@@ -9,7 +9,7 @@ jobs:
   Safe-graphics:
     runs-on: ubuntu-22.04
     steps:
-      - name: 'Checkout Kinetic Repo'
+      - name: 'Checkout mainline Repo'
         uses: actions/checkout@v3
 
       - name: Get version
@@ -19,13 +19,13 @@ jobs:
          echo "ver=${VERSION}" >> $GITHUB_ENV
          echo "release=${REL}" >> $GITHUB_ENV
           
-      - name: 'Checkout kinetic-16,4 Repo'
+      - name: 'Checkout mainline-16,4 Repo'
         uses: actions/checkout@v3
         with:
-          ref: kinetic-16,4
+          ref: mainline-16,4
           persist-credentials: false
 
-      - name: 'Push new version to kinetic-16,4'
+      - name: 'Push new version to mainline-16,4'
         id: publish
         run: |
          sed -i "s/KERNEL_VERSION=6.*/KERNEL_VERSION=${{ env.ver }}/g" build.sh
@@ -37,7 +37,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.PAT }}
-          branch: kinetic-16,4
+          branch: mainline-16,4
 
   ISO:
     runs-on: ubuntu-22.04
@@ -85,7 +85,7 @@ jobs:
           ls -l
 
       - name: Release
-        if: github.ref == 'refs/heads/kinetic'
+        if: github.ref == 'refs/heads/mainline'
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ github.workspace }}/ISO/*.tar.gz
