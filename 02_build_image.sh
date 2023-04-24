@@ -37,7 +37,7 @@ done
 
 echo >&2 "===]> Info: Create diskdefines... "
 cat <<EOF >"${IMAGE_PATH}"/README.diskdefines
-#define DISKNAME  Ubuntu MBP 22.10 "Kinetic Kudu" - Beta amd64
+#define DISKNAME  Ubuntu MBP 23.04 "Lunar Lobster" - amd64
 #define TYPE  binary
 #define TYPEbinary  1
 #define ARCH  amd64
