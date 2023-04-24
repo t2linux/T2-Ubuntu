@@ -18,13 +18,13 @@ jobs:
          echo "ver=${VERSION}" >> $GITHUB_ENV
          echo "release=${REL}" >> $GITHUB_ENV
           
-      - name: 'Checkout kinetic Repo'
+      - name: 'Checkout mainline Repo'
         uses: actions/checkout@v3
         with:
-          ref: kinetic
+          ref: mainline
           persist-credentials: false
 
-      - name: 'Push new version to kinetic'
+      - name: 'Push new version to mainline'
         id: publish
         run: |
          sed -i "s/KERNEL_VERSION=6.*/KERNEL_VERSION=${{ env.ver }}/g" build.sh
@@ -36,7 +36,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.PAT }}
-          branch: kinetic
+          branch: mainline
 
   Safe-graphics:
     runs-on: ubuntu-22.04
