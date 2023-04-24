@@ -5,7 +5,7 @@ on:
   [push, workflow_dispatch]
 
 jobs:
-  Kinetic:
+  Mainline:
     runs-on: ubuntu-22.04
     steps:
       - name: 'Checkout Jammy Repo'
