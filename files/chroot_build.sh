@@ -11,7 +11,7 @@ mount none -t devpts /dev/pts
 export HOME=/root
 export LC_ALL=C
 
-echo "ubuntu-lunar-live" >/etc/hostname
+echo "kubuntu-lunar-live" >/etc/hostname
 
 echo >&2 "===]> Info: Configure and update apt... "
 
@@ -45,7 +45,7 @@ echo >&2 "===]> Info: Install packages needed for Live System... "
 
 export DEBIAN_FRONTEND=noninteractive
 apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
-  ubuntu-standard \
+  kde-standard \
   sudo \
   casper \
   discover \
@@ -64,7 +64,8 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   intel-microcode \
   thermald \
   grub2 \
-  nautilus-admin
+  nautilus-admin \
+  software-properties-common
 
 curl -L https://github.com/t2linux/T2-Ubuntu-Kernel/releases/download/vKVER-PREL/linux-headers-KVER-${ALTERNATIVE}_KVER-PREL_amd64.deb > /tmp/headers.deb
 curl -L https://github.com/t2linux/T2-Ubuntu-Kernel/releases/download/vKVER-PREL/linux-image-KVER-${ALTERNATIVE}_KVER-PREL_amd64.deb > /tmp/image.deb
@@ -75,10 +76,17 @@ echo >&2 "===]> Info: Install window manager... "
 
 apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
   plymouth-theme-spinner \
+  plymouth-theme-kubuntu-logo \
+  plymouth-theme-kubuntu-text \
   plymouth-theme-ubuntu-text \
-  ubuntu-desktop-minimal \
-  ubuntu-gnome-wallpapers \
-  snapd
+  kde-plasma-desktop \
+  kubuntu-settings-desktop \
+  plasma-discover \
+  kubuntu-wallpapers \
+  kde-plasma-desktop \
+  sddm-theme-breeze \
+  snapd \
+  firefox
 
 echo >&2 "===]> Info: Install Graphical installer... "
 
@@ -86,7 +94,7 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   ubiquity \
   ubiquity-casper \
   ubiquity-frontend-gtk \
-  ubiquity-slideshow-ubuntu \
+  ubiquity-slideshow-kubuntu \
   ubiquity-ubuntu-artwork
 
 echo >&2 "===]> Info: Install useful applications and sound configuration... "
@@ -143,6 +151,7 @@ apt-get purge -y -qq \
   linux-image-generic \
   linux-modules-6.2.0-20-generic \
   linux-modules-extra-6.2.0-20-generic \
+  sddm-theme-debian-maui \
   gedit
 
 apt-get autoremove -y
