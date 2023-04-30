@@ -11,17 +11,17 @@ mount none -t devpts /dev/pts
 export HOME=/root
 export LC_ALL=C
 
-echo "ubuntu-kinetic-live" >/etc/hostname
+echo "ubuntu-lunar-live" >/etc/hostname
 
 echo >&2 "===]> Info: Configure and update apt... "
 
 cat <<EOF >/etc/apt/sources.list
-deb http://archive.ubuntu.com/ubuntu/ kinetic main restricted universe multiverse
-deb-src http://archive.ubuntu.com/ubuntu/ kinetic main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu/ kinetic-security main restricted universe multiverse
-deb-src http://archive.ubuntu.com/ubuntu/ kinetic-security main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu/ kinetic-updates main restricted universe multiverse
-deb-src http://archive.ubuntu.com/ubuntu/ kinetic-updates main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ lunar main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ lunar main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ lunar-security main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ lunar-security main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu/ lunar-updates main restricted universe multiverse
+deb-src http://archive.ubuntu.com/ubuntu/ lunar-updates main restricted universe multiverse
 EOF
 apt-get update
 
@@ -139,13 +139,13 @@ apt-get purge -y -qq \
   vim \
   binutils \
   linux-generic \
-  linux-headers-5.19.0-21 \
-  linux-headers-5.19.0-21-generic \
+  linux-headers-6.2.0-20 \
+  linux-headers-6.2.0-20-generic \
   linux-headers-generic \
-  linux-image-5.19.0-21-generic \
+  linux-image-6.2.0-20-generic \
   linux-image-generic \
-  linux-modules-5.19.0-21-generic \
-  linux-modules-extra-5.19.0-21-generic \
+  linux-modules-6.2.0-20-generic \
+  linux-modules-extra-6.2.0-20-generic \
   gedit
 
 apt-get autoremove -y

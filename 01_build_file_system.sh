@@ -5,7 +5,7 @@ echo >&2 "===]> Info: Checkout bootstrap... "
 debootstrap \
   --arch=amd64 \
   --variant=minbase \
-  kinetic \
+  lunar \
   "${CHROOT_PATH}" \
   http://archive.ubuntu.com/ubuntu/
 
