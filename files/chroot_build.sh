@@ -151,7 +151,6 @@ apt-get purge -y -qq \
   linux-image-generic \
   linux-modules-6.2.0-20-generic \
   linux-modules-extra-6.2.0-20-generic \
-  sddm-theme-debian-maui \
   gedit
 
 apt-get autoremove -y
