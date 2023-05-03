@@ -51,7 +51,7 @@ jobs:
           ls -l
 
       - name: Release
-        if: github.ref == 'refs/heads/mainline-16,4'
+        if: github.ref == 'refs/heads/kubuntuMainline-16,4'
         uses: softprops/action-gh-release@v1
         with:
           #files: ${{ github.workspace }}/ISO/*.tar.gz
