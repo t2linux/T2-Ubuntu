@@ -120,7 +120,8 @@ jobs:
         if: github.ref == 'refs/heads/jammy'
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ github.workspace }}/ISO/*.tar.gz
+          #files: ${{ github.workspace }}/ISO/*.tar.gz
+          files: ${{ github.workspace }}/ISO/*.iso
           tag_name: v${{ env.isotag }}
           body_path: ${{ github.workspace }}/.github/workflows/instructions.txt
           draft: false
