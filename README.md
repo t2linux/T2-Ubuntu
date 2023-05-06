@@ -6,7 +6,7 @@ The ISOs from this repo should allow you to install Ubuntu without using an exte
 
 **If this repo helped you in any way, consider inviting a coffee to the people in the [credits](https://github.com/AdityaGarg8/T2-Ubuntu#credits), [link](https://wiki.t2linux.org/contribute/).**
 
-UBUNTU ISO with Apple T2 patches built-in.
+Ubuntu ISO with Apple T2 patches built-in. Now we also support kubuntu thanks to [@lemmyg](https://github.com/lemmyg)!
 
 Apple T2 drivers are integrated with this iso. 
 
