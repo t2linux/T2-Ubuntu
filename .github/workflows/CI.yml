@@ -39,6 +39,7 @@ jobs:
           cat livecd-${{ steps.tag.outputs.tag }}-t2.z?? > cd.zip
           echo unzip cd.zip
           EOF
+          ls /${{ github.workspace }}/output
 
       - name: Compress ISO
         run: |
