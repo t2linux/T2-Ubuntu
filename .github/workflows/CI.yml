@@ -15,7 +15,7 @@ jobs:
         run: sudo ./build_in_docker.sh
 
       - name: print sha256sum
-        run: cat output/sha256
+        run: cat output/sha256*
 
       - name: Generate Tag
         id: tag
