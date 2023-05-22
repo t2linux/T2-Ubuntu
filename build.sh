@@ -88,7 +88,7 @@ do
   zip -s 1500m "${ROOT_PATH}/output/kubuntu-23.04-${KERNEL_VERSION}-${ALTERNATIVE}.zip" "${ROOT_PATH}/kubuntu-23.04-${KERNEL_VERSION}-${ALTERNATIVE}.iso"
 done
 ## Calculate sha256 sums of built ISO
-sha256sum "${ROOT_PATH}"/*.iso >"${ROOT_PATH}/output/sha256"
+sha256sum "${ROOT_PATH}"/*.iso >"${ROOT_PATH}/output/sha256-kubuntu-23.04"
 
 find ./ | grep ".iso"
 find ./ | grep ".zip"
