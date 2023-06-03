@@ -85,7 +85,7 @@ jobs:
 
       - name: Get the ISO script
         run: |
-          cp ${{ github.workspace }}/.github/workflows/iso.sh ${{ github.workspace }}/output/iso.sh
+          sudo cp ${{ github.workspace }}/.github/workflows/iso.sh ${{ github.workspace }}/output/iso.sh
 
       - name: Release
         if: github.ref == 'refs/heads/jammy'
