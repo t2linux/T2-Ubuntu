@@ -85,10 +85,10 @@ do
   fi
   ## Zip iso and split it into multiple parts - github max size of release attachment is 2GB, where ISO is sometimes bigger than that
   cd "${ROOT_PATH}"
-  zip -s 1500m "${ROOT_PATH}/output/kubuntu-22.04-${KERNEL_VERSION}-${ALTERNATIVE}.zip" "${ROOT_PATH}/ubuntu-22.04-${KERNEL_VERSION}-${ALTERNATIVE}.iso"
+  zip -s 1500m "${ROOT_PATH}/output/kubuntu-22.04-${KERNEL_VERSION}-${ALTERNATIVE}.zip" "${ROOT_PATH}/kubuntu-22.04-${KERNEL_VERSION}-${ALTERNATIVE}.iso"
 done
 ## Calculate sha256 sums of built ISO
-sha256sum "${ROOT_PATH}"/*.iso >"${ROOT_PATH}/output/sha256-ubuntu-22.04"
+sha256sum "${ROOT_PATH}"/*.iso >"${ROOT_PATH}/output/sha256-kubuntu-22.04"
 
 find ./ | grep ".iso"
 find ./ | grep ".zip"
