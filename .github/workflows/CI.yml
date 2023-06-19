@@ -38,39 +38,6 @@ jobs:
           github_token: ${{ secrets.PAT }}
           branch: mainline
 
-  Safe-graphics:
-    runs-on: ubuntu-22.04
-    steps:
-      - name: 'Checkout Jammy Repo'
-        uses: actions/checkout@v3
-
-      - name: Get version
-        run: |
-         VERSION=$(grep ^KERNEL_VERSION build.sh | head -n1| cut -d = -f2)
-         REL=$(grep "PKGREL=\d*" build.sh | cut -d = -f2)
-         echo "ver=${VERSION}" >> $GITHUB_ENV
-         echo "release=${REL}" >> $GITHUB_ENV
-          
-      - name: 'Checkout jammy-16,4 Repo'
-        uses: actions/checkout@v3
-        with:
-          ref: jammy-16,4
-          persist-credentials: false
-
-      - name: 'Push new version to jammy-16,4'
-        id: publish
-        run: |
-         sed -i "s/KERNEL_VERSION=6.*/KERNEL_VERSION=${{ env.ver }}/g" build.sh
-         sed -i "s/PKGREL=.*/PKGREL=${{ env.release }}/g" build.sh
-         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-         git config --local user.name "github-actions[bot]"
-         git commit -m "${{ env.ver }}-${{ env.release }}" -a
-      - name: Push changes to the repo
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.PAT }}
-          branch: jammy-16,4
-
   ISO:
     runs-on: ubuntu-22.04
     steps:
@@ -80,7 +47,7 @@ jobs:
         run: sudo ./build_in_docker.sh
 
       - name: print sha256sum
-        run: cat output/sha256
+        run: cat output/sha256*
 
       - name: Generate Tag
         id: tag
@@ -116,11 +83,17 @@ jobs:
           tar -czvf ${ISONAME}.tar.gz ${ISONAME}.iso
           ls -l
 
+      - name: Get the ISO script
+        run: |
+          sudo cp ${{ github.workspace }}/.github/workflows/iso.sh ${{ github.workspace }}/output/iso.sh
+
       - name: Release
         if: github.ref == 'refs/heads/jammy'
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ github.workspace }}/ISO/*.tar.gz
+          #files: ${{ github.workspace }}/ISO/*.tar.gz
+          #files: ${{ github.workspace }}/ISO/*.iso
+          files: ${{ github.workspace }}/output/*
           tag_name: v${{ env.isotag }}
           body_path: ${{ github.workspace }}/.github/workflows/instructions.txt
           draft: false
