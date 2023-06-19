@@ -40,7 +40,7 @@ for ALTERNATIVE in t2-jammy
 do
   echo >&2 "===]> Info: Start building ${ALTERNATIVE}... "
 
-  echo >&2 "===]> Info: Build Kbuntu Jammy... "
+  echo >&2 "===]> Info: Build Kubuntu Jammy... "
   /bin/bash -c "
     ROOT_PATH=${ROOT_PATH} \\
     WORKING_PATH=${WORKING_PATH} \\
