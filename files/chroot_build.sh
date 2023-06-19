@@ -11,7 +11,7 @@ mount none -t devpts /dev/pts
 export HOME=/root
 export LC_ALL=C
 
-echo "Kubuntu-jammy-live" >/etc/hostname
+echo "kubuntu-jammy-live" >/etc/hostname
 
 echo >&2 "===]> Info: Configure and update apt... "
 
