@@ -149,7 +149,7 @@ apt-get purge -y -qq \
   linux-image-5.15.0-72-generic \
   linux-image-generic \
   linux-modules-5.15.0-72-generic \
-  linux-modules-extra-5.15.0-72-generic
+  linux-modules-extra-5.15.0-72-generic \
   sddm-theme-debian-maui \
   gedit
 
