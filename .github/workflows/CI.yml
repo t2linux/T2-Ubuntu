@@ -5,10 +5,10 @@ on:
   [push, workflow_dispatch]
 
 jobs:
-  Mainline:
+  kubuntuMainline:
     runs-on: ubuntu-22.04
     steps:
-      - name: 'Checkout Jammy Repo'
+      - name: 'Checkout kubuntuJammy Repo'
         uses: actions/checkout@v3
 
       - name: Get version
@@ -18,13 +18,13 @@ jobs:
          echo "ver=${VERSION}" >> $GITHUB_ENV
          echo "release=${REL}" >> $GITHUB_ENV
           
-      - name: 'Checkout mainline Repo'
+      - name: 'Checkout kubuntuMainline Repo'
         uses: actions/checkout@v3
         with:
-          ref: mainline
+          ref: kubuntuMainline
           persist-credentials: false
 
-      - name: 'Push new version to mainline'
+      - name: 'Push new version to kubuntuMainline'
         id: publish
         run: |
          sed -i "s/KERNEL_VERSION=6.*/KERNEL_VERSION=${{ env.ver }}/g" build.sh
@@ -36,7 +36,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.PAT }}
-          branch: mainline
+          branch: kubuntuMainline
 
   ISO:
     runs-on: ubuntu-22.04
@@ -83,12 +83,8 @@ jobs:
           tar -czvf ${ISONAME}.tar.gz ${ISONAME}.iso
           ls -l
 
-      - name: Get the ISO script
-        run: |
-          sudo cp ${{ github.workspace }}/.github/workflows/iso.sh ${{ github.workspace }}/output/iso.sh
-
       - name: Release
-        if: github.ref == 'refs/heads/jammy'
+        if: github.ref == 'refs/heads/kubuntuJammy'
         uses: softprops/action-gh-release@v1
         with:
           #files: ${{ github.workspace }}/ISO/*.tar.gz
