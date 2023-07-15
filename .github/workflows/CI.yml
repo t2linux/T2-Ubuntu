@@ -54,7 +54,7 @@ jobs:
       - name: 'Checkout kubuntuJammy Repo'
         uses: actions/checkout@v3
         with:
-          ref: mainline
+          ref: kubuntuJammy
           persist-credentials: false
 
       - name: 'Push new version to kubuntuJammy'
