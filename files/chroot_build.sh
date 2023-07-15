@@ -76,7 +76,7 @@ echo >&2 "===]> Info: Install window manager... "
 apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
   plymouth-theme-spinner \
   plymouth-theme-ubuntu-text \
-  ubuntu-desktop-minimal \
+  ubuntu-desktop \
   ubuntu-gnome-wallpapers \
   snapd
 
