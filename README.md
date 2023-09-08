@@ -22,17 +22,20 @@ Bootloader is configure correctly out of the box. No workaround needed.
 
 1. Reduce the size of the mac partition in MacOS.
 2. Download ISO file from releases.
-3. Copy it to a USB using dd (or gdd if installed over brew): 
-```bash
-diskutil list # found which number has the USB
-diskutil umountDisk /dev/diskX
-sudo gdd bs=4M if=ubuntu-20.04-5.6.10-mbp.iso of=/dev/diskX conv=fdatasync status=progress
-```
-#### Note
-Other imaging tools such as Etcher or Rufus may not work as intended, if you are having trouble, use dd (or gdd if installed over brew)
+3. Copy it to a USB using dd (or gdd if installed over brew):
+
+   ```bash
+   diskutil list # found which number has the USB
+   diskutil umountDisk /dev/diskX
+   sudo gdd bs=4M if=ubuntu-20.04-5.6.10-mbp.iso of=/dev/diskX conv=fdatasync status=progress
+   ```
+
+   **Note :**
+   Other imaging tools such as Etcher or Rufus may not work as intended, if you are having trouble, use dd (or gdd if installed over brew).
+
 4. Boot in Recovery mode and allow booting unknown OS.
 5. Restart and immediately press and hold the option key until the Logo comes up.
-6. Select "EFI Boot" (the third option was the one that worked for me)
+6. Select "EFI Boot" (the rightmost option was the one that worked for me)
 7. Launch Ubuntu Live
 8. Use Ubiquity to install (just click on it)
 9. Select the options that work for you and use for the partition the following setup:
