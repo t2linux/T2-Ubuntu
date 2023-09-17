@@ -84,11 +84,16 @@ esac
 
 flavourcap=`echo ${flavour:0:1} | tr  '[a-z]' '[A-Z]'`${flavour:1}
 
-echo -e "\nDownloading ${flavourcap} ${ver}"
-echo -e "\nPart 1"
-curl -#L https://github.com/t2linux/T2-Ubuntu/releases/download/${latest}/${iso}.z01 > ${iso}.z01
-echo -e "\nPart 2"
-curl -#L https://github.com/t2linux/T2-Ubuntu/releases/download/${latest}/${iso}.zip > ${iso}.zip
+if [ ! -f ${iso}.z01 ]; then
+	echo -e "\nDownloading Part 1 for ${flavourcap} ${ver}"
+	echo -e "\n"
+	curl -#L https://github.com/t2linux/T2-Ubuntu/releases/download/${latest}/${iso}.z01 > ${iso}.z01
+fi
+if [ ! -f ${iso}.zip ]; then
+	echo -e "\nDownloading Part 2 for ${flavourcap} ${ver}"
+	echo -e "\n"
+	curl -#L https://github.com/t2linux/T2-Ubuntu/releases/download/${latest}/${iso}.zip > ${iso}.zip
+fi
 echo -e "\nCreating ISO"
 
 isofinal=$RANDOM
