@@ -23,7 +23,7 @@ xorriso -as mkisofs \
   -no-emul-boot \
   -isohybrid-mbr "${ROOT_PATH}/files/isohdpfx.bin" \
   -isohybrid-gpt-basdat -isohybrid-apm-hfsplus \
-  -output "${ROOT_PATH}/kubuntu-23.04-${KERNEL_VERSION}.iso" \
+  -output "${ROOT_PATH}/kubuntu-23.10-${KERNEL_VERSION}.iso" \
   -graft-points \
   "." \
   /boot/grub/bios.img=isolinux/bios.img \
