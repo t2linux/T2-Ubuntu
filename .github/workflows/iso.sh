@@ -60,7 +60,7 @@ cat <<EOF
 Choose the version of Ubuntu you wish to install:
 
 1. 22.04 LTS - Jammy Jellyfish
-2. 23.04 - Lunar Lobstar
+2. 23.10 - Mantic Minotaur
 
 Type your choice (1 or 2) from the above list and press return.
 EOF
@@ -73,8 +73,8 @@ case "$verinput" in
 		ver="22.04 LTS - Jammy Jellyfish"
 		;;
 	(2)
-		iso="${flavour}-23.04-${latestkver}-t2-lunar"
-		ver="23.04 - Lunar Lobstar"
+		iso="${flavour}-23.10-${latestkver}-t2-mantic"
+		ver="23.10 - Mantic Minotaur"
 		;;
 	(*)
 		echo "Invalid input. Aborting!"
