@@ -4,7 +4,7 @@ Follow [this guide](https://wiki.t2linux.org/guides/wifi-bluetooth/) for Wi-Fi a
 
 Users of **MacBookPro16,4** are recommended to choose the **Safe Graphics** option from the grub menu while booting the ISO as the kernel doesn't have the driver for their AMD Graphics Card. Rest users can use the other options. After installing, follow [this guide](https://wiki.t2linux.org/guides/hybrid-graphics/#macbookpro164) to enable Intel GPU for graphics acceleration.
 
-**Getting kernel updates :-** Post installation, users are recommended to set up the [kernel update script](https://github.com/t2linux/T2-Ubuntu-Kernel#installation) to receive kernel updates.
+**Getting kernel updates :** Post installation, users are recommended to set up the [kernel update script](https://github.com/t2linux/T2-Ubuntu-Kernel#installation) to receive kernel updates.
 
 **Touch Bar :* If your Mac has a Touch Bar, install `tiny-dfr` from [t2-ubuntu-repo](https://github.com/AdityaGarg8/t2-ubuntu-repo.git).
 
