@@ -6,6 +6,6 @@ Users of **MacBookPro16,4** are recommended to choose the **Safe Graphics** opti
 
 **Getting kernel updates :** Post installation, users are recommended to set up the [kernel update script](https://github.com/t2linux/T2-Ubuntu-Kernel#installation) to receive kernel updates.
 
-**Touch Bar :* If your Mac has a Touch Bar, install `tiny-dfr` from [t2-ubuntu-repo](https://github.com/AdityaGarg8/t2-ubuntu-repo.git).
+**Touch Bar :** If your Mac has a Touch Bar, install `tiny-dfr` from [t2-ubuntu-repo](https://github.com/AdityaGarg8/t2-ubuntu-repo.git).
 
 To make downloading the ISO easier, you can simply run the `iso.sh` script from the Assets below in macOS or Linux.
