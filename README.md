@@ -6,9 +6,14 @@ The ISOs from this repo should allow you to install Ubuntu without using an exte
 
 **If this repo helped you in any way, consider inviting a coffee to the people in the [credits](https://github.com/AdityaGarg8/T2-Ubuntu#credits), [link](https://wiki.t2linux.org/contribute/).**
 
-Ubuntu ISO with Apple T2 patches built-in. Now we also support kubuntu thanks to [@lemmyg](https://github.com/lemmyg)!
+Supported flavours:
 
-Apple T2 drivers are integrated with this iso. 
+- Ubuntu
+- Kubuntu
+
+We also kubuntu thanks to [@lemmyg](https://github.com/lemmyg)!
+
+Apple T2 drivers are integrated with the isos.
 
 This repo is a rework of the great work done by [@mikeeq](https://github.com/mikeeq/mbp-fedora). It originally was [@marcosfad's mbp-ubuntu repo](https://github.com/marcosfad/mbp-ubuntu) and has been transferred to [t2linux](https://github.com/t2linux).
 
