@@ -11,9 +11,9 @@ Supported flavours:
 - Ubuntu
 - Kubuntu
 
-We also kubuntu thanks to [@lemmyg](https://github.com/lemmyg)!
+We support Kubuntu thanks to [@lemmyg](https://github.com/lemmyg)!
 
-Apple T2 drivers are integrated with the isos.
+Apple T2 drivers are integrated with the ISOs.
 
 This repo is a rework of the great work done by [@mikeeq](https://github.com/mikeeq/mbp-fedora). It originally was [@marcosfad's mbp-ubuntu repo](https://github.com/marcosfad/mbp-ubuntu) and has been transferred to [t2linux](https://github.com/t2linux).
 
