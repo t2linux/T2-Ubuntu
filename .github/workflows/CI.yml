@@ -35,7 +35,7 @@ jobs:
         run: |
           sudo rm ${{ github.workspace }}/output/*.iso
       - name: Release
-        if: github.ref == 'refs/heads/kubuntuMainline'
+        if: github.ref == 'refs/heads/flavourMainline'
         uses: softprops/action-gh-release@v2
         with:
           files: ${{ github.workspace }}/output/*
@@ -47,7 +47,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update the json
-        if: github.ref == 'refs/heads/kubuntuMainline'
+        if: github.ref == 'refs/heads/flavourMainline'
         run: |
           git clone https://github.com/t2linux/wiki.git
           cd wiki/docs/tools
@@ -79,7 +79,7 @@ jobs:
           cd -
 
       - name: Push updated links to t2linux.org
-        if: github.ref == 'refs/heads/kubuntuMainline'
+        if: github.ref == 'refs/heads/flavourMainline'
         uses: cpina/github-action-push-to-another-repository@main
         env:
           API_TOKEN_GITHUB: ${{ secrets.PAT }}
