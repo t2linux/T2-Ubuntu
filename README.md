@@ -10,6 +10,7 @@ Supported flavours:
 
 - Ubuntu
 - Kubuntu
+- Ubuntu Unity
 
 We support Kubuntu thanks to [@lemmyg](https://github.com/lemmyg)!
 
