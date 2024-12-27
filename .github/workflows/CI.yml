@@ -124,3 +124,90 @@ jobs:
           user-name: github-actions[bot]
           target-branch: master
           commit-message: Distro metadata - Update Kubuntu 24.04 to v${{ env.isotag }}
+
+  ISO-Ubuntu-unity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate Tag
+        id: tag
+        run: |
+          VER=$(egrep ^KERNEL_VERSION build.sh|cut -d= -f2)
+          REL=$(egrep ^PKGREL build.sh|cut -d= -f2)
+          echo Version is ${VER}-${REL}
+          echo "kver=${VER}" >> $GITHUB_ENV
+          echo "isotag=${VER}-${REL}" >> $GITHUB_ENV
+  
+      - name: Run build script
+        run: |
+          chmod +x ${{ github.workspace }}/build_in_docker.sh
+          ${{ github.workspace }}/build_in_docker.sh ubuntu-unity
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Ubuntu-Unity-24.04
+          path: ${{ github.workspace }}/output/*.iso
+
+      - name: Remove unsplit ISO
+        run: |
+          sudo rm ${{ github.workspace }}/output/*.iso
+
+      - name: Release
+        if: github.ref == 'refs/heads/flavourLTS'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ github.workspace }}/output/*
+          tag_name: v${{ env.isotag }}
+          body_path: ${{ github.workspace }}/.github/workflows/instructions.txt
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update the json
+        if: github.ref == 'refs/heads/flavourLTS'
+        run: |
+          git clone https://github.com/t2linux/wiki.git
+          cd wiki/docs/tools
+
+          cat << EOF > update.py
+          import json
+          # Define the new links
+          new_link1 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/ubuntu-unity-24.04-${{ env.kver }}-t2-noble.iso.00"
+          new_link2 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/ubuntu-unity-24.04-${{ env.kver }}-t2-noble.iso.01"
+          new_link3 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/ubuntu-unity-24.04-${{ env.kver }}-t2-noble.iso.02"
+          # Load the JSON file
+          with open('distro-metadata.json', 'r') as file:
+              data = json.load(file)
+          # Function to update the links
+          def update_links(distros, name, new_links):
+              for distro in distros:
+                  if distro['name'] == name:
+                      distro['iso'] = new_links
+          # Update the links
+          update_links(data['all'], "Ubuntu Unity 24.04 - Noble Numbat", [new_link1, new_link2, new_link3])
+          # Save the updated JSON back to the file
+          with open('distro-metadata.json', 'w') as file:
+              json.dump(data, file, indent=2)
+          print("Links updated successfully.")
+          EOF
+
+          python3 update.py
+          rm update.py
+          cd -
+
+      - name: Push updated links to t2linux.org
+        if: github.ref == 'refs/heads/flavourLTS'
+        uses: cpina/github-action-push-to-another-repository@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.PAT }}
+        with:
+          source-directory: 'wiki'
+          destination-github-username: 't2linux'
+          destination-repository-name: 'wiki'
+          user-email: github-actions[bot]@users.noreply.github.com
+          user-name: github-actions[bot]
+          target-branch: master
+          commit-message: Distro metadata - Update Ubuntu Unity 24.04 to v${{ env.isotag }}
