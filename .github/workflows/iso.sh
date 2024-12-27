@@ -37,8 +37,9 @@ Choose the flavour of Ubuntu you wish to install:
 
 1. Ubuntu
 2. Kubuntu
+3. Ubuntu Unity
 
-Type your choice (1 or 2) from the above list and press return.
+Type your choice (1, 2 etc.) from the above list and press return.
 EOF
 
 read flavinput
@@ -49,6 +50,9 @@ case "$flavinput" in
 		;;
 	(2)
 		flavour=kubuntu
+		;;
+	(3)
+		flavour=ubuntu-unity
 		;;
 	(*)
 		echo "Invalid input. Aborting!"
@@ -83,9 +87,14 @@ case "$verinput" in
 		;;
 esac
 
+if [[ ${flavour} = ubuntu-unity ]]
+then
+flavourcap="Ubuntu Unity"
+else
 firstChar=$(echo "$flavour" | cut -c1 | tr '[a-z]' '[A-Z]')
 restOfString=$(echo "$flavour" | cut -c2-)
 flavourcap="${firstChar}${restOfString}"
+fi
 
 echo -e "\nDownloading Part 1 for ${flavourcap} ${ver}\n"
 curl -#L https://github.com/t2linux/T2-Ubuntu/releases/download/${latest}/${iso}.iso.00 > ${iso}.iso
