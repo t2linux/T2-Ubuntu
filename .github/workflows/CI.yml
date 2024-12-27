@@ -5,10 +5,10 @@ on:
   [push, workflow_dispatch]
 
 jobs:
-  kubuntuMainline:
+  flavourMainline:
     runs-on: ubuntu-latest
     steps:
-      - name: 'Checkout kubuntuLTS Repo'
+      - name: 'Checkout flavourLTS Repo'
         uses: actions/checkout@v4
 
       - name: Get version
@@ -18,13 +18,13 @@ jobs:
          echo "ver=${VERSION}" >> $GITHUB_ENV
          echo "release=${REL}" >> $GITHUB_ENV
           
-      - name: 'Checkout kubuntuMainline Repo'
+      - name: 'Checkout flavourMainline Repo'
         uses: actions/checkout@v4
         with:
-          ref: kubuntuMainline
+          ref: flavourMainline
           persist-credentials: false
 
-      - name: 'Push new version to kubuntuMainline'
+      - name: 'Push new version to flavourMainline'
         id: publish
         run: |
          sed -i "s/KERNEL_VERSION=6.*/KERNEL_VERSION=${{ env.ver }}/g" build.sh
@@ -36,7 +36,7 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.PAT }}
-          branch: kubuntuMainline
+          branch: flavourMainline
 
   ISO-Kubuntu:
     runs-on: ubuntu-latest
@@ -68,7 +68,7 @@ jobs:
           sudo rm ${{ github.workspace }}/output/*.iso
 
       - name: Release
-        if: github.ref == 'refs/heads/kubuntuLTS'
+        if: github.ref == 'refs/heads/flavourLTS'
         uses: softprops/action-gh-release@v2
         with:
           files: ${{ github.workspace }}/output/*
@@ -80,7 +80,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update the json
-        if: github.ref == 'refs/heads/kubuntuLTS'
+        if: github.ref == 'refs/heads/flavourLTS'
         run: |
           git clone https://github.com/t2linux/wiki.git
           cd wiki/docs/tools
@@ -112,7 +112,7 @@ jobs:
           cd -
 
       - name: Push updated links to t2linux.org
-        if: github.ref == 'refs/heads/kubuntuLTS'
+        if: github.ref == 'refs/heads/flavourLTS'
         uses: cpina/github-action-push-to-another-repository@main
         env:
           API_TOKEN_GITHUB: ${{ secrets.PAT }}
