@@ -65,7 +65,7 @@ cat <<EOF
 Choose the version of Ubuntu you wish to install:
 
 1. 24.04 LTS - Noble Numbat
-2. 24.10 - Oracular Oriole
+2. 25.04 - Plucky Puffin
 
 Type your choice (1 or 2) from the above list and press return.
 EOF
@@ -78,8 +78,8 @@ case "$verinput" in
 		ver="24.04 LTS - Noble Numbat"
 		;;
 	(2)
-		iso="${flavour}-24.10-${latestkver}-t2-oracular"
-		ver="24.10 - Oracular Oriole"
+		iso="${flavour}-25.04-${latestkver}-t2-oracular"
+		ver="25.04 - Plucky Puffin"
 		;;
 	(*)
 		echo "Invalid input. Aborting!"
