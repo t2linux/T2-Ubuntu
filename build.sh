@@ -36,11 +36,11 @@ apt-get install -y -qq -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="
   syslinux
 
 echo >&2 "===]> Info: Start loop... "
-for ALTERNATIVE in t2-oracular
+for ALTERNATIVE in t2-plucky
 do
   echo >&2 "===]> Info: Start building ${ALTERNATIVE}... "
 
-  echo >&2 "===]> Info: Build Ubuntu Oracular... "
+  echo >&2 "===]> Info: Build Ubuntu Plucky... "
   /bin/bash -c "
     ROOT_PATH=${ROOT_PATH} \\
     WORKING_PATH=${WORKING_PATH} \\
@@ -51,7 +51,7 @@ do
     ${ROOT_PATH}/01_build_file_system.sh
   "
 
-  echo >&2 "===]> Info: Build Image Oracular... "
+  echo >&2 "===]> Info: Build Image Plucky... "
   /bin/bash -c "
     ROOT_PATH=${ROOT_PATH} \\
     WORKING_PATH=${WORKING_PATH} \\
@@ -85,10 +85,10 @@ do
   fi
   ### Split iso into multiple parts - github max size of release attachment is 2GB, where ISO is sometimes bigger than that
   cd "${ROOT_PATH}"
-  split -b 900M -x "${ROOT_PATH}/ubuntu-24.10-${KERNEL_VERSION}-${ALTERNATIVE}.iso" "${ROOT_PATH}/output/ubuntu-24.10-${KERNEL_VERSION}-${ALTERNATIVE}.iso."
+  split -b 900M -x "${ROOT_PATH}/ubuntu-25.04-${KERNEL_VERSION}-${ALTERNATIVE}.iso" "${ROOT_PATH}/output/ubuntu-25.04-${KERNEL_VERSION}-${ALTERNATIVE}.iso."
 done
 ## Calculate sha256 sums of built ISO
-sha256sum "${ROOT_PATH}"/*.iso >"${ROOT_PATH}/output/sha256-ubuntu-24.10"
+sha256sum "${ROOT_PATH}"/*.iso >"${ROOT_PATH}/output/sha256-ubuntu-25.04"
 
 find ./ | grep ".iso"
 #find ./ | grep ".zip"

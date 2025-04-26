@@ -2,7 +2,7 @@
 
 set -eu -o pipefail
 
-CODENAME=oracular
+CODENAME=plucky
 
 echo >&2 "===]> Info: Configure environment... "
 
@@ -141,13 +141,8 @@ apt-get purge -y -qq \
   xiterm+thai \
   vim \
   linux-generic \
-  linux-headers-6.11.0-8 \
-  linux-headers-6.11.0-8-generic \
   linux-headers-generic \
-  linux-image-6.11.0-8-generic \
   linux-image-generic \
-  linux-modules-6.11.0-8-generic \
-  linux-modules-extra-6.11.0-8-generic \
   gedit
 
 apt-get autoremove -y
