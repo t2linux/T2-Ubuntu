@@ -78,7 +78,7 @@ case "$verinput" in
 		ver="24.04 LTS - Noble Numbat"
 		;;
 	(2)
-		iso="${flavour}-25.04-${latestkver}-t2-oracular"
+		iso="${flavour}-25.04-${latestkver}-t2-plucky"
 		ver="25.04 - Plucky Puffin"
 		;;
 	(*)
