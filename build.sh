@@ -7,11 +7,11 @@ OUTPUT_PATH=$(pwd)/output
 
 FLAVOUR=$1
 ISO_MOUNT_DIR="$ROOT_PATH/${FLAVOUR}-original"    # Temporary mount point for the original ISO
-VER=24.10
-CODENAME=oracular
+VER=25.04
+CODENAME=plucky
 KERNEL_VERSION=6.13.8
 PKGREL=1
-ISO_IMAGE=${FLAVOUR}-24.10-desktop-amd64.iso
+ISO_IMAGE=${FLAVOUR}-25.04-desktop-amd64.iso
 ISO_IMAGE_OUTPUT="${OUTPUT_PATH}/${FLAVOUR}-${VER}-${KERNEL_VERSION}-t2-${CODENAME}.iso"
 ISO_WORK_DIR="$ROOT_PATH/${FLAVOUR}-iso"
 CHROOT_DIR="$ROOT_PATH/${FLAVOUR}-edit"

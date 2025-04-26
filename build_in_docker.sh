@@ -2,7 +2,7 @@
 
 set -eu -o pipefail
 
-DOCKER_IMAGE=ubuntu:24.10
+DOCKER_IMAGE=ubuntu:25.04
 
 echo "DOCKER_IMAGE=${DOCKER_IMAGE}"
 docker pull ${DOCKER_IMAGE}
