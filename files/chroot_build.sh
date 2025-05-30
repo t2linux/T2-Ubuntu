@@ -169,10 +169,16 @@ wifi.scan-rand-mac-address=no
 EOF
 dpkg-reconfigure network-manager
 
-echo >&2 "===]> Info: Configure Network Manager to use iwd... "
+echo >&2 "===]> Info: Add udev Rule to stop annoying WiFi popup... "
 mkdir -p /etc/NetworkManager/conf.d
-printf '#[device]\n#wifi.backend=iwd\n' > /etc/NetworkManager/conf.d/wifi_backend.conf
-#systemctl enable iwd.service
+cat <<EOF | sudo tee /etc/udev/rules.d/99-network-t2-ncm.rules
+SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="ac:de:48:00:11:22", NAME="t2_ncm"
+EOF
+
+cat <<EOF | sudo tee /etc/NetworkManager/conf.d/99-network-t2-ncm.conf
+[main]
+no-auto-default=t2_ncm
+EOF
 
 echo >&2 "===]> Info: Add udev Rule for AMD GPU Power Management... "
 cat <<EOF > /etc/udev/rules.d/30-amdgpu-pm.rules
