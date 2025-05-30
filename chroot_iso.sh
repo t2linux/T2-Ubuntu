@@ -19,7 +19,18 @@ update-grub
 apt install -y apple-t2-audio-config apple-firmware-script
 apt install -y linux-t2=${KERNEL_VERSION}-${PKGREL}-${CODENAME}
 
-# Add udev Rule for AMD GPU Power Management
+echo >&2 "===]> Info: Add udev Rule to stop annoying WiFi popup... "
+mkdir -p /etc/NetworkManager/conf.d
+cat <<EOF | sudo tee /etc/udev/rules.d/99-network-t2-ncm.rules
+SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="ac:de:48:00:11:22", NAME="t2_ncm"
+EOF
+
+cat <<EOF | sudo tee /etc/NetworkManager/conf.d/99-network-t2-ncm.conf
+[main]
+no-auto-default=t2_ncm
+EOF
+
+echo >&2 "===]> Info: Add udev Rule for AMD GPU Power Management... "
 cat <<EOF > /etc/udev/rules.d/30-amdgpu-pm.rules
 KERNEL=="card[012]", SUBSYSTEM=="drm", DRIVERS=="amdgpu", ATTR{device/power_dpm_force_performance_level}="low"
 EOF
