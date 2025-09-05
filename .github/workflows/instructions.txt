@@ -4,10 +4,9 @@ Download the "iso.sh" script in the **assets** below, run it on the terminal and
 
 ## Adding Wi-Fi and Bluetooth support:
 
-Once you're booted and in your desktop, run `get-apple-firmware` and choose the option **"Retrieve the firmware directly from macOS"**.
+Once you're booted and in your desktop:
 
-If this method doesn't work, follow [this guide](https://wiki.t2linux.org/guides/wifi-bluetooth/) to get firmware for Wi-Fi and Bluetooth.
+- Run `get-apple-firmware get_from_macos` **if you have macOS installed as well**.
+- Run `get-apple-firmware get_from_online` **if you have removed macOS or above method does not work** (Note: This method needs wired internet to work).
 
-## Adding support for customisable Touch Bar:
-
-If your Mac has a Touch Bar, and you want to customise it, install `tiny-dfr` by running `sudo apt update && sudo apt install tiny-dfr`. After installing restart your Mac and run `sudo touchbar` to customise.
+If these methods do not work, follow [this guide](https://wiki.t2linux.org/guides/wifi-bluetooth/) to get firmware for Wi-Fi and Bluetooth.
