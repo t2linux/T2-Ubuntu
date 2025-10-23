@@ -2,7 +2,7 @@
 
 set -eu -o pipefail
 
-CODENAME=plucky
+CODENAME=questing
 
 echo >&2 "===]> Info: Configure environment... "
 

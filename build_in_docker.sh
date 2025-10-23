@@ -2,7 +2,7 @@
 
 set -eu -o pipefail
 
-DOCKER_IMAGE=ubuntu:25.04
+DOCKER_IMAGE=ubuntu:25.10
 
 docker pull ${DOCKER_IMAGE}
 docker run \
