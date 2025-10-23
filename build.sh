@@ -7,7 +7,7 @@ FLAVOUR=$1
 ISO_MOUNT_DIR="$ROOT_PATH/${FLAVOUR}-original"    # Temporary mount point for the original ISO
 VER=24.04
 CODENAME=noble
-KERNEL_VERSION=6.16.6
+KERNEL_VERSION=6.17.5
 PKGREL=1
 
 ISO_IMAGE=${FLAVOUR}-24.04.3-desktop-amd64.iso
