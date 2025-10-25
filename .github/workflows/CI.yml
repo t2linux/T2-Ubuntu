@@ -27,7 +27,7 @@ jobs:
           echo "isotag=${VER}-${REL}" >> $GITHUB_ENV
 
       - name: Upload iso artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: mbp-ubuntu-${{ steps.tag.outputs.tag }}.z01
           path: ${{ github.workspace }}/output/*
