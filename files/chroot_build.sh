@@ -136,6 +136,7 @@ apt-get purge -y -qq \
   gnome-mahjongg \
   gnome-mines \
   gnome-sudoku \
+  gnome-terminal \
   aisleriot \
   hitori \
   xiterm+thai \
