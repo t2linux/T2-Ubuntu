@@ -9,7 +9,7 @@ jobs:
   ISO:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Build
         run: sudo ./build_in_docker.sh
