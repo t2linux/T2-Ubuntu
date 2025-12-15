@@ -10,3 +10,8 @@ Once you're booted and in your desktop:
 - Run `get-apple-firmware get_from_online` **if you have removed macOS or above method does not work** (Note: This method needs wired internet to work).
 
 If these methods do not work, follow [this guide](https://wiki.t2linux.org/guides/wifi-bluetooth/) to get firmware for Wi-Fi and Bluetooth.
+
+## Known issues:
+
+1. Ubuntu 25.10 ISO won't be able to install due to a bug in the installer. See: https://bugs.launchpad.net/ubuntu/+source/ubiquity/+bug/2130341. Kubuntu should work normally.
+2. Ubuntu Unity 25.10 is not available since it has not been officially released.
