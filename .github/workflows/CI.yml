@@ -73,7 +73,7 @@ jobs:
         with:
           files: ${{ github.workspace }}/output/*
           tag_name: v${{ env.isotag }}
-          body_path: ${{ github.workspace }}/.github/workflows/instructions.txt
+          #body_path: ${{ github.workspace }}/.github/workflows/instructions.txt
           draft: false
           prerelease: false
         env:
@@ -160,7 +160,7 @@ jobs:
         with:
           files: ${{ github.workspace }}/output/*
           tag_name: v${{ env.isotag }}
-          body_path: ${{ github.workspace }}/.github/workflows/instructions.txt
+          #body_path: ${{ github.workspace }}/.github/workflows/instructions.txt
           draft: false
           prerelease: false
         env:
