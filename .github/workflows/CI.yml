@@ -43,6 +43,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Free up disk space for the CI
+        uses: AdityaGarg8/remove-unwanted-software@v5
+        with:
+          remove-android: 'true'
+          remove-dotnet: 'true'
+          remove-haskell: 'true'
+
       - name: Generate Tag
         id: tag
         run: |
@@ -129,6 +136,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Free up disk space for the CI
+        uses: AdityaGarg8/remove-unwanted-software@v5
+        with:
+          remove-android: 'true'
+          remove-dotnet: 'true'
+          remove-haskell: 'true'
 
       - name: Generate Tag
         id: tag
