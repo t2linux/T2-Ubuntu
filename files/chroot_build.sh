@@ -123,6 +123,26 @@ printf 'apple-bce' >>/etc/modules-load.d/t2.conf
 #printf '\n# display f* key in touchbar\noptions apple-ib-tb fnmode=1\n'  >> /etc/modprobe.d/apple-tb.conf
 #printf '\n# delay loading of the touchbar driver\ninstall apple-ib-tb /bin/sleep 7; /sbin/modprobe --ignore-install apple-ib-tb' >> /etc/modprobe.d/delay-tb.conf
 
+echo >&2 "===]> Info: Setup auto-fetch firmware service... "
+
+cat <<'EOF' >/etc/systemd/system/get-apple-firmware.service
+[Unit]
+Description=Get Apple WiFi and Bluetooth firmware
+ConditionPathExists=!/etc/get_apple_firmware_attempted
+ConditionPathExists=/lib/firmware/brcm
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=-/usr/libexec/get-apple-firmware -i get_from_macos
+ExecStart=touch /etc/get_apple_firmware_attempted
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl enable get-apple-firmware.service
+
 echo >&2 "===]> Info: Update initramfs... "
 
 ## Add custom drivers to be loaded at boot
