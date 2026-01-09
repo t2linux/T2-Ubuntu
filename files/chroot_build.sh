@@ -125,21 +125,7 @@ printf 'apple-bce' >>/etc/modules-load.d/t2.conf
 
 echo >&2 "===]> Info: Setup auto-fetch firmware service... "
 
-cat <<'EOF' >/etc/systemd/system/get-apple-firmware.service
-[Unit]
-Description=Get Apple WiFi and Bluetooth firmware
-ConditionPathExists=!/etc/get_apple_firmware_attempted
-ConditionPathExists=/lib/firmware/brcm
-
-[Service]
-Type=oneshot
-RemainAfterExit=yes
-ExecStart=-/usr/libexec/get-apple-firmware -i get_from_macos
-ExecStart=touch /etc/get_apple_firmware_attempted
-
-[Install]
-WantedBy=multi-user.target
-EOF
+curl -s https://raw.githubusercontent.com/t2linux/wiki/refs/heads/master/docs/tools/get-apple-firmware.service -o /etc/systemd/system/get-apple-firmware.service
 
 systemctl enable get-apple-firmware.service
 
