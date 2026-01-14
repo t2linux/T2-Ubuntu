@@ -122,6 +122,12 @@ printf 'apple-bce' >>/etc/modules-load.d/t2.conf
 #printf '\n# display f* key in touchbar\noptions apple-ib-tb fnmode=1\n'  >> /etc/modprobe.d/apple-tb.conf
 #printf '\n# delay loading of the touchbar driver\ninstall apple-ib-tb /bin/sleep 7; /sbin/modprobe --ignore-install apple-ib-tb' >> /etc/modprobe.d/delay-tb.conf
 
+echo >&2 "===]> Info: Setup auto-fetch firmware service... "
+
+curl -s https://raw.githubusercontent.com/t2linux/wiki/refs/heads/master/docs/tools/get-apple-firmware.service -o /etc/systemd/system/get-apple-firmware.service
+
+systemctl enable get-apple-firmware.service
+
 echo >&2 "===]> Info: Update initramfs... "
 
 ## Add custom drivers to be loaded at boot

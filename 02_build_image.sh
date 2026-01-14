@@ -18,6 +18,8 @@ touch "${IMAGE_PATH}"/ubuntu
 cp -r "${ROOT_PATH}"/files/preseed "${IMAGE_PATH}"/preseed
 cp "${ROOT_PATH}/files/grub/grub.cfg" "${IMAGE_PATH}"/isolinux/grub.cfg
 
+echo >&2 "===]> Info: Reset firmware flag for fresh boot... "
+rm -f "${CHROOT_PATH}/etc/get_apple_firmware_attempted" || true
 
 echo >&2 "===]> Info: Compress the chroot... "
 cd "${WORKING_PATH}"
