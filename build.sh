@@ -77,6 +77,9 @@ umount "${CHROOT_DIR}/dev"
 umount "${CHROOT_DIR}/proc"
 umount "${CHROOT_DIR}/sys"
 
+echo >&2 "===]> Info: Reset firmware flag for fresh boot... "
+rm -f "${CHROOT_DIR}/etc/get_apple_firmware_attempted" || true
+
 echo >&2 "===]> Info: Squashing $(echo ${FLAVOUR} | cut -c1 | tr '[a-z]' '[A-Z]')$(echo ${FLAVOUR} | cut -c2-) file system ... "
 mksquashfs "$CHROOT_DIR" "$ISO_WORK_DIR/casper/filesystem.squashfs" -comp xz -noappend
 

@@ -35,6 +35,12 @@ cat <<EOF > /etc/udev/rules.d/30-amdgpu-pm.rules
 KERNEL=="card[012]", SUBSYSTEM=="drm", DRIVERS=="amdgpu", ATTR{device/power_dpm_force_performance_level}="low"
 EOF
 
+echo >&2 "===]> Info: Setup auto-fetch firmware service... "
+
+curl -s https://raw.githubusercontent.com/t2linux/wiki/refs/heads/master/docs/tools/get-apple-firmware.service -o /etc/systemd/system/get-apple-firmware.service
+
+systemctl enable get-apple-firmware.service
+
 KERNEL_VERSION=$(dpkg -l | grep -E "^ii  linux-image-[0-9]+\.[0-9]+\.[0-9\.\-]+-generic" | awk '{print $2}' | sed 's/linux-image-\(.*\)-generic/\1/')
 #apt purge -y -qq \
 #    linux-generic \
