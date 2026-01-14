@@ -3,25 +3,27 @@
 os=$(uname -s)
 case "$os" in
 	(Darwin)
-		true
+		echo -e "GET http://github.com HTTP/1.0\n\n" | nc github.com 80 > /dev/null 2>&1
+		if [ $? -eq 0 ]; then
+			true
+		else
+			echo "Please connect to the internet"
+			exit 1
+		fi
 		;;
 	(Linux)
-		true
+		if wget -q --spider --timeout=5 --tries=1 http://github.com >/dev/null 2>&1; then
+			true
+		else
+			echo "Please connect to the internet"
+			exit 1
+		fi
 		;;
 	(*)
 		echo "This script is meant to be run only on Linux or macOS"
 		exit 1
 		;;
 esac
-
-echo -e "GET http://github.com HTTP/1.0\n\n" | nc github.com 80 > /dev/null 2>&1
-
-if [ $? -eq 0 ]; then
-    true
-else
-    echo "Please connect to the internet"
-    exit 1
-fi
 
 set -e
 
