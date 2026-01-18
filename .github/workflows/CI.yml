@@ -115,6 +115,9 @@ jobs:
           sudo sed -i 's/GITHUBRELEASE/v${{ env.isotag }}/g' ${{ github.workspace }}/.github/workflows/iso.ps1
           sudo cp ${{ github.workspace }}/.github/workflows/iso.ps1 ${{ github.workspace }}/output/iso.ps1
 
+          sudo sed -i 's/GITHUBRELEASE/v${{ env.isotag }}/g' ${{ github.workspace }}/.github/workflows/iso.bat
+          sudo cp ${{ github.workspace }}/.github/workflows/iso.bat ${{ github.workspace }}/output/iso.bat
+
       - name: Release
         if: github.ref == 'refs/heads/LTS'
         uses: softprops/action-gh-release@v2
