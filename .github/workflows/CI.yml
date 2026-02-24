@@ -64,6 +64,12 @@ jobs:
           chmod +x ${{ github.workspace }}/build_in_docker.sh
           ${{ github.workspace }}/build_in_docker.sh kubuntu
 
+      - name: print sha256sum
+        run: |
+          cat ${{ github.workspace }}/output/sha256*
+          SHA256=$(cat ${{ github.workspace }}/output/sha256* | cut -d " " -f 1)
+          echo "sha256=${SHA256}" >> $GITHUB_ENV
+  
       - name: Upload package artifact
         uses: actions/upload-artifact@v4
         with:
@@ -102,12 +108,13 @@ jobs:
           with open('distro-metadata.json', 'r') as file:
               data = json.load(file)
           # Function to update the links
-          def update_links(distros, name, new_links):
+          def update_links(distros, name, new_links, sha256):
               for distro in distros:
                   if distro['name'] == name:
                       distro['iso'] = new_links
+                      distro['sha256'] = sha256
           # Update the links
-          update_links(data['all'], "Kubuntu 24.04 - Noble Numbat", [new_link1, new_link2, new_link3])
+          update_links(data['all'], "Kubuntu 24.04 - Noble Numbat", [new_link1, new_link2, new_link3], "${{ env.sha256 }}")
           # Save the updated JSON back to the file
           with open('distro-metadata.json', 'w') as file:
               json.dump(data, file, indent=2)
@@ -158,6 +165,12 @@ jobs:
           chmod +x ${{ github.workspace }}/build_in_docker.sh
           ${{ github.workspace }}/build_in_docker.sh ubuntu-unity
 
+      - name: print sha256sum
+        run: |
+          cat ${{ github.workspace }}/output/sha256*
+          SHA256=$(cat ${{ github.workspace }}/output/sha256* | cut -d " " -f 1)
+          echo "sha256=${SHA256}" >> $GITHUB_ENV
+  
       - name: Upload package artifact
         uses: actions/upload-artifact@v4
         with:
@@ -196,12 +209,13 @@ jobs:
           with open('distro-metadata.json', 'r') as file:
               data = json.load(file)
           # Function to update the links
-          def update_links(distros, name, new_links):
+          def update_links(distros, name, new_links, sha256):
               for distro in distros:
                   if distro['name'] == name:
                       distro['iso'] = new_links
+                      distro['sha256'] = sha256
           # Update the links
-          update_links(data['all'], "Ubuntu Unity 24.04 - Noble Numbat", [new_link1, new_link2, new_link3])
+          update_links(data['all'], "Ubuntu Unity 24.04 - Noble Numbat", [new_link1, new_link2, new_link3], "${{ env.sha256 }}" )
           # Save the updated JSON back to the file
           with open('distro-metadata.json', 'w') as file:
               json.dump(data, file, indent=2)
