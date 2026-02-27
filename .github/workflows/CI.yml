@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout flavourLTS Repo'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Get version
         run: |
@@ -19,7 +19,7 @@ jobs:
          echo "release=${REL}" >> $GITHUB_ENV
           
       - name: 'Checkout flavourMainline Repo'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           ref: flavourMainline
           persist-credentials: false
@@ -41,7 +41,7 @@ jobs:
   ISO-Kubuntu:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Free up disk space for the CI
         uses: AdityaGarg8/remove-unwanted-software@v5
@@ -143,7 +143,7 @@ jobs:
   ISO-Ubuntu-unity:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Free up disk space for the CI
         uses: AdityaGarg8/remove-unwanted-software@v5
