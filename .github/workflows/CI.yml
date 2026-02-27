@@ -9,7 +9,7 @@ jobs:
   ISO-Kubuntu:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Free up disk space for the CI
         uses: AdityaGarg8/remove-unwanted-software@v5
@@ -110,7 +110,7 @@ jobs:
   ISO-Ubuntu-Unity:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Free up disk space for the CI
         uses: AdityaGarg8/remove-unwanted-software@v5
