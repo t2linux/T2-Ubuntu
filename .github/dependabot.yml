@@ -14,9 +14,9 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    target-branch: "kubuntuMainline"
+    target-branch: "flavourMainline"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "daily"
-    target-branch: "kubuntuLTS"
+    target-branch: "flavourLTS"
