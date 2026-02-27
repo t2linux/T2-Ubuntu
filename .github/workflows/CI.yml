@@ -41,8 +41,9 @@ jobs:
       - name: Upload package artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Kubuntu-25.10
-          path: ${{ github.workspace }}/output/*.iso
+          name: ISO-Kubuntu
+          path: ${{ github.workspace }}/output/kubuntu-25.10-${{ env.kver }}-t2-questing.iso
+          archive: false
 
       - name: Remove unsplit ISO
         run: |
@@ -141,8 +142,9 @@ jobs:
       - name: Upload package artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Ubuntu-Unity-25.10
-          path: ${{ github.workspace }}/output/*.iso
+          name: ISO-Ubuntu-Unity
+          path: ${{ github.workspace }}/output/ubuntu-unity-25.10-${{ env.kver }}-t2-questing.iso
+          archive: false
 
       - name: Remove unsplit ISO
         run: |
