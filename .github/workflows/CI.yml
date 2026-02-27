@@ -71,7 +71,7 @@ jobs:
           echo "sha256=${SHA256}" >> $GITHUB_ENV
   
       - name: Upload package artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ISO-Kubuntu
           path: ${{ github.workspace }}/output/kubuntu-24.04-${{ env.kver }}-t2-noble.iso
@@ -173,7 +173,7 @@ jobs:
           echo "sha256=${SHA256}" >> $GITHUB_ENV
   
       - name: Upload package artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ISO-Ubuntu-Unity
           path: ${{ github.workspace }}/output/ubuntu-unity-24.04-${{ env.kver }}-t2-noble.iso
