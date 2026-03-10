@@ -55,19 +55,19 @@ IF "%verinput%"=="1" (
 )
 
 ECHO Downloading Part 1 for %flavour% %ver%
-curl -A "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64)" -L https://github.com/t2linux/T2-Ubuntu/releases/download/%latest%/%iso%.iso.00 >> %downloads%\%iso%.iso
+curl -#L https://github.com/t2linux/T2-Ubuntu/releases/download/%latest%/%iso%.iso.00 >> %downloads%\%iso%.iso
 
 ECHO Downloading Part 2 for %flavour% %ver%
-curl -A "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64)" -L https://github.com/t2linux/T2-Ubuntu/releases/download/%latest%/%iso%.iso.01 >> %downloads%\%iso%.iso
+curl -#L https://github.com/t2linux/T2-Ubuntu/releases/download/%latest%/%iso%.iso.01 >> %downloads%\%iso%.iso
 
 ECHO Downloading Part 3 for %flavour% %ver%
-curl -A "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64)" -L https://github.com/t2linux/T2-Ubuntu/releases/download/%latest%/%iso%.iso.02 >> %downloads%\%iso%.iso
+curl -#L https://github.com/t2linux/T2-Ubuntu/releases/download/%latest%/%iso%.iso.02 >> %downloads%\%iso%.iso
 
 FOR /f "tokens=1,2 delims= " %%a IN ("%ver%") DO (
   SET shortver=%%a
 )
 
-curl -s -A "Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64)" -L https://github.com/t2linux/T2-Ubuntu/releases/download/%latest%/sha256-%flavour%-%shortver% -o shafile.txt
+curl -s -L https://github.com/t2linux/T2-Ubuntu/releases/download/%latest%/sha256-%flavour%-%shortver% -o shafile.txt
 
 FOR /F "DELIMS=" %%A IN (shafile.txt) DO (
     SET actual_iso_chksum=%%A
