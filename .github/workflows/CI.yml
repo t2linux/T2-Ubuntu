@@ -29,8 +29,8 @@ jobs:
 
       - name: Run build script
         run: |
-          chmod +x ${{ github.workspace }}/build_in_docker.sh
-          ${{ github.workspace }}/build_in_docker.sh ubuntu
+          chmod +x ${{ github.workspace }}/build.sh
+          ${{ github.workspace }}/build.sh ubuntu
 
       - name: print sha256sum
         run: |
