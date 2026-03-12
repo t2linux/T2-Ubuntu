@@ -41,7 +41,11 @@ apt update && apt update && \
 	xorriso isolinux grub-efi-amd64-bin mtools dosfstools curl
 
 echo >&2 "===]> Info: Download ISO..."
-curl -L -o "$(pwd)/${ISO_IMAGE}" "https://cdimage.ubuntu.com/${FLAVOUR}/releases/${VER}/release/${ISO_IMAGE}"
+if [ "$FLAVOUR" = "ubuntu" ]; then
+    curl -L -o "$(pwd)/${ISO_IMAGE}" "https://releases.ubuntu.com/${VER}/ubuntu-${VER}-desktop-amd64.iso"
+else
+    curl -L -o "$(pwd)/${ISO_IMAGE}" "https://cdimage.ubuntu.com/${FLAVOUR}/releases/${VER}/release/${ISO_IMAGE}"
+fi
 
 # Run entrypoint.sh to extract and customize the ISO
 echo >&2 "===]> Info: Starting extraction and customization..."
