@@ -84,8 +84,9 @@ T2_KERNEL=${KERNEL_VERSION}-${PKGREL}-t2-${CODENAME}
 echo >&2 "===]> Info: Cleanup the chroot environment... "
 # restore backup
 cp -p "${CHROOT_DIR}/etc/resolv.conf.backup" "${CHROOT_DIR}/etc/resolv.conf"
+sleep 10 #Sometimes umount fails as mounts are busy.
 umount "${CHROOT_DIR}/dev/pts"
-umount "${CHROOT_DIR}/dev" || (sleep 10 && umount "${CHROOT_DIR}/dev")
+umount "${CHROOT_DIR}/dev"
 umount "${CHROOT_DIR}/proc"
 umount "${CHROOT_DIR}/sys"
 
