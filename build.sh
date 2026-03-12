@@ -85,7 +85,7 @@ echo >&2 "===]> Info: Cleanup the chroot environment... "
 # restore backup
 cp -p "${CHROOT_DIR}/etc/resolv.conf.backup" "${CHROOT_DIR}/etc/resolv.conf"
 umount "${CHROOT_DIR}/dev/pts"
-umount "${CHROOT_DIR}/dev"
+umount "${CHROOT_DIR}/dev" || (sleep 10 && umount "${CHROOT_DIR}/dev")
 umount "${CHROOT_DIR}/proc"
 umount "${CHROOT_DIR}/sys"
 

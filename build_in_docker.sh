@@ -13,5 +13,5 @@ docker run \
   -t \
   -v "$(pwd)":/repo \
   ${DOCKER_IMAGE} \
-  /bin/bash -c "echo testing && ls -l / && cd /repo && ./build.sh $1"
+  /bin/bash -c "cd /repo && ./build.sh $1"
 
