@@ -86,8 +86,6 @@ git clone --depth 1 https://github.com/AdityaGarg8/applesmc-t2 ./applesmc-t2-0.1
 
 git clone --depth 1 https://github.com/linux-apfs/linux-apfs-rw.git ./linux-apfs-rw-0.1
 sed -i 's/PACKAGE_VERSION=.*/PACKAGE_VERSION="0.1"/g' ./linux-apfs-rw-0.1/dkms.conf
-sed -i 's/make CONFIG/make APFS_CONFIG/g' ./linux-apfs-rw-0.1/Makefile
-sed -i 's/$(CONFIG)/$(APFS_CONFIG)/g' ./linux-apfs-rw-0.1/Makefile
 
 cd ..
 cd ..
