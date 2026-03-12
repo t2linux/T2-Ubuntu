@@ -12,7 +12,11 @@ fi
 
 # Update GRUB Configuration in ISO
 echo >&2 "===]> Info: Modify existing grub.cfg ..."
-sed -i 's/--- quiet splash/--- quiet splash intel_iommu=on iommu=pt pcie_ports=native/g' "$ISO_WORK_DIR/boot/grub/grub.cfg"
+if [ "$SUBIQUITY" = "yes" ]; then
+    sed -i 's/--- quiet splash/--- quiet splash intel_iommu=on iommu=pt pcie_ports=native/g' "$ISO_WORK_DIR/boot/grub/grub.cfg"
+else
+    sed -i 's/--- quiet splash/boot=casper quiet splash intel_iommu=on iommu=pt pcie_ports=native ---/g' "$ISO_WORK_DIR/boot/grub/grub.cfg"
+fi
 
 echo >&2 "===]> Info: Creating EFI image ... "
 dd if=/dev/zero of="$ISO_WORK_DIR/EFI/efiboot.img" bs=1M count=10
