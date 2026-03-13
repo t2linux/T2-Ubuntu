@@ -94,7 +94,7 @@ umount "${CHROOT_DIR}/sys"
 echo >&2 "===]> Info: Reset firmware flag for fresh boot... "
 rm -f "${CHROOT_DIR}/etc/get_apple_firmware_attempted" || true
 
-echo >&2 "===]> Info: Squashing $(echo ${FLAVOUR} | cut -c1 | tr '[a-z]' '[A-Z]')$(echo ${FLAVOUR} | cut -c2-) file system ... "
+echo >&2 "===]> Info: Squashing ${FLAVOUR_CAP} file system ... "
 if [ "$SUBIQUITY" = "yes" ]; then
     mksquashfs "$CHROOT_DIR" "$ISO_WORK_DIR/casper/minimal.squashfs" -comp xz -noappend
     printf "%s" "$(du -sx --block-size=1 "${CHROOT_DIR}" | cut -f1)" >"${ISO_WORK_DIR}"/casper/minimal.size
