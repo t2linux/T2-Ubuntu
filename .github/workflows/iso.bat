@@ -55,7 +55,7 @@ IF "%verinput%"=="1" (
 )
 
 ECHO Downloading Part 1 for %flavour% %ver%
-curl -#L https://github.com/t2linux/T2-Ubuntu/releases/download/%latest%/%iso%.iso.00 >> %downloads%\%iso%.iso
+curl -#L https://github.com/t2linux/T2-Ubuntu/releases/download/%latest%/%iso%.iso.00 > %downloads%\%iso%.iso
 
 ECHO Downloading Part 2 for %flavour% %ver%
 curl -#L https://github.com/t2linux/T2-Ubuntu/releases/download/%latest%/%iso%.iso.01 >> %downloads%\%iso%.iso
