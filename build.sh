@@ -10,7 +10,7 @@ FLAVOUR_CAP=$(echo "${FLAVOUR}" | tr '_-' ' ' | awk '{for(i=1;i<=NF;i++) $i=toup
 ISO_MOUNT_DIR="$ROOT_PATH/${FLAVOUR}-original"    # Temporary mount point for the original ISO
 VER=25.10
 CODENAME=questing
-KERNEL_VERSION=6.19.4
+KERNEL_VERSION=6.19.7
 PKGREL=1
 ISO_IMAGE=${FLAVOUR}-25.10-desktop-amd64.iso
 ISO_IMAGE_OUTPUT="${OUTPUT_PATH}/${FLAVOUR}-${VER}-${KERNEL_VERSION}-t2-${CODENAME}.iso"
