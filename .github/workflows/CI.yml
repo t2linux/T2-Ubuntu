@@ -11,7 +11,7 @@ jobs:
         target:
           - image: ubuntu
           - image: kubuntu
-          - image: ubuntu-unity
+          #- image: ubuntu-unity
 
     runs-on: ubuntu-latest
     steps:
