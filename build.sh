@@ -6,6 +6,7 @@ ROOT_PATH=$(pwd)/work
 OUTPUT_PATH=$(pwd)/output
 
 FLAVOUR=$1
+FLAVOUR_CAP=$(echo "${FLAVOUR}" | tr '_-' ' ' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2); print}')
 ISO_MOUNT_DIR="$ROOT_PATH/${FLAVOUR}-original"    # Temporary mount point for the original ISO
 VER=25.10
 CODENAME=questing
@@ -104,17 +105,17 @@ if [ "$SUBIQUITY" = "yes" ]; then
     ln -s minimal.manifest filesystem.manifest
     FILESYSTEM_SIZE=$(($(cat minimal.size)+$(cat minimal.standard.live.size)))
     echo ${FILESYSTEM_SIZE} > filesystem.size
-cat <<EOF > ./install-sources.yaml
+cat <<EOF | tee ./install-sources.yaml
 kernel:
   default: linux-generic-hwe-24.04
 sources:
 - default: true
   description:
-    en: Ubuntu for T2 Macs
-  id: ubuntu-desktop-minimal
+    en: ${FLAVOUR_CAP} for T2 Macs
+  id: ${FLAVOUR}-desktop-minimal
   locale_support: none
   name:
-    en: Ubuntu 25.10 Questing Quokka
+    en: ${FLAVOUR_CAP} 25.10 Questing Quokka
   path: minimal.squashfs
   size: ${FILESYSTEM_SIZE}
   type: fsimage-layered
