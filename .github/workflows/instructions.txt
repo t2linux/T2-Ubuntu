@@ -13,5 +13,4 @@ If these methods do not work, follow [this guide](https://wiki.t2linux.org/guide
 
 ## Known issues:
 
-1. Ubuntu 25.10 ISO won't be able to install due to a bug in the installer. See: https://bugs.launchpad.net/ubuntu/+source/ubiquity/+bug/2130341. Kubuntu should work normally.
-2. Ubuntu Unity 25.10 is not available since it has not been officially released.
+1. Ubuntu Unity 25.10 is not available since it has not been officially released.
