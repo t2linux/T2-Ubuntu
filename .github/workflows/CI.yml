@@ -5,39 +5,6 @@ on:
   [push, workflow_dispatch]
 
 jobs:
-  flavourMainline:
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'Checkout flavourLTS Repo'
-        uses: actions/checkout@v6
-
-      - name: Get version
-        run: |
-         VERSION=$(egrep ^KERNEL_VERSION build.sh|cut -d= -f2)
-         REL=$(egrep ^PKGREL build.sh|cut -d= -f2)
-         echo "ver=${VERSION}" >> $GITHUB_ENV
-         echo "release=${REL}" >> $GITHUB_ENV
-          
-      - name: 'Checkout flavourMainline Repo'
-        uses: actions/checkout@v6
-        with:
-          ref: flavourMainline
-          persist-credentials: false
-
-      - name: 'Push new version to flavourMainline'
-        id: publish
-        run: |
-         sed -i "s/KERNEL_VERSION=6.*/KERNEL_VERSION=${{ env.ver }}/g" build.sh
-         sed -i '/^PKGREL=/ s/PKGREL=[0-9]*/PKGREL=${{ env.release }}/' build.sh
-         git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-         git config --local user.name "github-actions[bot]"
-         git commit -m "${{ env.ver }}-${{ env.release }}" -a
-      - name: Push changes to the repo
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.PAT }}
-          branch: flavourMainline
-
   ISO-Kubuntu:
     runs-on: ubuntu-latest
     steps:
