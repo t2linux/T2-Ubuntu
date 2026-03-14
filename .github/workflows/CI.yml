@@ -96,9 +96,10 @@ jobs:
 
           for i in ubuntu kubuntu
           do
-          wget https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/sha256-${i}-25.10
-          SHA256=$(cat ./sha256-${i} | cut -d " " -f 1)
-          rm sha256-${i}-25.10
+          j=${i}-25.10
+          wget https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/sha256-${j}
+          SHA256=$(cat ./sha256-${j} | cut -d " " -f 1)
+          rm sha256-${j}
           CAPS=$(echo "${i}" | tr '_-' ' ' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2); print}')
           cat << EOF > update.py
           import json
