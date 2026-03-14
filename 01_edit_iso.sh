@@ -17,7 +17,7 @@ fi
 mount -o loop "$(pwd)/$ISO_IMAGE" "$ISO_MOUNT_DIR"
 
 if [ "$SUBIQUITY" = "yes" ]; then
-    rsync -a "$ISO_MOUNT_DIR/" "$ISO_WORK_DIR" --include="casper/initrd" --include="casper/vmlinuz" --include="casper/minimal.standard.live.squashfs" --include="casper/minimal.standard.live.manifest" --include="casper/minimal.standard.live.size" --exclude="casper/*" --exclude="md5sum.txt" --exclude="MD5SUMS" --exclude=".disk/release_notes_url" --exclude="casper/*.gpg"
+    rsync -a "$ISO_MOUNT_DIR/" "$ISO_WORK_DIR" --include="casper/initrd" --include="casper/vmlinuz" --include="casper/minimal.standard.live.squashfs" --include="casper/minimal.standard.live.manifest" --include="casper/minimal.standard.live.size" --include="casper/install-sources.yaml" --exclude="casper/*" --exclude="md5sum.txt" --exclude="MD5SUMS" --exclude=".disk/release_notes_url" --exclude="casper/*.gpg"
     unsquashfs -d "$CHROOT_DIR" "$ISO_MOUNT_DIR/casper/minimal.squashfs"
     unsquashfs -d "$CHROOT_DIR_EXTRA" "$ISO_MOUNT_DIR/casper/minimal.standard.squashfs"
     rsync -a "$CHROOT_DIR_EXTRA/" "$CHROOT_DIR/"
