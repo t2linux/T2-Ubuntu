@@ -11,6 +11,10 @@ jobs:
         target:
           - image: ubuntu
           - image: kubuntu
+          - image: ubuntu-budgie
+          - image: ubuntucinnamon
+          - image: ubuntu-mate
+          - image: xubuntu
           #- image: ubuntu-unity
 
     runs-on: ubuntu-latest
