@@ -10,6 +10,8 @@ if [ "$FLAVOUR" = "ubuntucinnamon" ]; then
     FLAVOUR_CAP="Ubuntu Cinnamon"
 elif [ "$FLAVOUR" = "ubuntu-mate" ]; then
     FLAVOUR_CAP="Ubuntu MATE"
+elif [ "$FLAVOUR" = "ubuntukylin" ]; then
+    FLAVOUR_CAP="Ubuntu Kylin"
 else
     FLAVOUR_CAP=$(echo "${FLAVOUR}" | tr '_-' ' ' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2); print}')
 fi
