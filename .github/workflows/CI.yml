@@ -68,18 +68,40 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  Publish:
+    needs: [ISO]
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout Repo'
+        uses: actions/checkout@v6
+
+      - name: Generate Tag
+        id: tag
+        run: |
+          VER=$(egrep ^KERNEL_VERSION build.sh|cut -d= -f2)
+          REL=$(egrep ^PKGREL build.sh|cut -d= -f2)
+          echo Version is ${VER}-${REL}
+          echo "kver=${VER}" >> $GITHUB_ENV
+          echo "isotag=${VER}-${REL}" >> $GITHUB_ENV
       - name: Update the json
         if: github.ref == 'refs/heads/mainline'
+        id: publish
         run: |
           git clone https://github.com/t2linux/wiki.git
           cd wiki/docs/tools
 
+          for i in ubuntu kubuntu
+          do
+          wget https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/sha256-${i}-25.10
+          SHA256=$(cat ./sha256-${i} | cut -d " " -f 1)
+          rm sha256-${i}-25.10
+          CAPS=$(echo "${i}" | tr '_-' ' ' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2); print}')
           cat << EOF > update.py
           import json
           # Define the new links
-          new_link1 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/${{ matrix.target.image }}-25.10-${{ env.kver }}-t2-questing.iso.00"
-          new_link2 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/${{ matrix.target.image }}-25.10-${{ env.kver }}-t2-questing.iso.01"
-          new_link3 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/${{ matrix.target.image }}-25.10-${{ env.kver }}-t2-questing.iso.02"
+          new_link1 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/${i}-25.10-${{ env.kver }}-t2-questing.iso.00"
+          new_link2 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/${i}-25.10-${{ env.kver }}-t2-questing.iso.01"
+          new_link3 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/${i}-25.10-${{ env.kver }}-t2-questing.iso.02"
           # Load the JSON file
           with open('distro-metadata.json', 'r') as file:
               data = json.load(file)
@@ -90,7 +112,7 @@ jobs:
                       distro['iso'] = new_links
                       distro['sha256'] = sha256
           # Update the links
-          update_links(data['all'], "${{ env.caps }} 25.10 - Questing Quokka", [new_link1, new_link2, new_link3], "${{ env.sha256 }}")
+          update_links(data['all'], "${CAPS} 25.10 - Questing Quokka", [new_link1, new_link2, new_link3], "${SHA256}")
           # Save the updated JSON back to the file
           with open('distro-metadata.json', 'w') as file:
               json.dump(data, file, indent=2)
@@ -99,9 +121,9 @@ jobs:
 
           python3 update.py
           rm update.py
+          done
           cd -
-
-      - name: Push updated links to t2linux.org
+      - name: Push changes to apt repo
         if: github.ref == 'refs/heads/mainline'
         uses: cpina/github-action-push-to-another-repository@main
         env:
@@ -113,4 +135,4 @@ jobs:
           user-email: github-actions[bot]@users.noreply.github.com
           user-name: github-actions[bot]
           target-branch: master
-          commit-message: Distro metadata - Update ${{ env.caps }} 25.10 to v${{ env.isotag }}
+          commit-message: Distro metadata - Update Ubuntu 25.10 and its flavours to v${{ env.isotag }}
