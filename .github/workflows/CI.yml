@@ -14,7 +14,7 @@ jobs:
           - image: ubuntu-budgie
           - image: ubuntucinnamon
           - image: ubuntu-mate
-          - image: ubuntukylin
+          #- image: ubuntukylin
           - image: xubuntu
           #- image: ubuntu-unity
 
