@@ -45,8 +45,9 @@ jobs:
           chmod +x ${{ github.workspace }}/build_in_docker.sh
           ${{ github.workspace }}/build_in_docker.sh ${{ matrix.target.image }}
 
-      - name: print sha256sum
+      - name: List items built and print sha256sum
         run: |
+          ls -l ${{ github.workspace }}/output
           cat ${{ github.workspace }}/output/sha256*
           SHA256=$(cat ${{ github.workspace }}/output/sha256* | cut -d " " -f 1)
           echo "sha256=${SHA256}" >> $GITHUB_ENV
