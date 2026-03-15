@@ -1,5 +1,11 @@
 @ECHO off
 
+curl -Is https://github.com >nul 2>&1
+if errorlevel 1 (
+    echo Please connect to the internet
+    exit /b 1
+)
+
 SET latest=GITHUBRELEASE
 SET latestkver=%latest%
 CALL SET latestkver=%%latestkver:v=%%
