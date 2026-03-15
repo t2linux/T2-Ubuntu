@@ -9,22 +9,27 @@ FOR /f "tokens=1,2 delims=-" %%a IN ("%latestkver%") DO (
 
 SET downloads=%userprofile%\Downloads
 
+ECHO.
 ECHO Choose the flavour of Ubuntu you wish to install: 
 ECHO.
 ECHO 1. Ubuntu 
 ECHO 2. Kubuntu 
 ECHO 3. Ubuntu Unity 
 ECHO.
-SET /P flavinput=Type your choice (1, 2 etc.) from the above list and press return.
+ECHO Type your choice (1, 2 etc.) from the above list and press return.
+SET /P flavinput=
 
 IF "%flavinput%"=="1" (
     SET flavour=ubuntu
+    SET flavourcap=Ubuntu
 ) ELSE (
     IF "%flavinput%"=="2" (
         SET flavour=kubuntu
+        SET flavourcap=Kubuntu
     ) ELSE (
         IF "%flavinput%"=="3" (
             SET flavour=ubuntu-unity
+            SET flavourcap=Ubuntu Unity
         ) ELSE (
             ECHO Invalid input. Aborting!
             PAUSE 
@@ -33,12 +38,14 @@ IF "%flavinput%"=="1" (
     )
 )
 
+ECHO.
 ECHO Choose the version of Ubuntu you wish to install: 
 ECHO.
 ECHO 1. 24.04 LTS - Noble Numbat 
 ECHO 2. 25.10 - Questing Quokka 
 ECHO.
-SET /P verinput=Type your choice (1 or 2) from the above list and press return.
+ECHO Type your choice (1 or 2) from the above list and press return.
+SET /P verinput=
 
 IF "%verinput%"=="1" (
     SET iso=%flavour%-24.04-%latestkver%-t2-noble
@@ -54,13 +61,19 @@ IF "%verinput%"=="1" (
     )
 )
 
-ECHO Downloading Part 1 for %flavour% %ver%
+ECHO.
+ECHO Downloading Part 1 for %flavourcap% %ver%
+ECHO.
 curl -#L https://github.com/t2linux/T2-Ubuntu/releases/download/%latest%/%iso%.iso.00 > %downloads%\%iso%.iso
 
-ECHO Downloading Part 2 for %flavour% %ver%
+ECHO.
+ECHO Downloading Part 2 for %flavourcap% %ver%
+ECHO.
 curl -#L https://github.com/t2linux/T2-Ubuntu/releases/download/%latest%/%iso%.iso.01 >> %downloads%\%iso%.iso
 
-ECHO Downloading Part 3 for %flavour% %ver%
+ECHO.
+ECHO Downloading Part 3 for %flavourcap% %ver%
+ECHO.
 curl -#L https://github.com/t2linux/T2-Ubuntu/releases/download/%latest%/%iso%.iso.02 >> %downloads%\%iso%.iso
 
 FOR /f "tokens=1,2 delims= " %%a IN ("%ver%") DO (
@@ -81,21 +94,19 @@ FOR /f "tokens=1,2 delims= " %%a IN ("%actual_iso_chksum%") DO (
   SET actual_iso_chksum=%%a
 )
 
+ECHO.
 ECHO Verifying sha256 checksums
 
 FOR /f "tokens=1" %%i IN ('certutil -hashfile %downloads%\%iso%.iso SHA256 ^| findstr /v "hash"') DO (
     SET "downloaded_iso_chksum=%%i"
 )
 
-ECHO %actual_iso_chksum%
-ECHO %downloaded_iso_chksum%
-
 IF "%actual_iso_chksum%" NEQ "%downloaded_iso_chksum%" (
+    ECHO.
     ECHO Error: Failed to verify sha256 checksums of the ISO
-    PAUSE 
+    DEL %downloads%\%iso%.iso
     EXIT
 )
 
-ECHO ISO saved successfully
-
-PAUSE
+ECHO.
+ECHO ISO saved to Downloads
