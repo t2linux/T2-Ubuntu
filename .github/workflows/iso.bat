@@ -16,7 +16,7 @@ FOR /f "tokens=1,2 delims=-" %%a IN ("%latestkver%") DO (
 SET downloads=%userprofile%\Downloads
 
 ECHO.
-ECHO Choose the flavour of Ubuntu you wish to install: 
+ECHO Choose the flavour of Ubuntu you wish to install:
 ECHO.
 ECHO 1. Ubuntu 
 ECHO 2. Kubuntu 
@@ -45,7 +45,7 @@ IF "%flavinput%"=="1" (
 )
 
 ECHO.
-ECHO Choose the version of Ubuntu you wish to install: 
+ECHO Choose the version of Ubuntu you wish to install:
 ECHO.
 ECHO 1. 24.04 LTS - Noble Numbat 
 ECHO 2. 25.10 - Questing Quokka 
