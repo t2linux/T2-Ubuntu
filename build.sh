@@ -151,7 +151,7 @@ echo >&2 "===]> Info: Creating iso ... "
 # split iso
 
 ISO_SIZE=$(du -m "${OUTPUT_PATH}/${FLAVOUR}-${VER}-${KERNEL_VERSION}-t2-${CODENAME}.iso" | cut -f1)
-if [ "$ISO_SIZE_MB" -lt 4000 ]; then
+if [ "$ISO_SIZE" -lt 4000 ]; then
     SPLIT_SIZE=1500M
 else
     SPLIT_SIZE=2000M
