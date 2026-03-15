@@ -18,9 +18,9 @@ SET downloads=%userprofile%\Downloads
 ECHO.
 ECHO Choose the flavour of Ubuntu you wish to install:
 ECHO.
-ECHO 1. Ubuntu 
-ECHO 2. Kubuntu 
-ECHO 3. Ubuntu Unity 
+ECHO 1. Ubuntu
+ECHO 2. Kubuntu
+ECHO 3. Ubuntu Unity
 ECHO.
 ECHO Type your choice (1, 2 etc.) from the above list and press return.
 SET /P flavinput=
@@ -38,7 +38,6 @@ IF "%flavinput%"=="1" (
             SET flavourcap=Ubuntu Unity
         ) ELSE (
             ECHO Invalid input. Aborting!
-            PAUSE 
             EXIT
         )
     )
@@ -47,8 +46,8 @@ IF "%flavinput%"=="1" (
 ECHO.
 ECHO Choose the version of Ubuntu you wish to install:
 ECHO.
-ECHO 1. 24.04 LTS - Noble Numbat 
-ECHO 2. 25.10 - Questing Quokka 
+ECHO 1. 24.04 LTS - Noble Numbat
+ECHO 2. 25.10 - Questing Quokka
 ECHO.
 ECHO Type your choice (1 or 2) from the above list and press return.
 SET /P verinput=
@@ -59,10 +58,9 @@ IF "%verinput%"=="1" (
 ) ELSE (
     IF "%verinput%"=="2" (
         SET iso=%flavour%-25.10-%latestkver%-t2-questing
-        SET ver=25.10 - Questing Quokka 
+        SET ver=25.10 - Questing Quokka
     ) ELSE (
         ECHO "Invalid input. Aborting!"
-        PAUSE 
         EXIT
     )
 )
