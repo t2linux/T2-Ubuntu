@@ -1,6 +1,6 @@
 ## How to download the ISO?
 
-Download the "iso.sh" script in the **assets** below, run it on the terminal and follow the on screen instructions.
+Download the "iso.sh" script (if using macOS or Linux) or "iso.bat" script (if using Windows) from the **assets** below, run it on the terminal and follow the on screen instructions.
 
 ## Adding Wi-Fi and Bluetooth support:
 
