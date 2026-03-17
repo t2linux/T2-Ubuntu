@@ -40,6 +40,10 @@ Choose the flavour of Ubuntu you wish to install:
 1. Ubuntu
 2. Kubuntu
 3. Ubuntu Unity
+4. Ubuntu Budgie
+5. Ubuntu Cinnamon
+6. Ubuntu MATE
+7. Xubuntu
 
 Type your choice (1, 2 etc.) from the above list and press return.
 EOF
@@ -49,12 +53,31 @@ read flavinput
 case "$flavinput" in
 	(1)
 		flavour=ubuntu
+		flavourcap=Ubuntu
 		;;
 	(2)
 		flavour=kubuntu
+		flavourcap=Kubuntu
 		;;
 	(3)
 		flavour=ubuntu-unity
+		flavourcap="Ubuntu Unity"
+		;;
+	(4)
+		flavour=ubuntu-budgie
+		flavourcap="Ubuntu Budgie"
+		;;
+	(5)
+		flavour=ubuntucinnamon
+		flavourcap="Ubuntu Cinnamon"
+		;;
+	(6)
+		flavour=ubuntu-mate
+		flavourcap="Ubuntu MATE"
+		;;
+	(7)
+		flavour=xubuntu
+		flavourcap="Xubuntu"
 		;;
 	(*)
 		echo "Invalid input. Aborting!"
@@ -88,15 +111,6 @@ case "$verinput" in
 		exit 1
 		;;
 esac
-
-if [[ ${flavour} = ubuntu-unity ]]
-then
-flavourcap="Ubuntu Unity"
-else
-firstChar=$(echo "$flavour" | cut -c1 | tr '[a-z]' '[A-Z]')
-restOfString=$(echo "$flavour" | cut -c2-)
-flavourcap="${firstChar}${restOfString}"
-fi
 
 echo -e "\nDownloading Part 1 for ${flavourcap} ${ver}\n"
 curl -#L https://github.com/t2linux/T2-Ubuntu/releases/download/${latest}/${iso}.iso.00 > ${iso}.iso
