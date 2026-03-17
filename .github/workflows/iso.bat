@@ -21,6 +21,10 @@ ECHO.
 ECHO 1. Ubuntu
 ECHO 2. Kubuntu
 ECHO 3. Ubuntu Unity
+ECHO 4. Ubuntu Budgie
+ECHO 5. Ubuntu Cinnamon
+ECHO 6. Ubuntu MATE
+ECHO 7. Xubuntu
 ECHO.
 ECHO Type your choice (1, 2 etc.) from the above list and press return.
 SET /P flavinput=
@@ -37,8 +41,28 @@ IF "%flavinput%"=="1" (
             SET flavour=ubuntu-unity
             SET flavourcap=Ubuntu Unity
         ) ELSE (
-            ECHO Invalid input. Aborting!
-            EXIT
+            IF "%flavinput%"=="4" (
+                SET flavour=ubuntu-budgie
+                SET flavourcap=Ubuntu Budgie
+            ) ELSE (
+                IF "%flavinput%"=="5" (
+                    SET flavour=ubuntucinnamon
+                    SET flavourcap=Ubuntu Cinnamon
+                ) ELSE (
+                    IF "%flavinput%"=="6" (
+                        SET flavour=ubuntu-mate
+                        SET flavourcap=Ubuntu MATE
+                    ) ELSE (
+                        IF "%flavinput%"=="7" (
+                            SET flavour=xubuntu
+                            SET flavourcap=Xubuntu
+                        ) ELSE (
+                            ECHO Invalid input. Aborting!
+                            EXIT
+                        )
+                    )
+                )
+            )
         )
     )
 )
