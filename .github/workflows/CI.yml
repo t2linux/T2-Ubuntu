@@ -104,9 +104,9 @@ jobs:
           rm sha256-${j}
           if [ "$i" = "ubuntucinnamon" ]; then
               CAPS="Ubuntu Cinnamon"
-          elif [ "$FLAVOUR" = "ubuntu-mate" ]; then
+          elif [ "$i" = "ubuntu-mate" ]; then
               CAPS="Ubuntu MATE"
-          elif [ "$FLAVOUR" = "ubuntukylin" ]; then
+          elif [ "$i" = "ubuntukylin" ]; then
               CAPS="Ubuntu Kylin"
           else
               CAPS=$(echo "${i}" | tr '_-' ' ' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2); print}')
