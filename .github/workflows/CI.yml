@@ -96,13 +96,21 @@ jobs:
           git clone https://github.com/t2linux/wiki.git
           cd wiki/docs/tools
 
-          for i in ubuntu kubuntu
+          for i in ubuntu kubuntu ubuntu-budgie ubuntucinnamon ubuntu-mate xubuntu
           do
           j=${i}-25.10
           wget https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/sha256-${j}
           SHA256=$(cat ./sha256-${j} | cut -d " " -f 1)
           rm sha256-${j}
-          CAPS=$(echo "${i}" | tr '_-' ' ' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2); print}')
+          if [ "$i" = "ubuntucinnamon" ]; then
+              CAPS="Ubuntu Cinnamon"
+          elif [ "$FLAVOUR" = "ubuntu-mate" ]; then
+              CAPS="Ubuntu MATE"
+          elif [ "$FLAVOUR" = "ubuntukylin" ]; then
+              CAPS="Ubuntu Kylin"
+          else
+              CAPS=$(echo "${i}" | tr '_-' ' ' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2); print}')
+          fi
           cat << EOF > update.py
           import json
           # Define the new links
