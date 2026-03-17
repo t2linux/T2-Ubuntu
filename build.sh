@@ -6,7 +6,15 @@ ROOT_PATH=$(pwd)/work
 OUTPUT_PATH=$(pwd)/output
 
 FLAVOUR=$1
-FLAVOUR_CAP=$(echo "${FLAVOUR}" | tr '_-' ' ' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2); print}')
+if [ "$FLAVOUR" = "ubuntucinnamon" ]; then
+    FLAVOUR_CAP="Ubuntu Cinnamon"
+elif [ "$FLAVOUR" = "ubuntu-mate" ]; then
+    FLAVOUR_CAP="Ubuntu MATE"
+elif [ "$FLAVOUR" = "ubuntukylin" ]; then
+    FLAVOUR_CAP="Ubuntu Kylin"
+else
+    FLAVOUR_CAP=$(echo "${FLAVOUR}" | tr '_-' ' ' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2); print}')
+fi
 ISO_MOUNT_DIR="$ROOT_PATH/${FLAVOUR}-original"    # Temporary mount point for the original ISO
 VER=25.10
 CODENAME=questing
@@ -18,10 +26,10 @@ ISO_WORK_DIR="$ROOT_PATH/${FLAVOUR}-iso"
 CHROOT_DIR="$ROOT_PATH/${FLAVOUR}-edit"
 CHROOT_DIR_EXTRA="$ROOT_PATH/${FLAVOUR}-edit-extra"
 
-if [ "$FLAVOUR" = "ubuntu" ]; then
-    SUBIQUITY=yes
-else
+if [ "$FLAVOUR" = "kubuntu" ] || [ "$FLAVOUR" = "ubuntu-unity" ]; then
     SUBIQUITY=no
+else
+    SUBIQUITY=yes
 fi
 
 echo "ROOT_PATH=$ROOT_PATH"
@@ -105,9 +113,10 @@ if [ "$SUBIQUITY" = "yes" ]; then
     ln -s minimal.manifest filesystem.manifest
     FILESYSTEM_SIZE=$(($(cat minimal.size)+$(cat minimal.standard.live.size)))
     echo ${FILESYSTEM_SIZE} > filesystem.size
+    LINUXGENERIC=$(cat ./install-sources.yaml | grep default | grep generic | cut -d ":" -f 2 | xargs)
 cat <<EOF | tee ./install-sources.yaml
 kernel:
-  default: linux-generic-hwe-24.04
+  default: ${LINUXGENERIC}
 sources:
 - default: true
   description:
@@ -141,7 +150,13 @@ echo >&2 "===]> Info: Creating iso ... "
 	$(pwd)/02_create_iso.sh"
 # split iso
 
-split -b 2000M -x "${OUTPUT_PATH}/${FLAVOUR}-${VER}-${KERNEL_VERSION}-t2-${CODENAME}.iso" "${OUTPUT_PATH}/${FLAVOUR}-${VER}-${KERNEL_VERSION}-t2-${CODENAME}.iso."
+ISO_SIZE=$(du -m "${OUTPUT_PATH}/${FLAVOUR}-${VER}-${KERNEL_VERSION}-t2-${CODENAME}.iso" | cut -f1)
+if [ "$ISO_SIZE" -lt 4000 ]; then
+    SPLIT_SIZE=1500M
+else
+    SPLIT_SIZE=2000M
+fi
+split -b "${SPLIT_SIZE}" -x "${OUTPUT_PATH}/${FLAVOUR}-${VER}-${KERNEL_VERSION}-t2-${CODENAME}.iso" "${OUTPUT_PATH}/${FLAVOUR}-${VER}-${KERNEL_VERSION}-t2-${CODENAME}.iso."
 sha256sum "${OUTPUT_PATH}"/*.iso > "${OUTPUT_PATH}/sha256-${FLAVOUR}-${VER}"
 
 
