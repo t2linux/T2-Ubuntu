@@ -11,6 +11,10 @@ Supported flavours:
 - Ubuntu
 - Kubuntu
 - Ubuntu Unity
+- Ubuntu Budgie
+- Ubuntu MATE
+- Ubuntu Cinnamon
+- Xubuntu
 
 We support Kubuntu thanks to [@lemmyg](https://github.com/lemmyg)!
 
