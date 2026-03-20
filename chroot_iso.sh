@@ -107,11 +107,11 @@ fi
 
 echo >&2 "===]> Info: Add udev Rule to stop annoying WiFi popup... "
 mkdir -p /etc/NetworkManager/conf.d
-cat <<EOF | sudo tee /etc/udev/rules.d/99-network-t2-ncm.rules
+cat <<EOF | tee /etc/udev/rules.d/99-network-t2-ncm.rules
 SUBSYSTEM=="net", ACTION=="add", ATTR{address}=="ac:de:48:00:11:22", NAME="t2_ncm"
 EOF
 
-cat <<EOF | sudo tee /etc/NetworkManager/conf.d/99-network-t2-ncm.conf
+cat <<EOF | tee /etc/NetworkManager/conf.d/99-network-t2-ncm.conf
 [main]
 no-auto-default=t2_ncm
 EOF
