@@ -60,6 +60,7 @@ jobs:
         #  draft: false
         #  prerelease: false
         run: |
+          ls -l ${{ github.workspace }}/output/
           gh release view v${{ env.isotag }} -R t2linux/T2-Ubuntu || \
           gh release create v${{ env.isotag }} -t v${{ env.isotag }} -F ${{ github.workspace }}/instructions.txt -R t2linux/T2-Ubuntu
           gh release upload v${{ env.isotag }} ${{ github.workspace }}/output/* --clobber -R t2linux/T2-Ubuntu
@@ -168,6 +169,7 @@ jobs:
         #  draft: false
         #  prerelease: false
         run: |
+          ls -l ${{ github.workspace }}/output/
           gh release view v${{ env.isotag }} -R t2linux/T2-Ubuntu || \
           gh release create v${{ env.isotag }} -t v${{ env.isotag }} -F ${{ github.workspace }}/instructions.txt -R t2linux/T2-Ubuntu
           gh release upload v${{ env.isotag }} ${{ github.workspace }}/output/* --clobber -R t2linux/T2-Ubuntu
