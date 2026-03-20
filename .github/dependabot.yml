@@ -14,9 +14,4 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    target-branch: "flavourMainline"
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "daily"
     target-branch: "flavourLTS"
