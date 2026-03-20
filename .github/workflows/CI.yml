@@ -44,9 +44,11 @@ jobs:
           path: ${{ github.workspace }}/output/kubuntu-24.04-${{ env.kver }}-t2-noble.iso
           archive: false
 
-      - name: Remove unsplit ISO
+      - name: Remove unsplit ISO and get instructions.txt
         run: |
           sudo rm ${{ github.workspace }}/output/*.iso
+          cd ${{ github.workspace }}
+          wget https://raw.githubusercontent.com/t2linux/T2-Ubuntu/refs/heads/LTS/.github/workflows/instructions.txt
 
       - name: Release
         if: github.ref == 'refs/heads/flavourLTS'
@@ -54,7 +56,7 @@ jobs:
         with:
           files: ${{ github.workspace }}/output/*
           tag_name: v${{ env.isotag }}
-          #body_path: ${{ github.workspace }}/.github/workflows/instructions.txt
+          body_path: ${{ github.workspace }}/instructions.txt
           draft: false
           prerelease: false
         env:
@@ -146,9 +148,11 @@ jobs:
           path: ${{ github.workspace }}/output/ubuntu-unity-24.04-${{ env.kver }}-t2-noble.iso
           archive: false
 
-      - name: Remove unsplit ISO
+      - name: Remove unsplit ISO and get instructions.txt
         run: |
           sudo rm ${{ github.workspace }}/output/*.iso
+          cd ${{ github.workspace }}
+          wget https://raw.githubusercontent.com/t2linux/T2-Ubuntu/refs/heads/LTS/.github/workflows/instructions.txt
 
       - name: Release
         if: github.ref == 'refs/heads/flavourLTS'
@@ -156,7 +160,7 @@ jobs:
         with:
           files: ${{ github.workspace }}/output/*
           tag_name: v${{ env.isotag }}
-          #body_path: ${{ github.workspace }}/.github/workflows/instructions.txt
+          body_path: ${{ github.workspace }}/instructions.txt
           draft: false
           prerelease: false
         env:
