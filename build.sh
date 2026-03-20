@@ -7,8 +7,8 @@ FLAVOUR=$1
 ISO_MOUNT_DIR="$ROOT_PATH/${FLAVOUR}-original"    # Temporary mount point for the original ISO
 VER=24.04
 CODENAME=noble
-KERNEL_VERSION=6.19.8
-PKGREL=2
+KERNEL_VERSION=6.19.9
+PKGREL=1
 
 ISO_IMAGE=${FLAVOUR}-24.04.4-desktop-amd64.iso
 ISO_IMAGE_OUTPUT="${OUTPUT_PATH}/${FLAVOUR}-${VER}-${KERNEL_VERSION}-t2-${CODENAME}.iso"
@@ -96,5 +96,11 @@ echo >&2 "===]> Info: Creating iso ... "
 	$(pwd)/02_create_iso.sh"
 # split iso
 
-split -b 1500M -x "${OUTPUT_PATH}/${FLAVOUR}-${VER}-${KERNEL_VERSION}-t2-${CODENAME}.iso" "${OUTPUT_PATH}/${FLAVOUR}-${VER}-${KERNEL_VERSION}-t2-${CODENAME}.iso."
+ISO_SIZE=$(du -m "${OUTPUT_PATH}/${FLAVOUR}-${VER}-${KERNEL_VERSION}-t2-${CODENAME}.iso" | cut -f1)
+if [ "$ISO_SIZE" -lt 4000 ]; then
+    SPLIT_SIZE=1500M
+else
+    SPLIT_SIZE=2000M
+fi
+split -b ${ISO_SIZE} -x "${OUTPUT_PATH}/${FLAVOUR}-${VER}-${KERNEL_VERSION}-t2-${CODENAME}.iso" "${OUTPUT_PATH}/${FLAVOUR}-${VER}-${KERNEL_VERSION}-t2-${CODENAME}.iso."
 sha256sum "${OUTPUT_PATH}"/*.iso > "${OUTPUT_PATH}/sha256-${FLAVOUR}-${VER}"
