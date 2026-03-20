@@ -51,19 +51,19 @@ jobs:
           wget https://raw.githubusercontent.com/t2linux/T2-Ubuntu/refs/heads/LTS/.github/workflows/instructions.txt
 
       - name: Release
-        #if: github.ref == 'refs/heads/flavourLTS'
-        #uses: softprops/action-gh-release@v2
-        #with:
-        #  files: ${{ github.workspace }}/output/*
-        #  tag_name: v${{ env.isotag }}
-        #  body_path: ${{ github.workspace }}/instructions.txt
-        #  draft: false
-        #  prerelease: false
-        run: |
-          ls -l ${{ github.workspace }}/output/
-          gh release view v${{ env.isotag }} -R t2linux/T2-Ubuntu || \
-          gh release create v${{ env.isotag }} -t v${{ env.isotag }} -F ${{ github.workspace }}/instructions.txt -R t2linux/T2-Ubuntu
-          gh release upload v${{ env.isotag }} ${{ github.workspace }}/output/* --clobber -R t2linux/T2-Ubuntu
+        if: github.ref == 'refs/heads/flavourLTS'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ github.workspace }}/output/*
+          tag_name: v${{ env.isotag }}
+          body_path: ${{ github.workspace }}/instructions.txt
+          draft: false
+          prerelease: false
+        #run: |
+        #  ls -l ${{ github.workspace }}/output/
+        #  gh release view v${{ env.isotag }} -R t2linux/T2-Ubuntu || \
+        #  gh release create v${{ env.isotag }} -t v${{ env.isotag }} -F ${{ github.workspace }}/instructions.txt -R t2linux/T2-Ubuntu
+        #  gh release upload v${{ env.isotag }} ${{ github.workspace }}/output/* --clobber -R t2linux/T2-Ubuntu
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -160,19 +160,19 @@ jobs:
           wget https://raw.githubusercontent.com/t2linux/T2-Ubuntu/refs/heads/LTS/.github/workflows/instructions.txt
 
       - name: Release
-        #if: github.ref == 'refs/heads/flavourLTS'
-        #uses: softprops/action-gh-release@v2
-        #with:
-        #  files: ${{ github.workspace }}/output/*
-        #  tag_name: v${{ env.isotag }}
-        #  body_path: ${{ github.workspace }}/instructions.txt
-        #  draft: false
-        #  prerelease: false
-        run: |
-          ls -l ${{ github.workspace }}/output/
-          gh release view v${{ env.isotag }} -R t2linux/T2-Ubuntu || \
-          gh release create v${{ env.isotag }} -t v${{ env.isotag }} -F ${{ github.workspace }}/instructions.txt -R t2linux/T2-Ubuntu
-          gh release upload v${{ env.isotag }} ${{ github.workspace }}/output/* --clobber -R t2linux/T2-Ubuntu
+        if: github.ref == 'refs/heads/flavourLTS'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ github.workspace }}/output/*
+          tag_name: v${{ env.isotag }}
+          body_path: ${{ github.workspace }}/instructions.txt
+          draft: false
+          prerelease: false
+        #run: |
+        #  ls -l ${{ github.workspace }}/output/
+        #  gh release view v${{ env.isotag }} -R t2linux/T2-Ubuntu || \
+        #  gh release create v${{ env.isotag }} -t v${{ env.isotag }} -F ${{ github.workspace }}/instructions.txt -R t2linux/T2-Ubuntu
+        #  gh release upload v${{ env.isotag }} ${{ github.workspace }}/output/* --clobber -R t2linux/T2-Ubuntu
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
