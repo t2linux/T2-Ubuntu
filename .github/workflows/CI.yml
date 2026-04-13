@@ -66,7 +66,7 @@ jobs:
           wget https://raw.githubusercontent.com/t2linux/T2-Ubuntu/refs/heads/LTS/.github/workflows/instructions.txt
       - name: Release
         if: github.ref == 'refs/heads/mainline'
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: ${{ github.workspace }}/output/*
           tag_name: v${{ env.isotag }}
