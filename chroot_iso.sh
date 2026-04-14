@@ -16,7 +16,7 @@ apt update
 
 echo >&2 "===]> Info: Update grub... "
 # Add Kernel Parameters to GRUB for Installed System
-sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash intel_iommu=on iommu=pt pcie_ports=native"/' /etc/default/grub
+sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash intel_iommu=on iommu=pt pm_async=off"/' /etc/default/grub
 update-grub
 
 echo >&2 "===]> Info: Install audio and wifi firmware script... "
