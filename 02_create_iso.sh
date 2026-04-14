@@ -9,7 +9,7 @@ cp "$CHROOT_DIR/boot/vmlinuz-$T2_KERNEL" "$ISO_WORK_DIR/casper/vmlinuz"
 cp "$CHROOT_DIR/boot/initrd.img-$T2_KERNEL" "$ISO_WORK_DIR/casper/initrd"
 
 echo >&2 "===]> Info: Modify existing grub.cfg ..."
-sed -i 's/--- quiet splash/boot=casper quiet splash intel_iommu=on iommu=pt pcie_ports=native ---/g' "$ISO_WORK_DIR/boot/grub/grub.cfg"
+sed -i 's/--- quiet splash/boot=casper quiet splash intel_iommu=on iommu=pt pm_async=off ---/g' "$ISO_WORK_DIR/boot/grub/grub.cfg"
 
 echo >&2 "===]> Info: Creating EFI image ... "
 dd if=/dev/zero of="$ISO_WORK_DIR/EFI/efiboot.img" bs=1M count=10
