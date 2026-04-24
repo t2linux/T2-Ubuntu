@@ -121,6 +121,9 @@ curl -#L https://github.com/t2linux/T2-Ubuntu/releases/download/${latest}/${iso}
 echo -e "\nDownloading Part 3 for ${flavourcap} ${ver}\n"
 curl -#L https://github.com/t2linux/T2-Ubuntu/releases/download/${latest}/${iso}.iso.02 >> ${iso}.iso
 
+echo -e "\nDownloading Part 4 for ${flavourcap} ${ver}\n"
+curl -#L https://github.com/t2linux/T2-Ubuntu/releases/download/${latest}/${iso}.iso.03 >> ${iso}.iso
+
 echo -e "\nVerifying sha256 checksums"
 
 actual_iso_chksum=$(curl -sL https://github.com/t2linux/T2-Ubuntu/releases/download/${latest}/sha256-${flavour}-$(echo ${ver} | cut -d " " -f 1) | cut -d " " -f 1)

@@ -104,6 +104,11 @@ ECHO Downloading Part 3 for %flavourcap% %ver%
 ECHO.
 curl -#L https://github.com/t2linux/T2-Ubuntu/releases/download/%latest%/%iso%.iso.02 >> %downloads%\%iso%.iso
 
+ECHO.
+ECHO Downloading Part 4 for %flavourcap% %ver%
+ECHO.
+curl -#L https://github.com/t2linux/T2-Ubuntu/releases/download/%latest%/%iso%.iso.03 >> %downloads%\%iso%.iso
+
 FOR /f "tokens=1,2 delims= " %%a IN ("%ver%") DO (
   SET shortver=%%a
 )
