@@ -4,7 +4,7 @@ set -eu -o pipefail
 
 echo >&2 "===]> Info: Configure and update apt... "
 
-apt update
+apt update || true
 apt install -y curl
 # Add T2 Repository and Install Packages
 CODENAME=$(lsb_release -cs)
@@ -12,7 +12,7 @@ curl -s --compressed "https://adityagarg8.github.io/t2-ubuntu-repo/KEY.gpg" | gp
 curl -s --compressed -o /etc/apt/sources.list.d/t2.list "https://adityagarg8.github.io/t2-ubuntu-repo/t2.list"
 echo "deb [signed-by=/etc/apt/trusted.gpg.d/t2-ubuntu-repo.gpg] https://github.com/AdityaGarg8/t2-ubuntu-repo/releases/download/${CODENAME} ./" | tee -a /etc/apt/sources.list.d/t2.list
 
-apt update
+apt update || true
 
 echo >&2 "===]> Info: Update grub... "
 # Add Kernel Parameters to GRUB for Installed System
