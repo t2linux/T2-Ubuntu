@@ -16,11 +16,11 @@ else
     FLAVOUR_CAP=$(echo "${FLAVOUR}" | tr '_-' ' ' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) substr($i,2); print}')
 fi
 ISO_MOUNT_DIR="$ROOT_PATH/${FLAVOUR}-original"    # Temporary mount point for the original ISO
-VER=25.10
-CODENAME=questing
+VER=26.04
+CODENAME=resolute
 KERNEL_VERSION=6.19.12
 PKGREL=2
-ISO_IMAGE=${FLAVOUR}-25.10-desktop-amd64.iso
+ISO_IMAGE=${FLAVOUR}-26.04-desktop-amd64.iso
 ISO_IMAGE_OUTPUT="${OUTPUT_PATH}/${FLAVOUR}-${VER}-${KERNEL_VERSION}-t2-${CODENAME}.iso"
 ISO_WORK_DIR="$ROOT_PATH/${FLAVOUR}-iso"
 CHROOT_DIR="$ROOT_PATH/${FLAVOUR}-edit"
@@ -51,7 +51,7 @@ apt update && apt update && \
 
 echo >&2 "===]> Info: Download ISO..."
 if [ "$FLAVOUR" = "ubuntu" ]; then
-    curl -L -o "$(pwd)/${ISO_IMAGE}" "https://releases.ubuntu.com/${VER}/ubuntu-${VER}-desktop-amd64.iso"
+    curl -L -o "$(pwd)/${ISO_IMAGE}" "https://releases.ubuntu.com/${VER}/${ISO_IMAGE}"
 else
     curl -L -o "$(pwd)/${ISO_IMAGE}" "https://cdimage.ubuntu.com/${FLAVOUR}/releases/${VER}/release/${ISO_IMAGE}"
 fi
@@ -124,7 +124,7 @@ sources:
   id: ${FLAVOUR}-desktop-minimal
   locale_support: none
   name:
-    en: ${FLAVOUR_CAP} 25.10 Questing Quokka
+    en: ${FLAVOUR_CAP} 26.04 Resolute Raccoon
   path: minimal.squashfs
   size: ${FILESYSTEM_SIZE}
   type: fsimage-layered

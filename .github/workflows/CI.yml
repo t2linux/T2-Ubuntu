@@ -13,10 +13,10 @@ jobs:
           - image: kubuntu
           - image: ubuntu-budgie
           - image: ubuntucinnamon
-          - image: ubuntu-mate
+          #- image: ubuntu-mate
           #- image: ubuntukylin
           - image: xubuntu
-          #- image: ubuntu-unity
+          - image: ubuntu-unity
 
     runs-on: ubuntu-latest
     steps:
@@ -56,7 +56,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: ISO-${{ matrix.target.image }}
-          path: ${{ github.workspace }}/output/${{ matrix.target.image }}-25.10-${{ env.kver }}-t2-questing.iso
+          path: ${{ github.workspace }}/output/${{ matrix.target.image }}-26.04-${{ env.kver }}-t2-resolute.iso
           archive: false
 
       - name: Remove unsplit ISO and get instructions.txt
@@ -100,7 +100,7 @@ jobs:
 
           for i in ubuntu kubuntu ubuntu-budgie ubuntucinnamon ubuntu-mate xubuntu
           do
-          j=${i}-25.10
+          j=${i}-26.04
           wget https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/sha256-${j}
           SHA256=$(cat ./sha256-${j} | cut -d " " -f 1)
           rm sha256-${j}
@@ -116,10 +116,10 @@ jobs:
           cat << EOF > update.py
           import json
           # Define the new links
-          new_link1 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/${i}-25.10-${{ env.kver }}-t2-questing.iso.00"
-          new_link2 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/${i}-25.10-${{ env.kver }}-t2-questing.iso.01"
-          new_link3 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/${i}-25.10-${{ env.kver }}-t2-questing.iso.02"
-          new_link4 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/${i}-25.10-${{ env.kver }}-t2-questing.iso.03"
+          new_link1 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/${i}-26.04-${{ env.kver }}-t2-resolute.iso.00"
+          new_link2 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/${i}-26.04-${{ env.kver }}-t2-resolute.iso.01"
+          new_link3 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/${i}-26.04-${{ env.kver }}-t2-resolute.iso.02"
+          new_link4 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/${i}-26.04-${{ env.kver }}-t2-resolute.iso.03"
           # Load the JSON file
           with open('distro-metadata.json', 'r') as file:
               data = json.load(file)
@@ -130,7 +130,7 @@ jobs:
                       distro['iso'] = new_links
                       distro['sha256'] = sha256
           # Update the links
-          update_links(data['all'], "${CAPS} 25.10 - Questing Quokka", [new_link1, new_link2, new_link3, new_link4], "${SHA256}")
+          update_links(data['all'], "${CAPS} 26.04 - Resolute Raccoon", [new_link1, new_link2, new_link3, new_link4], "${SHA256}")
           # Save the updated JSON back to the file
           with open('distro-metadata.json', 'w') as file:
               json.dump(data, file, indent=2)
@@ -153,4 +153,4 @@ jobs:
           user-email: github-actions[bot]@users.noreply.github.com
           user-name: github-actions[bot]
           target-branch: master
-          commit-message: Distro metadata - Update Ubuntu 25.10 and its flavours to v${{ env.isotag }}
+          commit-message: Distro metadata - Update Ubuntu 26.04 and its flavours to v${{ env.isotag }}
