@@ -98,7 +98,7 @@ jobs:
           git clone https://github.com/t2linux/wiki.git
           cd wiki/docs/tools
 
-          for i in ubuntu kubuntu ubuntu-budgie ubuntucinnamon ubuntu-mate xubuntu
+          for i in ubuntu kubuntu ubuntu-budgie ubuntucinnamon ubuntu-unity xubuntu
           do
           j=${i}-26.04
           wget https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/sha256-${j}

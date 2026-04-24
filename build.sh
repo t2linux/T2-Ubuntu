@@ -155,6 +155,8 @@ if [ "$ISO_SIZE" -gt 6000 ]; then
     SPLIT_SIZE=2000M
 elif [ "$ISO_SIZE" -gt 4500 ]; then
     SPLIT_SIZE=1500M
+elif [ "$ISO_SIZE" -gt 4000 ]; then
+    SPLIT_SIZE=1200M
 elif [ "$ISO_SIZE" -gt 3000 ]; then
     SPLIT_SIZE=1000M
 elif [ "$ISO_SIZE" -gt 2000 ]; then
