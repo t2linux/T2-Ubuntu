@@ -79,6 +79,7 @@ jobs:
           new_link1 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/kubuntu-24.04-${{ env.kver }}-t2-noble.iso.00"
           new_link2 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/kubuntu-24.04-${{ env.kver }}-t2-noble.iso.01"
           new_link3 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/kubuntu-24.04-${{ env.kver }}-t2-noble.iso.02"
+          new_link4 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/kubuntu-24.04-${{ env.kver }}-t2-noble.iso.03"
           # Load the JSON file
           with open('distro-metadata.json', 'r') as file:
               data = json.load(file)
@@ -89,7 +90,7 @@ jobs:
                       distro['iso'] = new_links
                       distro['sha256'] = sha256
           # Update the links
-          update_links(data['all'], "Kubuntu 24.04 - Noble Numbat", [new_link1, new_link2, new_link3], "${{ env.sha256 }}")
+          update_links(data['all'], "Kubuntu 24.04 - Noble Numbat", [new_link1, new_link2, new_link3, new_link4], "${{ env.sha256 }}")
           # Save the updated JSON back to the file
           with open('distro-metadata.json', 'w') as file:
               json.dump(data, file, indent=2)
@@ -188,6 +189,7 @@ jobs:
           new_link1 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/ubuntu-unity-24.04-${{ env.kver }}-t2-noble.iso.00"
           new_link2 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/ubuntu-unity-24.04-${{ env.kver }}-t2-noble.iso.01"
           new_link3 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/ubuntu-unity-24.04-${{ env.kver }}-t2-noble.iso.02"
+          new_link4 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/ubuntu-unity-24.04-${{ env.kver }}-t2-noble.iso.03"
           # Load the JSON file
           with open('distro-metadata.json', 'r') as file:
               data = json.load(file)
@@ -198,7 +200,7 @@ jobs:
                       distro['iso'] = new_links
                       distro['sha256'] = sha256
           # Update the links
-          update_links(data['all'], "Ubuntu Unity 24.04 - Noble Numbat", [new_link1, new_link2, new_link3], "${{ env.sha256 }}" )
+          update_links(data['all'], "Ubuntu Unity 24.04 - Noble Numbat", [new_link1, new_link2, new_link3, new_link4], "${{ env.sha256 }}" )
           # Save the updated JSON back to the file
           with open('distro-metadata.json', 'w') as file:
               json.dump(data, file, indent=2)
