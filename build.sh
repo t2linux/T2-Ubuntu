@@ -151,10 +151,16 @@ echo >&2 "===]> Info: Creating iso ... "
 # split iso
 
 ISO_SIZE=$(du -m "${OUTPUT_PATH}/${FLAVOUR}-${VER}-${KERNEL_VERSION}-t2-${CODENAME}.iso" | cut -f1)
-if [ "$ISO_SIZE" -lt 4000 ]; then
-    SPLIT_SIZE=1500M
-else
+if [ "$ISO_SIZE" -gt 6000 ]; then
     SPLIT_SIZE=2000M
+elif [ "$ISO_SIZE" -gt 4500 ]; then
+    SPLIT_SIZE=1500M
+elif [ "$ISO_SIZE" -gt 3000 ]; then
+    SPLIT_SIZE=1000M
+elif [ "$ISO_SIZE" -gt 2000 ]; then
+    SPLIT_SIZE=600M
+else
+    SPLIT_SIZE=500M
 fi
 split -b "${SPLIT_SIZE}" -x "${OUTPUT_PATH}/${FLAVOUR}-${VER}-${KERNEL_VERSION}-t2-${CODENAME}.iso" "${OUTPUT_PATH}/${FLAVOUR}-${VER}-${KERNEL_VERSION}-t2-${CODENAME}.iso."
 sha256sum "${OUTPUT_PATH}"/*.iso > "${OUTPUT_PATH}/sha256-${FLAVOUR}-${VER}"

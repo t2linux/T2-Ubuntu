@@ -119,6 +119,7 @@ jobs:
           new_link1 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/${i}-25.10-${{ env.kver }}-t2-questing.iso.00"
           new_link2 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/${i}-25.10-${{ env.kver }}-t2-questing.iso.01"
           new_link3 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/${i}-25.10-${{ env.kver }}-t2-questing.iso.02"
+          new_link4 = "https://github.com/t2linux/T2-Ubuntu/releases/download/v${{ env.isotag }}/${i}-25.10-${{ env.kver }}-t2-questing.iso.03"
           # Load the JSON file
           with open('distro-metadata.json', 'r') as file:
               data = json.load(file)
@@ -129,7 +130,7 @@ jobs:
                       distro['iso'] = new_links
                       distro['sha256'] = sha256
           # Update the links
-          update_links(data['all'], "${CAPS} 25.10 - Questing Quokka", [new_link1, new_link2, new_link3], "${SHA256}")
+          update_links(data['all'], "${CAPS} 25.10 - Questing Quokka", [new_link1, new_link2, new_link3, new_link4], "${SHA256}")
           # Save the updated JSON back to the file
           with open('distro-metadata.json', 'w') as file:
               json.dump(data, file, indent=2)
