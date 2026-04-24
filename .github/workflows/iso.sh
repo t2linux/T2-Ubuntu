@@ -90,7 +90,7 @@ cat <<EOF
 Choose the version of Ubuntu you wish to install:
 
 1. 24.04 LTS - Noble Numbat
-2. 25.10 - Questing Quokka
+2. 26.04 LTS - Resolute Raccoon
 
 Type your choice (1 or 2) from the above list and press return.
 EOF
@@ -103,8 +103,8 @@ case "$verinput" in
 		ver="24.04 LTS - Noble Numbat"
 		;;
 	(2)
-		iso="${flavour}-25.10-${latestkver}-t2-questing"
-		ver="25.10 - Questing Quokka"
+		iso="${flavour}-26.04-${latestkver}-t2-resolute"
+		ver="26.04 - Resolute Raccoon"
 		;;
 	(*)
 		echo "Invalid input. Aborting!"

@@ -71,7 +71,7 @@ ECHO.
 ECHO Choose the version of Ubuntu you wish to install:
 ECHO.
 ECHO 1. 24.04 LTS - Noble Numbat
-ECHO 2. 25.10 - Questing Quokka
+ECHO 2. 26.04 LTS - Resolute Raccoon
 ECHO.
 ECHO Type your choice (1 or 2) from the above list and press return.
 SET /P verinput=
@@ -81,8 +81,8 @@ IF "%verinput%"=="1" (
     SET ver=24.04 LTS - Noble Numbat
 ) ELSE (
     IF "%verinput%"=="2" (
-        SET iso=%flavour%-25.10-%latestkver%-t2-questing
-        SET ver=25.10 - Questing Quokka
+        SET iso=%flavour%-26.04-%latestkver%-t2-resolute
+        SET ver=26.04 - Resolute Raccoon
     ) ELSE (
         ECHO "Invalid input. Aborting!"
         EXIT
