@@ -1,6 +1,10 @@
 ## How to download the ISO?
 
-Download the "iso.sh" script (if using macOS or Linux) or "iso.bat" script (if using Windows) from the **assets** below, run it on the terminal and follow the on screen instructions.
+There are 2 ways to download the ISO:
+
+1. Download the "iso.sh" script (if using macOS or Linux) or "iso.bat" script (if using Windows) from the **assets** below, run it on the terminal and follow the on screen instructions.
+
+2. Use the [t2linux Installer](https://github.com/sharpenedblade/t2linux-installer/releases/latest) app].
 
 ## Adding Wi-Fi and Bluetooth support:
 
