@@ -20,7 +20,11 @@ VER=26.04
 CODENAME=resolute
 KERNEL_VERSION=7.0.9
 PKGREL=1
-ISO_IMAGE=${FLAVOUR}-26.04-desktop-amd64.iso
+if [ "$FLAVOUR" = "ubuntu-unity" ]; then
+	ISO_IMAGE=${FLAVOUR}-26.04-desktop-amd64.iso
+else
+	ISO_IMAGE=${FLAVOUR}-26.04.1-desktop-amd64.iso
+fi
 ISO_IMAGE_OUTPUT="${OUTPUT_PATH}/${FLAVOUR}-${VER}-${KERNEL_VERSION}-t2-${CODENAME}.iso"
 ISO_WORK_DIR="$ROOT_PATH/${FLAVOUR}-iso"
 CHROOT_DIR="$ROOT_PATH/${FLAVOUR}-edit"
