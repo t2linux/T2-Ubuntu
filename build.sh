@@ -18,7 +18,7 @@ fi
 ISO_MOUNT_DIR="$ROOT_PATH/${FLAVOUR}-original"    # Temporary mount point for the original ISO
 VER=26.04
 CODENAME=resolute
-KERNEL_VERSION=7.0.9
+KERNEL_VERSION=7.1.8
 PKGREL=1
 if [ "$FLAVOUR" = "ubuntu-unity" ]; then
 	ISO_IMAGE=${FLAVOUR}-26.04-desktop-amd64.iso
