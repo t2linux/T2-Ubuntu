@@ -17,6 +17,7 @@ jobs:
           #- image: ubuntukylin
           - image: xubuntu
           - image: ubuntu-unity
+          - image: ubuntustudio
 
     runs-on: ubuntu-latest
     steps:
