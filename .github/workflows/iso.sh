@@ -12,7 +12,11 @@ case "$os" in
 		fi
 		;;
 	(Linux)
-		if wget -q --spider --timeout=5 --tries=1 http://github.com >/dev/null 2>&1; then
+		if ! command -v curl >/dev/null 2>&1; then
+			echo "curl is required but not installed. Please install curl and try again."
+			exit 1
+		fi
+		if curl -fsI -m 5 http://github.com >/dev/null 2>&1; then
 			true
 		else
 			echo "Please connect to the internet"
